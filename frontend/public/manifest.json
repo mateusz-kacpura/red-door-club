@@ -1,0 +1,37 @@
+{
+  "name": "Red Door Club",
+  "short_name": "Red Door",
+  "description": "The Red Door — Private Members Club",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#141426",
+  "theme_color": "#C9A96E",
+  "categories": ["lifestyle", "social"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "My Tab",
+      "url": "/dashboard/tab",
+      "description": "View your current tab"
+    },
+    {
+      "name": "Events",
+      "url": "/dashboard/events",
+      "description": "Browse upcoming events"
+    }
+  ]
+}
