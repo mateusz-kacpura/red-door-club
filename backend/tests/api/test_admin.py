@@ -8,12 +8,13 @@ from uuid import uuid4
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from app.api.deps import get_current_user, get_db_session
+from app.api.deps import get_current_user, get_db_session, get_user_service
 from app.api.routes.v1.admin import get_admin_service, get_event_service
 from app.core.config import settings
 from app.core.exceptions import NotFoundError
 from app.main import app
 from app.schemas.event import EventRead
+from app.schemas.user import UserRead
 
 
 class MockAdminUser:
@@ -62,9 +63,43 @@ def _make_event(**kwargs) -> EventRead:
     return EventRead(**defaults)
 
 
+def _make_user_read(**kwargs) -> UserRead:
+    now = datetime.now(UTC)
+    defaults = dict(
+        id=uuid4(),
+        email="alice@example.com",
+        phone=None,
+        full_name="Alice Chen",
+        company_name=None,
+        industry=None,
+        revenue_range=None,
+        interests=[],
+        user_type="member",
+        tier="gold",
+        segment_groups=[],
+        pdpa_consent=True,
+        last_seen_at=None,
+        is_active=True,
+        is_superuser=False,
+        role="user",
+        staff_notes=None,
+        created_at=now,
+        updated_at=now,
+    )
+    defaults.update(kwargs)
+    return UserRead(**defaults)
+
+
 @pytest.fixture
 def mock_admin_user() -> MockAdminUser:
     return MockAdminUser()
+
+
+@pytest.fixture
+def mock_user_service() -> MagicMock:
+    service = MagicMock()
+    service.update = AsyncMock(return_value=_make_user_read())
+    return service
 
 
 @pytest.fixture
@@ -107,12 +142,14 @@ async def admin_client(
     mock_admin_user: MockAdminUser,
     mock_admin_service: MagicMock,
     mock_event_service: MagicMock,
+    mock_user_service: MagicMock,
     mock_redis,
     mock_db_session,
 ) -> AsyncClient:
     app.dependency_overrides[get_current_user] = lambda: mock_admin_user
     app.dependency_overrides[get_admin_service] = lambda: mock_admin_service
     app.dependency_overrides[get_event_service] = lambda: mock_event_service
+    app.dependency_overrides[get_user_service] = lambda: mock_user_service
     app.dependency_overrides[get_db_session] = lambda: mock_db_session
 
     # Mock DB execute for list_members query
@@ -1091,3 +1128,96 @@ async def test_get_member_churn_returns_score(admin_client: AsyncClient, mock_db
     assert data["score"] == 55
     assert data["risk_level"] == "medium"
     assert len(data["factors"]) == 5
+
+
+# ── PATCH /admin/members/{id} — update member profile ────────────────────────
+
+
+@pytest.mark.anyio
+async def test_update_member_full_name(admin_client: AsyncClient, mock_user_service: MagicMock):
+    """PATCH /admin/members/{id} updates member's full_name and returns UserRead."""
+    member_id = uuid4()
+    mock_user_service.update.return_value = _make_user_read(id=member_id, full_name="Alice Updated")
+
+    response = await admin_client.patch(
+        f"{settings.API_V1_STR}/admin/members/{member_id}",
+        json={"full_name": "Alice Updated"},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["full_name"] == "Alice Updated"
+    mock_user_service.update.assert_called_once()
+    call_args = mock_user_service.update.call_args
+    assert call_args[0][0] == member_id
+
+
+@pytest.mark.anyio
+async def test_update_member_tier(admin_client: AsyncClient, mock_user_service: MagicMock):
+    """PATCH /admin/members/{id} can update member tier."""
+    member_id = uuid4()
+    mock_user_service.update.return_value = _make_user_read(id=member_id, tier="obsidian")
+
+    response = await admin_client.patch(
+        f"{settings.API_V1_STR}/admin/members/{member_id}",
+        json={"tier": "obsidian"},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["tier"] == "obsidian"
+
+
+@pytest.mark.anyio
+async def test_update_member_user_type(admin_client: AsyncClient, mock_user_service: MagicMock):
+    """PATCH /admin/members/{id} can update user_type from prospect to member."""
+    member_id = uuid4()
+    mock_user_service.update.return_value = _make_user_read(id=member_id, user_type="member")
+
+    response = await admin_client.patch(
+        f"{settings.API_V1_STR}/admin/members/{member_id}",
+        json={"user_type": "member"},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["user_type"] == "member"
+
+
+@pytest.mark.anyio
+async def test_update_member_deactivate(admin_client: AsyncClient, mock_user_service: MagicMock):
+    """PATCH /admin/members/{id} can deactivate a member by setting is_active=False."""
+    member_id = uuid4()
+    mock_user_service.update.return_value = _make_user_read(id=member_id, is_active=False)
+
+    response = await admin_client.patch(
+        f"{settings.API_V1_STR}/admin/members/{member_id}",
+        json={"is_active": False},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["is_active"] is False
+
+
+@pytest.mark.anyio
+async def test_update_member_multiple_fields(admin_client: AsyncClient, mock_user_service: MagicMock):
+    """PATCH /admin/members/{id} accepts and applies multiple field updates at once."""
+    member_id = uuid4()
+    mock_user_service.update.return_value = _make_user_read(
+        id=member_id,
+        full_name="Bob Smith",
+        tier="gold",
+        company_name="Smith & Co",
+    )
+
+    response = await admin_client.patch(
+        f"{settings.API_V1_STR}/admin/members/{member_id}",
+        json={"full_name": "Bob Smith", "tier": "gold", "company_name": "Smith & Co"},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["full_name"] == "Bob Smith"
+    assert data["tier"] == "gold"
+    assert data["company_name"] == "Smith & Co"

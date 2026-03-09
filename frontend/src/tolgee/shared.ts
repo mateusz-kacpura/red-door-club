@@ -1,7 +1,7 @@
 import { DevTools, Tolgee, FormatSimple } from "@tolgee/web";
 import type { TolgeeStaticData } from "@tolgee/core";
 
-export const ALL_LOCALES = ["en", "pl", "ru", "uk"] as const;
+export const ALL_LOCALES = ["en", "pl", "ru", "uk", "th", "zh"] as const;
 export type AppLocale = (typeof ALL_LOCALES)[number];
 
 export const LOCALE_LABELS: Record<AppLocale, string> = {
@@ -9,6 +9,8 @@ export const LOCALE_LABELS: Record<AppLocale, string> = {
   pl: "PL",
   ru: "RU",
   uk: "UK",
+  th: "TH",
+  zh: "ZH",
 };
 
 export const createTolgeeInstance = (

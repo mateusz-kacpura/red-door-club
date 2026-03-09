@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Plus, CalendarDays } from "lucide-react";
+import { Loader2, Plus, CalendarDays, Pencil } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,26 +36,36 @@ const SEGMENT_OPTIONS = [
   "Corporate Executives", "Lifestyle & Leisure", "Legal & Advisory", "International Network",
 ];
 
+const EMPTY_FORM = {
+  title: "",
+  description: "",
+  event_type: "mixer",
+  target_segments: [] as string[],
+  capacity: 50,
+  ticket_price: "0.00",
+  starts_at: "",
+  status: "draft",
+  min_tier: "",
+};
+
+function toLocalDatetime(isoString: string): string {
+  if (!isoString) return "";
+  const d = new Date(isoString);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export default function AdminEventsPage() {
   const { t } = useTranslate();
   const [events, setEvents] = useState<ClubEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [statusLoading, setStatusLoading] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    event_type: "mixer",
-    target_segments: [] as string[],
-    capacity: 50,
-    ticket_price: "0.00",
-    starts_at: "",
-    status: "draft",
-    min_tier: "",
-  });
+  const [form, setForm] = useState(EMPTY_FORM);
 
   const fetchEvents = async () => {
     try {
@@ -79,17 +89,53 @@ export default function AdminEventsPage() {
     }));
   };
 
+  const openCreate = () => {
+    setForm(EMPTY_FORM);
+    setEditingId(null);
+    setError("");
+    setShowForm(true);
+  };
+
+  const openEdit = (event: ClubEvent) => {
+    setForm({
+      title: event.title,
+      description: (event as ClubEvent & { description?: string }).description ?? "",
+      event_type: event.event_type,
+      target_segments: [...event.target_segments],
+      capacity: event.capacity,
+      ticket_price: String(event.ticket_price ?? "0.00"),
+      starts_at: toLocalDatetime(event.starts_at),
+      status: event.status,
+      min_tier: event.min_tier ?? "",
+    });
+    setEditingId(event.id);
+    setError("");
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setError("");
+  };
+
   const handleSubmit = async () => {
     setSubmitting(true);
     setError("");
     try {
-      await apiClient.post("/admin/events", {
+      const payload = {
         ...form,
         ticket_price: parseFloat(form.ticket_price) || 0,
         min_tier: form.min_tier || null,
         starts_at: new Date(form.starts_at).toISOString(),
-      });
-      setShowForm(false);
+      };
+      if (editingId) {
+        await apiClient.patch(`/admin/events/${editingId}`, payload);
+      } else {
+        await apiClient.post("/admin/events", payload);
+      }
+      closeForm();
       await fetchEvents();
     } catch (err) {
       if (err instanceof ApiError) setError(err.message);
@@ -122,34 +168,45 @@ export default function AdminEventsPage() {
           <h1 className="text-2xl font-light tracking-wide">{t("events.title")}</h1>
           <p className="text-sm text-muted-foreground mt-1">{t("adminEvents.totalEvents", { count: events.length })}</p>
         </div>
-        <Button onClick={() => setShowForm(!showForm)} size="sm">
+        <Button onClick={openCreate} size="sm">
           <Plus className="h-4 w-4 mr-1" /> {t("adminEvents.createEvent")}
         </Button>
       </div>
 
-      {/* Create form */}
+      {/* Create / Edit form */}
       {showForm && (
         <Card className="rounded-xl border-primary/20">
           <CardContent className="p-6 space-y-4">
-            <h2 className="font-medium">{t("adminEvents.newEvent")}</h2>
+            <h2 className="font-medium">
+              {editingId ? t("adminEvents.editEvent") : t("adminEvents.newEvent")}
+            </h2>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2 space-y-1">
                 <Label>{t("adminEvents.titleLabel")}</Label>
                 <Input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} placeholder={t("adminEvents.titlePlaceholder")} />
               </div>
+              <div className="sm:col-span-2 space-y-1">
+                <Label>{t("adminEvents.descriptionLabel")}</Label>
+                <textarea
+                  className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  value={form.description}
+                  onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
+                  placeholder={t("adminEvents.descriptionPlaceholder")}
+                />
+              </div>
               <div className="space-y-1">
                 <Label>{t("adminEvents.typeLabel")}</Label>
                 <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                   value={form.event_type} onChange={(e) => setForm((p) => ({ ...p, event_type: e.target.value }))}>
-                  {EVENT_TYPES.map((t) => <option key={t} value={t} className="capitalize">{t.replace("_", " ")}</option>)}
+                  {EVENT_TYPES.map((et) => <option key={et} value={et} className="capitalize">{et.replace("_", " ")}</option>)}
                 </select>
               </div>
               <div className="space-y-1">
                 <Label>{t("adminEvents.statusLabel")}</Label>
                 <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                   value={form.status} onChange={(e) => setForm((p) => ({ ...p, status: e.target.value }))}>
-                  {["draft", "published"].map((s) => <option key={s} value={s}>{s}</option>)}
+                  {["draft", "published", "sold_out", "completed", "cancelled"].map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div className="space-y-1">
@@ -169,7 +226,7 @@ export default function AdminEventsPage() {
                 <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                   value={form.min_tier} onChange={(e) => setForm((p) => ({ ...p, min_tier: e.target.value }))}>
                   <option value="">{t("adminEvents.noRestriction")}</option>
-                  {["silver", "gold", "obsidian"].map((t) => <option key={t} value={t} className="capitalize">{t}</option>)}
+                  {["silver", "gold", "obsidian"].map((tier) => <option key={tier} value={tier} className="capitalize">{tier}</option>)}
                 </select>
               </div>
             </div>
@@ -190,9 +247,11 @@ export default function AdminEventsPage() {
             {error && <p className="text-sm text-destructive">{error}</p>}
 
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>{t("common.cancel")}</Button>
+              <Button variant="outline" size="sm" onClick={closeForm}>{t("common.cancel")}</Button>
               <Button size="sm" onClick={handleSubmit} disabled={submitting || !form.title || !form.starts_at}>
-                {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t("adminEvents.createEvent")}
+                {submitting
+                  ? <Loader2 className="h-4 w-4 animate-spin" />
+                  : editingId ? t("common.saveChanges") : t("adminEvents.createEvent")}
               </Button>
             </div>
           </CardContent>
@@ -214,7 +273,7 @@ export default function AdminEventsPage() {
 
       <div className="space-y-3">
         {events.map((event) => (
-          <Card key={event.id} className="rounded-xl">
+          <Card key={event.id} className={`rounded-xl transition-colors ${editingId === event.id ? "border-primary/40" : ""}`}>
             <CardContent className="p-4 flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -257,6 +316,15 @@ export default function AdminEventsPage() {
                 <Badge variant="outline" className="capitalize text-xs">
                   {event.event_type.replace("_", " ")}
                 </Badge>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 w-7 p-0"
+                  onClick={() => openEdit(event)}
+                  title={t("common.edit")}
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
               </div>
             </CardContent>
           </Card>

@@ -9,15 +9,15 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import Response, StreamingResponse
 from pydantic import BaseModel
 
-from app.api.deps import CurrentAdmin, DBSession
+from app.api.deps import CurrentAdmin, DBSession, UserSvc
 from app.core.config import settings
 from app.schemas.event import EventCreate, EventRead, EventUpdate
-from app.schemas.qr_batch import QrBatchCreate, QrBatchRead, QrBatchDetail
+from app.schemas.qr_batch import QrBatchCreate, QrBatchRead, QrBatchDetail, QrBatchModify, QrBatchDeleteRequest
 from app.schemas.locker import LockerCreate, LockerRead
 from app.schemas.loyalty import AdminAwardPointsRequest, LoyaltyTransactionRead
 from app.schemas.service_request import ServiceRequestRead, ServiceRequestUpdate, ServiceRequestAdminUpdate
 from app.schemas.tab import TabRead
-from app.schemas.user import UserRead
+from app.schemas.user import UserRead, UserUpdate
 from app.services.admin import AdminService
 from app.services.event import EventService
 
@@ -87,6 +87,16 @@ async def get_member_detail(
     admin_service: AdminSvc,
 ):
     return await admin_service.get_member_detail(member_id)
+
+
+@router.patch("/members/{member_id}", response_model=UserRead, summary="Update member profile (admin)")
+async def update_member(
+    member_id: uuid.UUID,
+    user_in: UserUpdate,
+    current_user: CurrentAdmin,
+    user_service: UserSvc,
+):
+    return await user_service.update(member_id, user_in)
 
 
 @router.patch("/members/{member_id}/notes", summary="Update staff notes for a member")
@@ -828,3 +838,122 @@ async def download_qr_batch_pdf(
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename=qr-batch-{str(batch_id)[:8]}.pdf"},
     )
+
+
+@router.get("/qr-batches/{batch_id}/png-zip", summary="Download QR batch as PNG ZIP (transparent background)")
+async def download_qr_batch_png_zip(
+    batch_id: uuid.UUID,
+    current_user: CurrentAdmin,
+    db: DBSession,
+):
+    from app.services.qr_batch import get_batch_with_codes, generate_png_zip
+    from app.core.exceptions import NotFoundError
+
+    result = await get_batch_with_codes(db, batch_id)
+    if not result:
+        raise NotFoundError(message="QR batch not found.")
+    batch, codes = result
+    zip_bytes = generate_png_zip(batch, codes, settings.FRONTEND_URL)
+    return Response(
+        content=zip_bytes,
+        media_type="application/zip",
+        headers={"Content-Disposition": f"attachment; filename=qr-batch-{str(batch_id)[:8]}.zip"},
+    )
+
+
+@router.post("/qr-batches/{batch_id}/append", response_model=QrBatchRead, summary="Append codes to existing QR batch")
+async def append_qr_batch(
+    batch_id: uuid.UUID,
+    body: QrBatchModify,
+    current_user: CurrentAdmin,
+    db: DBSession,
+):
+    from app.services.qr_batch import append_codes
+    from app.core.exceptions import NotFoundError
+    from app.db.models.qr_batch import QrCode as QrCodeModel
+    from sqlalchemy import func, select
+
+    batch = await append_codes(db, batch_id, body.count)
+    if not batch:
+        raise NotFoundError(message="QR batch not found.")
+    conv_result = await db.execute(
+        select(func.count()).select_from(QrCodeModel).where(
+            QrCodeModel.batch_id == batch.id,
+            QrCodeModel.converted_at.is_not(None),
+        )
+    )
+    converted = conv_result.scalar() or 0
+    return QrBatchRead(
+        id=batch.id,
+        promoter_id=batch.promoter_id,
+        promo_code=batch.promo_code,
+        tier=batch.tier,
+        count=batch.count,
+        prefix=batch.prefix,
+        notes=batch.notes,
+        created_by=batch.created_by,
+        created_at=batch.created_at,
+        conversion_rate=round(converted / batch.count, 4) if batch.count > 0 else 0.0,
+        converted_count=converted,
+    )
+
+
+@router.post("/qr-batches/{batch_id}/reduce", response_model=QrBatchRead, summary="Remove unconverted codes from QR batch")
+async def reduce_qr_batch(
+    batch_id: uuid.UUID,
+    body: QrBatchModify,
+    current_user: CurrentAdmin,
+    db: DBSession,
+):
+    from app.services.qr_batch import reduce_codes
+    from app.core.exceptions import NotFoundError
+    from app.db.models.qr_batch import QrCode as QrCodeModel
+    from sqlalchemy import func, select
+
+    batch = await reduce_codes(db, batch_id, body.count)
+    if not batch:
+        raise NotFoundError(message="QR batch not found.")
+    conv_result = await db.execute(
+        select(func.count()).select_from(QrCodeModel).where(
+            QrCodeModel.batch_id == batch.id,
+            QrCodeModel.converted_at.is_not(None),
+        )
+    )
+    converted = conv_result.scalar() or 0
+    return QrBatchRead(
+        id=batch.id,
+        promoter_id=batch.promoter_id,
+        promo_code=batch.promo_code,
+        tier=batch.tier,
+        count=batch.count,
+        prefix=batch.prefix,
+        notes=batch.notes,
+        created_by=batch.created_by,
+        created_at=batch.created_at,
+        conversion_rate=round(converted / batch.count, 4) if batch.count > 0 else 0.0,
+        converted_count=converted,
+    )
+
+
+@router.delete("/qr-batches/{batch_id}", status_code=204, summary="Delete QR batch (requires admin password)")
+async def delete_qr_batch(
+    batch_id: uuid.UUID,
+    body: QrBatchDeleteRequest,
+    current_user: CurrentAdmin,
+    db: DBSession,
+):
+    from app.core.security import verify_password
+    from app.core.exceptions import NotFoundError
+    from app.db.models.qr_batch import QrBatch as QrBatchModel
+    from fastapi import HTTPException
+    from sqlalchemy import select
+
+    if not verify_password(body.password, current_user.hashed_password):
+        raise HTTPException(status_code=403, detail="Incorrect password.")
+
+    result = await db.execute(select(QrBatchModel).where(QrBatchModel.id == batch_id))
+    qr_batch = result.scalar_one_or_none()
+    if not qr_batch:
+        raise NotFoundError(message="QR batch not found.")
+    await db.delete(qr_batch)
+    await db.commit()

@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "Save Changes",
+    "saveChanges": "Save Changes",
     "cancel": "Cancel",
     "edit": "Edit",
     "loading": "Loading...",
@@ -40,7 +41,12 @@
     "promoters": "Promoters",
     "corporate": "Corporate",
     "qrGenerator": "QR Generator",
-    "theRedDoor": "The Red Door"
+    "theRedDoor": "The Red Door",
+    "overview": "Overview",
+    "members": "Members",
+    "floorView": "Floor View",
+    "checklist": "Checklist",
+    "memberDashboard": "Member Dashboard"
   },
   "auth": {
     "loginTitle": "Login",
@@ -219,7 +225,9 @@
     "signOutDesc": "Sign out from your account on this device",
     "saveChanges": "Save Changes",
     "admin": "Admin",
-    "active": "Active"
+    "active": "Active",
+    "nfcCard": "My NFC Card",
+    "nfcCardHint": "Scan this QR code to simulate an NFC tap."
   },
   "analytics": {
     "title": "Analytics Overview",
@@ -493,7 +501,16 @@
     "industry": "Industry",
     "revenueRange": "Revenue Range",
     "interests": "Interests",
-    "phone": "Phone"
+    "phone": "Phone",
+    "editProfile": "Edit Profile",
+    "fullNameLabel": "Full Name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "companyLabel": "Company",
+    "tierLabel": "Tier",
+    "userTypeLabel": "User Type",
+    "isActiveLabel": "Active",
+    "editSaved": "Profile updated."
   },
   "floor": {
     "title": "Live Floor View",
@@ -527,7 +544,10 @@
     "minTierLabel": "Min Tier",
     "noRestriction": "No restriction",
     "targetSegments": "Target Segments",
-    "noEvents": "No events created yet."
+    "noEvents": "No events created yet.",
+    "editEvent": "Edit Event",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Optional event description"
   },
   "corporateDetail": {
     "notFound": "Account not found.",
@@ -568,6 +588,18 @@
     "conversions": "conversions",
     "previewTitle": "QR Preview",
     "totalBatches": "{count} batches",
-    "conversionRate": "Conversion rate"
+    "conversionRate": "Conversion rate",
+    "downloadPng": "PNG",
+    "addCodes": "Add",
+    "reduceCodes": "Remove",
+    "deleteBatch": "Delete",
+    "addCodesLabel": "Number of codes to add",
+    "reduceCodesLabel": "Codes to remove (unconverted only)",
+    "deleteConfirmLabel": "Enter your password to confirm deletion",
+    "confirmAdd": "Add",
+    "confirmReduce": "Remove",
+    "confirmDelete": "Confirm Delete",
+    "deleteWarning": "This action is irreversible. All QR codes in this batch will be permanently deleted.",
+    "reduceWarning": "Only unconverted codes will be removed, starting from the newest."
   }
 }

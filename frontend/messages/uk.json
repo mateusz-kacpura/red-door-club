@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "Зберегти зміни",
+    "saveChanges": "Зберегти зміни",
     "cancel": "Скасувати",
     "edit": "Редагувати",
     "loading": "Завантаження...",
@@ -40,7 +41,12 @@
     "promoters": "Промоутери",
     "corporate": "Корпоративні",
     "qrGenerator": "Генератор QR",
-    "theRedDoor": "The Red Door"
+    "theRedDoor": "The Red Door",
+    "overview": "Огляд",
+    "members": "Учасники",
+    "floorView": "Вид залу",
+    "checklist": "Контрольний список",
+    "memberDashboard": "Панель учасника"
   },
   "auth": {
     "loginTitle": "Вхід",
@@ -219,7 +225,9 @@
     "signOutDesc": "Завершити сеанс на цьому пристрої",
     "saveChanges": "Зберегти зміни",
     "admin": "Адміністратор",
-    "active": "Активний"
+    "active": "Активний",
+    "nfcCard": "Моя картка NFC",
+    "nfcCardHint": "Відскануйте QR-код для симуляції NFC-тапу."
   },
   "analytics": {
     "title": "Огляд аналітики",
@@ -493,7 +501,16 @@
     "industry": "Галузь",
     "revenueRange": "Діапазон доходу",
     "interests": "Інтереси",
-    "phone": "Телефон"
+    "phone": "Телефон",
+    "editProfile": "Редагувати профіль",
+    "fullNameLabel": "Повне ім'я",
+    "emailLabel": "Email",
+    "phoneLabel": "Телефон",
+    "companyLabel": "Компанія",
+    "tierLabel": "Рівень",
+    "userTypeLabel": "Тип користувача",
+    "isActiveLabel": "Активний",
+    "editSaved": "Профіль оновлено."
   },
   "floor": {
     "title": "Вид залу в реальному часі",
@@ -527,7 +544,10 @@
     "minTierLabel": "Мінімальний рівень",
     "noRestriction": "Без обмежень",
     "targetSegments": "Цільові сегменти",
-    "noEvents": "Немає створених подій."
+    "noEvents": "Немає створених подій.",
+    "editEvent": "Редагувати подію",
+    "descriptionLabel": "Опис",
+    "descriptionPlaceholder": "Необов'язковий опис події"
   },
   "corporateDetail": {
     "notFound": "Акаунт не знайдено.",
@@ -568,6 +588,18 @@
     "conversions": "конверсій",
     "previewTitle": "Перегляд QR",
     "totalBatches": "{count} пакетів",
-    "conversionRate": "Коефіцієнт конверсії"
+    "conversionRate": "Коефіцієнт конверсії",
+    "downloadPng": "PNG",
+    "addCodes": "Додати",
+    "reduceCodes": "Видалити",
+    "deleteBatch": "Видалити пакет",
+    "addCodesLabel": "Кількість кодів для додавання",
+    "reduceCodesLabel": "Коди для видалення (лише невикористані)",
+    "deleteConfirmLabel": "Введіть пароль для підтвердження видалення",
+    "confirmAdd": "Додати",
+    "confirmReduce": "Видалити",
+    "confirmDelete": "Підтвердити видалення",
+    "deleteWarning": "Ця дія незворотна. Усі QR-коди в цьому пакеті будуть видалені назавжди.",
+    "reduceWarning": "Видаляються лише невикористані коди, починаючи з найновіших."
   }
 }

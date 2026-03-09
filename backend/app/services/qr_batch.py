@@ -206,6 +206,85 @@ def generate_pdf(batch: QrBatch, codes: list[QrCode], frontend_url: str) -> byte
     return buffer.getvalue()
 
 
+async def append_codes(db: AsyncSession, batch_id: uuid.UUID, count: int) -> QrBatch | None:
+    """Append N additional QR codes to an existing batch."""
+    result = await db.execute(select(QrBatch).where(QrBatch.id == batch_id))
+    batch = result.scalar_one_or_none()
+    if not batch:
+        return None
+
+    total_result = await db.execute(select(func.count()).select_from(QrCode))
+    existing_count = total_result.scalar() or 0
+    start_serial = existing_count + 1
+
+    new_codes = []
+    for i in range(count):
+        serial = start_serial + i
+        pass_id = f"{batch.prefix}{serial:06d}"
+        new_codes.append(QrCode(id=uuid.uuid4(), batch_id=batch.id, pass_id=pass_id))
+    db.add_all(new_codes)
+    batch.count += count
+    await db.commit()
+    await db.refresh(batch)
+    return batch
+
+
+async def reduce_codes(db: AsyncSession, batch_id: uuid.UUID, count: int) -> QrBatch | None:
+    """Remove up to N unconverted QR codes (newest first) from an existing batch."""
+    result = await db.execute(select(QrBatch).where(QrBatch.id == batch_id))
+    batch = result.scalar_one_or_none()
+    if not batch:
+        return None
+
+    codes_result = await db.execute(
+        select(QrCode)
+        .where(QrCode.batch_id == batch_id, QrCode.converted_at.is_(None))
+        .order_by(QrCode.created_at.desc())
+        .limit(count)
+    )
+    codes_to_delete = list(codes_result.scalars().all())
+    for code in codes_to_delete:
+        await db.delete(code)
+    batch.count = max(0, batch.count - len(codes_to_delete))
+    await db.commit()
+    await db.refresh(batch)
+    return batch
+
+
+def generate_png_zip(batch: QrBatch, codes: list[QrCode], frontend_url: str) -> bytes:
+    """Generate a ZIP archive of individual QR code PNG images (transparent background)."""
+    import zipfile
+    from reportlab.graphics import renderPM
+    from PIL import Image as PilImage
+
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        for code in codes:
+            url = f"{frontend_url}/qr-register?pass={code.pass_id}"
+            if batch.promo_code:
+                url += f"&promo={batch.promo_code}"
+            url += f"&tier={batch.tier}"
+
+            # Render QR via ReportLab Drawing → PNG bytes
+            drawing = _make_qr_image(url, size=5 * cm)
+            png_bytes = renderPM.drawToString(drawing, fmt="PNG", dpi=300)
+
+            # Convert white background to transparent using PIL
+            img = PilImage.open(io.BytesIO(png_bytes)).convert("RGBA")
+            pixel_data = img.getdata()
+            new_pixels = [
+                (0, 0, 0, 0) if p[0] > 200 and p[1] > 200 and p[2] > 200 else p
+                for p in pixel_data
+            ]
+            img.putdata(new_pixels)
+            out = io.BytesIO()
+            img.save(out, format="PNG")
+            zf.writestr(f"{code.pass_id}.png", out.getvalue())
+
+    buffer.seek(0)
+    return buffer.read()
+
+
 async def mark_converted(db: AsyncSession, pass_id: str, user_id: uuid.UUID) -> bool:
     """Mark a QR code as converted after successful registration."""
     result = await db.execute(select(QrCode).where(QrCode.pass_id == pass_id))

@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "Сохранить изменения",
+    "saveChanges": "Сохранить изменения",
     "cancel": "Отмена",
     "edit": "Редактировать",
     "loading": "Загрузка...",
@@ -40,7 +41,12 @@
     "promoters": "Промоутеры",
     "corporate": "Корпоративные",
     "qrGenerator": "Генератор QR",
-    "theRedDoor": "The Red Door"
+    "theRedDoor": "The Red Door",
+    "overview": "Обзор",
+    "members": "Участники",
+    "floorView": "Вид зала",
+    "checklist": "Контрольный список",
+    "memberDashboard": "Панель участника"
   },
   "auth": {
     "loginTitle": "Вход",
@@ -219,7 +225,9 @@
     "signOutDesc": "Завершить сеанс на этом устройстве",
     "saveChanges": "Сохранить изменения",
     "admin": "Администратор",
-    "active": "Активен"
+    "active": "Активен",
+    "nfcCard": "Моя карта NFC",
+    "nfcCardHint": "Отсканируйте QR-код для симуляции NFC-тапа."
   },
   "analytics": {
     "title": "Обзор аналитики",
@@ -493,7 +501,16 @@
     "industry": "Отрасль",
     "revenueRange": "Диапазон дохода",
     "interests": "Интересы",
-    "phone": "Телефон"
+    "phone": "Телефон",
+    "editProfile": "Редактировать профиль",
+    "fullNameLabel": "Полное имя",
+    "emailLabel": "Email",
+    "phoneLabel": "Телефон",
+    "companyLabel": "Компания",
+    "tierLabel": "Уровень",
+    "userTypeLabel": "Тип пользователя",
+    "isActiveLabel": "Активный",
+    "editSaved": "Профиль обновлён."
   },
   "floor": {
     "title": "Вид зала в реальном времени",
@@ -527,7 +544,10 @@
     "minTierLabel": "Минимальный уровень",
     "noRestriction": "Без ограничений",
     "targetSegments": "Целевые сегменты",
-    "noEvents": "Нет созданных мероприятий."
+    "noEvents": "Нет созданных мероприятий.",
+    "editEvent": "Редактировать мероприятие",
+    "descriptionLabel": "Описание",
+    "descriptionPlaceholder": "Необязательное описание мероприятия"
   },
   "corporateDetail": {
     "notFound": "Аккаунт не найден.",
@@ -568,6 +588,18 @@
     "conversions": "конверсий",
     "previewTitle": "Предпросмотр QR",
     "totalBatches": "{count} пакетов",
-    "conversionRate": "Коэффициент конверсии"
+    "conversionRate": "Коэффициент конверсии",
+    "downloadPng": "PNG",
+    "addCodes": "Добавить",
+    "reduceCodes": "Убрать",
+    "deleteBatch": "Удалить пакет",
+    "addCodesLabel": "Количество кодов для добавления",
+    "reduceCodesLabel": "Коды для удаления (только неиспользованные)",
+    "deleteConfirmLabel": "Введите пароль для подтверждения удаления",
+    "confirmAdd": "Добавить",
+    "confirmReduce": "Убрать",
+    "confirmDelete": "Подтвердить удаление",
+    "deleteWarning": "Это действие необратимо. Все QR-коды в этом пакете будут удалены навсегда.",
+    "reduceWarning": "Удаляются только неиспользованные коды, начиная с новейших."
   }
 }

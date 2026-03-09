@@ -392,24 +392,20 @@ describe("AdminQrGeneratorPage", () => {
 
   // ── Download PDF ──────────────────────────────────────────────────────────
 
-  it("Download PDF button is rendered for each batch", async () => {
+  it("PDF button is rendered for each batch", async () => {
     setupMocks([makeBatch(), makeBatch()]);
     render(<AdminQrGeneratorPage />);
 
     await waitFor(() => {
-      const buttons = screen.getAllByText("Download PDF");
+      // Button label is hardcoded "PDF" (no translation)
+      const buttons = screen.getAllByText("PDF");
       expect(buttons.length).toBe(2);
     });
   });
 
-  it("clicking Download PDF calls fetch with correct URL", async () => {
+  it("clicking PDF button calls fetch with correct URL", async () => {
     const batch = makeBatch({ id: "batch-uuid-pdf" });
     setupMocks([batch]);
-
-    // Stub click so jsdom doesn't try to navigate
-    vi.stubGlobal("HTMLAnchorElement", class extends HTMLAnchorElement {
-      click() { /* no-op in tests */ }
-    });
 
     mockFetch.mockResolvedValue({
       ok: true,
@@ -419,13 +415,378 @@ describe("AdminQrGeneratorPage", () => {
     render(<AdminQrGeneratorPage />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("Download PDF").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("PDF").length).toBeGreaterThan(0);
     });
 
-    fireEvent.click(screen.getAllByText("Download PDF")[0]);
+    fireEvent.click(screen.getAllByText("PDF")[0]);
 
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalledWith("/api/admin/qr-batches/batch-uuid-pdf/pdf");
+    });
+  });
+
+  // ── Download PNG ──────────────────────────────────────────────────────────
+
+  it("PNG button is rendered for each batch", async () => {
+    setupMocks([makeBatch(), makeBatch()]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      const buttons = screen.getAllByText("PNG");
+      expect(buttons.length).toBe(2);
+    });
+  });
+
+  it("clicking PNG button calls fetch with correct URL", async () => {
+    const batch = makeBatch({ id: "batch-uuid-png" });
+    setupMocks([batch]);
+
+    mockFetch.mockResolvedValue({
+      ok: true,
+      blob: () => Promise.resolve(new Blob(["PK fake zip"], { type: "application/zip" })),
+    });
+
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      expect(screen.getAllByText("PNG").length).toBeGreaterThan(0);
+    });
+
+    fireEvent.click(screen.getAllByText("PNG")[0]);
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith("/api/admin/qr-batches/batch-uuid-png/png-zip");
+    });
+  });
+
+  // ── Add codes ─────────────────────────────────────────────────────────────
+
+  it("Add button is rendered for each batch", async () => {
+    setupMocks([makeBatch(), makeBatch()]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      // One "Add" toggle button per batch
+      const addButtons = screen.getAllByText("Add");
+      expect(addButtons.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  it("clicking Add button shows inline form with count input", async () => {
+    const batch = makeBatch({ id: "batch-uuid-add-open" });
+    setupMocks([batch]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Add").length).toBeGreaterThan(0);
+    });
+
+    fireEvent.click(screen.getAllByText("Add")[0]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Number of codes to add")).toBeInTheDocument();
+      // Confirm button "Add" also appears inside the panel
+      expect(screen.getAllByText("Add").length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  it("submitting Add form calls POST /append and refreshes list", async () => {
+    const batch = makeBatch({ id: "batch-uuid-append" });
+    setupMocks([batch]);
+
+    mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
+
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Add")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Number of codes to add")).toBeInTheDocument();
+    });
+
+    // The last "Add" button is the confirm button inside the panel
+    const addButtons = screen.getAllByText("Add");
+    fireEvent.click(addButtons[addButtons.length - 1]);
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/api/admin/qr-batches/batch-uuid-append/append",
+        expect.objectContaining({ method: "POST" }),
+      );
+    });
+  });
+
+  it("Add form shows error message on failed append", async () => {
+    const batch = makeBatch({ id: "batch-uuid-add-err" });
+    setupMocks([batch]);
+
+    mockFetch.mockResolvedValue({
+      ok: false,
+      json: () => Promise.resolve({ detail: "Append failed" }),
+    });
+
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Add")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Number of codes to add")).toBeInTheDocument();
+    });
+
+    const addButtons = screen.getAllByText("Add");
+    fireEvent.click(addButtons[addButtons.length - 1]);
+
+    await waitFor(() => {
+      expect(screen.getByText("Append failed")).toBeInTheDocument();
+    });
+  });
+
+  it("clicking Add again closes the inline panel", async () => {
+    const batch = makeBatch({ id: "batch-uuid-add-toggle" });
+    setupMocks([batch]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Add")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Number of codes to add")).toBeInTheDocument();
+    });
+
+    // Click the toggle button again (first "Add") to close
+    fireEvent.click(screen.getAllByText("Add")[0]);
+
+    await waitFor(() => {
+      expect(screen.queryByText("Number of codes to add")).not.toBeInTheDocument();
+    });
+  });
+
+  // ── Remove codes ──────────────────────────────────────────────────────────
+
+  it("Remove button is rendered for each batch", async () => {
+    setupMocks([makeBatch(), makeBatch()]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      const removeButtons = screen.getAllByText("Remove");
+      expect(removeButtons.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  it("clicking Remove shows inline form with warning and count input", async () => {
+    const batch = makeBatch({ id: "batch-uuid-reduce-open" });
+    setupMocks([batch]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Remove").length).toBeGreaterThan(0);
+    });
+
+    fireEvent.click(screen.getAllByText("Remove")[0]);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Only unconverted codes will be removed, starting from the newest."),
+      ).toBeInTheDocument();
+      expect(screen.getByText("Codes to remove (unconverted only)")).toBeInTheDocument();
+    });
+  });
+
+  it("submitting Remove form calls POST /reduce", async () => {
+    const batch = makeBatch({ id: "batch-uuid-reduce-submit" });
+    setupMocks([batch]);
+
+    mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
+
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Remove")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Codes to remove (unconverted only)")).toBeInTheDocument();
+    });
+
+    // The last "Remove" button is the confirm button inside the panel
+    const removeButtons = screen.getAllByText("Remove");
+    fireEvent.click(removeButtons[removeButtons.length - 1]);
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/api/admin/qr-batches/batch-uuid-reduce-submit/reduce",
+        expect.objectContaining({ method: "POST" }),
+      );
+    });
+  });
+
+  // ── Delete batch ──────────────────────────────────────────────────────────
+
+  it("Delete button is rendered for each batch", async () => {
+    setupMocks([makeBatch(), makeBatch()]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      const deleteButtons = screen.getAllByText("Delete");
+      expect(deleteButtons.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  it("clicking Delete shows inline form with password input and delete warning", async () => {
+    const batch = makeBatch({ id: "batch-uuid-delete-open" });
+    setupMocks([batch]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Delete").length).toBeGreaterThan(0);
+    });
+
+    fireEvent.click(screen.getAllByText("Delete")[0]);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          "This action is irreversible. All QR codes in this batch will be permanently deleted.",
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Enter your password to confirm deletion"),
+      ).toBeInTheDocument();
+      // Confirm button has unique text "Confirm Delete"
+      expect(screen.getByText("Confirm Delete")).toBeInTheDocument();
+    });
+  });
+
+  it("Confirm Delete button is disabled when password is empty", async () => {
+    const batch = makeBatch({ id: "batch-uuid-delete-disabled" });
+    setupMocks([batch]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Delete")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Confirm Delete")).toBeInTheDocument();
+    });
+
+    const confirmBtn = screen.getByRole("button", { name: "Confirm Delete" });
+    expect(confirmBtn).toBeDisabled();
+  });
+
+  it("submitting Delete form with password calls DELETE endpoint", async () => {
+    const batch = makeBatch({ id: "batch-uuid-del-submit" });
+    setupMocks([batch]);
+
+    mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
+
+    const { container } = render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Delete")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Confirm Delete")).toBeInTheDocument();
+    });
+
+    // Fill password via the password input
+    const passwordInput = container.querySelector('input[type="password"]') as HTMLInputElement;
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
+
+    // Confirm Delete button should now be enabled
+    const confirmBtn = screen.getByRole("button", { name: "Confirm Delete" });
+    expect(confirmBtn).not.toBeDisabled();
+
+    fireEvent.click(confirmBtn);
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/api/admin/qr-batches/batch-uuid-del-submit",
+        expect.objectContaining({
+          method: "DELETE",
+          body: JSON.stringify({ password: "password123" }),
+        }),
+      );
+    });
+  });
+
+  it("Delete form shows error on wrong password response", async () => {
+    const batch = makeBatch({ id: "batch-uuid-del-err" });
+    setupMocks([batch]);
+
+    mockFetch.mockResolvedValue({
+      ok: false,
+      json: () => Promise.resolve({ detail: "Incorrect password." }),
+    });
+
+    const { container } = render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Delete")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Confirm Delete")).toBeInTheDocument();
+    });
+
+    const passwordInput = container.querySelector('input[type="password"]') as HTMLInputElement;
+    fireEvent.change(passwordInput, { target: { value: "wrongpass" } });
+
+    fireEvent.click(screen.getByRole("button", { name: "Confirm Delete" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Incorrect password.")).toBeInTheDocument();
+    });
+  });
+
+  // ── Action panel — Cancel & toggling ──────────────────────────────────────
+
+  it("Cancel button in action panel closes the panel", async () => {
+    const batch = makeBatch({ id: "batch-uuid-cancel" });
+    setupMocks([batch]);
+    render(<AdminQrGeneratorPage />);
+
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Add")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Number of codes to add")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText("Cancel"));
+
+    await waitFor(() => {
+      expect(screen.queryByText("Number of codes to add")).not.toBeInTheDocument();
+    });
+  });
+
+  it("opening a different action replaces the previous panel", async () => {
+    const batch = makeBatch({ id: "batch-uuid-switch" });
+    setupMocks([batch]);
+    render(<AdminQrGeneratorPage />);
+
+    // Open Add panel
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText("Add")[0]);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Number of codes to add")).toBeInTheDocument();
+    });
+
+    // Open Remove panel — Add panel should disappear
+    fireEvent.click(screen.getAllByText("Remove")[0]);
+
+    await waitFor(() => {
+      expect(screen.queryByText("Number of codes to add")).not.toBeInTheDocument();
+      expect(screen.getByText("Codes to remove (unconverted only)")).toBeInTheDocument();
     });
   });
 });

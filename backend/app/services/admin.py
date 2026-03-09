@@ -173,6 +173,13 @@ class AdminService:
             (t.total_amount or Decimal("0.00")) for t in tab_history if t.status == "closed"
         )
 
+        # NFC cards
+        nfc_cards_raw = await nfc_repo.get_cards_by_member(self.db, member_id)
+        nfc_cards = [
+            {"card_id": c.card_id, "status": c.status, "tier_at_issue": c.tier_at_issue}
+            for c in nfc_cards_raw
+        ]
+
         # Recent taps
         recent_taps_raw = await nfc_repo.list_tap_events_by_member(self.db, member_id, limit=5)
         recent_taps = [
@@ -209,6 +216,7 @@ class AdminService:
             "service_requests_count": service_requests_count,
             "tab_total": float(tab_total),
             "recent_taps": recent_taps,
+            "nfc_cards": nfc_cards,
         }
 
     async def update_member_notes(self, member_id: uuid.UUID, notes: str | None) -> dict:

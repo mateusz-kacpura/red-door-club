@@ -3,6 +3,13 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import MemberDetailPage from "./page";
 
+// Mock react-qr-code so jsdom doesn't choke on SVG rendering internals
+vi.mock("react-qr-code", () => ({
+  default: ({ value }: { value: string }) => (
+    <div data-testid="qr-code" data-value={value} />
+  ),
+}));
+
 const mockPush = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush, replace: vi.fn(), prefetch: vi.fn() }),
@@ -38,6 +45,7 @@ const makeMember = (overrides = {}) => ({
   industry: null,
   revenue_range: null,
   phone: null,
+  nfc_cards: [],
   ...overrides,
 });
 
@@ -141,5 +149,118 @@ describe("MemberDetailPage", () => {
     });
     await userEvent.click(screen.getByRole("button", { name: /members/i }));
     expect(mockPush).toHaveBeenCalledWith("/admin/members");
+  });
+
+  // ── Edit Profile ───────────────────────────────────────────────────────────
+
+  it("shows Edit Profile button when member is loaded", async () => {
+    mockGet.mockResolvedValue(makeMember());
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    expect(screen.getByRole("button", { name: /edit profile/i })).toBeInTheDocument();
+  });
+
+  it("clicking Edit Profile button opens the edit form", async () => {
+    mockGet.mockResolvedValue(makeMember());
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByRole("button", { name: /edit profile/i }));
+    // Form fields should appear
+    expect(screen.getByDisplayValue("Alice Chen")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("alice@example.com")).toBeInTheDocument();
+  });
+
+  it("edit form pre-fills company name when present", async () => {
+    mockGet.mockResolvedValue(makeMember({ company_name: "Acme Corp" }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByRole("button", { name: /edit profile/i }));
+    expect(screen.getByDisplayValue("Acme Corp")).toBeInTheDocument();
+  });
+
+  it("clicking Cancel in edit form closes the form", async () => {
+    mockGet.mockResolvedValue(makeMember());
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByRole("button", { name: /edit profile/i }));
+    // Form is open — full_name input present
+    expect(screen.getByDisplayValue("Alice Chen")).toBeInTheDocument();
+    // The first cancel button in the form (not the toggle button)
+    const cancelBtns = screen.getAllByRole("button", { name: /cancel/i });
+    await userEvent.click(cancelBtns[cancelBtns.length - 1]);
+    // Form should be gone
+    expect(screen.queryByDisplayValue("Alice Chen")).not.toBeInTheDocument();
+  });
+
+  it("Save Profile calls PATCH with updated data", async () => {
+    mockGet.mockResolvedValue(makeMember());
+    mockPatch.mockResolvedValue(makeMember({ full_name: "Alice Updated" }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByRole("button", { name: /edit profile/i }));
+
+    // Clear and retype full_name
+    const nameInput = screen.getByDisplayValue("Alice Chen");
+    await userEvent.clear(nameInput);
+    await userEvent.type(nameInput, "Alice Updated");
+
+    await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
+
+    await waitFor(() => {
+      expect(mockPatch).toHaveBeenCalledWith(
+        "/admin/members/member-uuid-1",
+        expect.objectContaining({ full_name: "Alice Updated" })
+      );
+    });
+  });
+
+  // ── NFC QR Code ────────────────────────────────────────────────────────────
+
+  it("does not show NFC QR section when member has no NFC cards", async () => {
+    mockGet.mockResolvedValue(makeMember({ nfc_cards: [] }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    expect(screen.queryByTestId("qr-code")).not.toBeInTheDocument();
+  });
+
+  it("shows NFC QR code when member has an NFC card", async () => {
+    const nfcCards = [{ card_id: "RD-NFC-001", status: "active", tier_at_issue: "gold" }];
+    mockGet.mockResolvedValue(makeMember({ nfc_cards: nfcCards }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId("qr-code")).toBeInTheDocument();
+    });
+  });
+
+  it("NFC QR code encodes the /tap?cid= URL", async () => {
+    const nfcCards = [{ card_id: "RD-NFC-001", status: "active", tier_at_issue: "gold" }];
+    mockGet.mockResolvedValue(makeMember({ nfc_cards: nfcCards }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId("qr-code")).toBeInTheDocument();
+    });
+    const qr = screen.getByTestId("qr-code");
+    expect(qr.getAttribute("data-value")).toContain("/tap?cid=RD-NFC-001");
+  });
+
+  it("shows card_id text alongside the QR code", async () => {
+    const nfcCards = [{ card_id: "RD-NFC-001", status: "active", tier_at_issue: "gold" }];
+    mockGet.mockResolvedValue(makeMember({ nfc_cards: nfcCards }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("RD-NFC-001")).toBeInTheDocument();
+    });
   });
 });

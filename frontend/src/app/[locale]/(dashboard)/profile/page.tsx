@@ -1,16 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks";
 import { Button, Card, Input, Label, Badge } from "@/components/ui";
 import { ThemeToggle } from "@/components/theme";
-import { User, Mail, Calendar, Shield, Settings } from "lucide-react";
+import { User, Mail, Calendar, Shield, Settings, CreditCard } from "lucide-react";
 import { useTranslate } from "@tolgee/react";
+import QRCode from "react-qr-code";
+import { apiClient } from "@/lib/api-client";
 
 export default function ProfilePage() {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { t } = useTranslate();
   const [isEditing, setIsEditing] = useState(false);
+  const [nfcCards, setNfcCards] = useState<{ card_id: string; status: string }[]>([]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    apiClient
+      .get<{ nfc_cards?: { card_id: string; status: string }[] }>("/members/me")
+      .then((data) => setNfcCards(data.nfc_cards ?? []))
+      .catch(() => {});
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return (
@@ -122,6 +133,35 @@ export default function ProfilePage() {
             <ThemeToggle variant="dropdown" />
           </div>
         </Card>
+
+        {/* NFC Card QR Code */}
+        {nfcCards.length > 0 && (
+          <Card className="p-4 sm:p-6">
+            <h3 className="mb-4 text-base sm:text-lg font-semibold flex items-center gap-2">
+              <CreditCard className="h-5 w-5 text-primary" />
+              {t("profile.nfcCard")}
+            </h3>
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              <div className="bg-white p-3 rounded-xl border border-border shrink-0">
+                <QRCode
+                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/tap?cid=${nfcCards[0].card_id}`}
+                  size={140}
+                />
+              </div>
+              <div className="space-y-2 text-sm">
+                {nfcCards.map((card) => (
+                  <div key={card.card_id} className="flex items-center gap-2">
+                    <span className="font-mono text-xs bg-muted px-2 py-1 rounded">{card.card_id}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${card.status === "active" ? "bg-green-100 text-green-700" : "bg-muted text-muted-foreground"}`}>
+                      {card.status}
+                    </span>
+                  </div>
+                ))}
+                <p className="text-xs text-muted-foreground pt-1">{t("profile.nfcCardHint")}</p>
+              </div>
+            </div>
+          </Card>
+        )}
 
         <Card className="border-destructive/50 p-4 sm:p-6">
           <h3 className="mb-4 text-base sm:text-lg font-semibold text-destructive">

@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap } from "lucide-react";
+import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { apiClient } from "@/lib/api-client";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { apiClient, ApiError } from "@/lib/api-client";
 import type { MemberDetail } from "@/types";
 import { useTranslate } from "@tolgee/react";
+import QRCode from "react-qr-code";
 
 const TIER_COLORS: Record<string, string> = {
   silver: "bg-slate-100 text-slate-700",
@@ -39,6 +42,21 @@ export default function MemberDetailPage() {
   const [savingNotes, setSavingNotes] = useState(false);
   const [notesSaved, setNotesSaved] = useState(false);
 
+  // Edit profile state
+  const [showEdit, setShowEdit] = useState(false);
+  const [editForm, setEditForm] = useState({
+    full_name: "",
+    email: "",
+    phone: "",
+    company_name: "",
+    tier: "",
+    user_type: "",
+    is_active: true,
+  });
+  const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState("");
+  const [editSaved, setEditSaved] = useState(false);
+
   useEffect(() => {
     if (!memberId) return;
     apiClient
@@ -46,6 +64,15 @@ export default function MemberDetailPage() {
       .then((data) => {
         setMember(data);
         setNotes(data.staff_notes ?? "");
+        setEditForm({
+          full_name: data.full_name ?? "",
+          email: data.email ?? "",
+          phone: data.phone ?? "",
+          company_name: data.company_name ?? "",
+          tier: data.tier ?? "",
+          user_type: data.user_type ?? "member",
+          is_active: data.is_active ?? true,
+        });
       })
       .catch(() => {})
       .finally(() => setIsLoading(false));
@@ -63,6 +90,32 @@ export default function MemberDetailPage() {
       // silent
     } finally {
       setSavingNotes(false);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (!member) return;
+    setSaving(true);
+    setEditError("");
+    try {
+      const payload = {
+        full_name: editForm.full_name || null,
+        email: editForm.email || null,
+        phone: editForm.phone || null,
+        company_name: editForm.company_name || null,
+        tier: editForm.tier || null,
+        user_type: editForm.user_type || null,
+        is_active: editForm.is_active,
+      };
+      const updated = await apiClient.patch<MemberDetail>(`/admin/members/${member.id}`, payload);
+      setMember((prev) => prev ? { ...prev, ...updated } : prev);
+      setEditSaved(true);
+      setShowEdit(false);
+      setTimeout(() => setEditSaved(false), 3000);
+    } catch (err) {
+      if (err instanceof ApiError) setEditError(err.message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -98,7 +151,7 @@ export default function MemberDetailPage() {
           <ArrowLeft className="h-4 w-4 mr-1" /> {t("members.title")}
         </Button>
         <div className="flex items-start gap-3 flex-wrap">
-          <div>
+          <div className="flex-1 min-w-0">
             <h1 className="text-2xl font-light tracking-wide">
               {member.full_name ?? member.email}
             </h1>
@@ -107,7 +160,7 @@ export default function MemberDetailPage() {
               {member.email}
             </p>
           </div>
-          <div className="flex gap-2 flex-wrap mt-1">
+          <div className="flex items-center gap-2 flex-wrap mt-1">
             {member.tier && (
               <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium capitalize ${TIER_COLORS[member.tier] ?? "bg-muted text-muted-foreground"}`}>
                 {member.tier}
@@ -119,9 +172,132 @@ export default function MemberDetailPage() {
             <span className={`text-xs px-2.5 py-0.5 rounded-full ${member.is_active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
               {member.is_active ? "Active" : "Inactive"}
             </span>
+            <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5" onClick={() => setShowEdit(!showEdit)}>
+              {showEdit ? <X className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5" />}
+              {showEdit ? t("common.cancel") : t("memberDetail.editProfile")}
+            </Button>
+            {editSaved && (
+              <span className="text-xs text-green-600 flex items-center gap-1">
+                <Check className="h-3.5 w-3.5" /> {t("memberDetail.editSaved")}
+              </span>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Edit profile form */}
+      {showEdit && (
+        <Card className="rounded-xl border-primary/20">
+          <CardContent className="p-6 space-y-4">
+            <h2 className="font-medium text-sm">{t("memberDetail.editProfile")}</h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1">
+                <Label className="text-xs">{t("memberDetail.fullNameLabel")}</Label>
+                <Input
+                  value={editForm.full_name}
+                  onChange={(e) => setEditForm((p) => ({ ...p, full_name: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">{t("memberDetail.emailLabel")}</Label>
+                <Input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm((p) => ({ ...p, email: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">{t("memberDetail.phoneLabel")}</Label>
+                <Input
+                  value={editForm.phone}
+                  onChange={(e) => setEditForm((p) => ({ ...p, phone: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">{t("memberDetail.companyLabel")}</Label>
+                <Input
+                  value={editForm.company_name}
+                  onChange={(e) => setEditForm((p) => ({ ...p, company_name: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">{t("memberDetail.tierLabel")}</Label>
+                <select
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                  value={editForm.tier}
+                  onChange={(e) => setEditForm((p) => ({ ...p, tier: e.target.value }))}
+                >
+                  <option value="">— no tier —</option>
+                  <option value="silver">Silver</option>
+                  <option value="gold">Gold</option>
+                  <option value="obsidian">Obsidian</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">{t("memberDetail.userTypeLabel")}</Label>
+                <select
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                  value={editForm.user_type}
+                  onChange={(e) => setEditForm((p) => ({ ...p, user_type: e.target.value }))}
+                >
+                  <option value="prospect">Prospect</option>
+                  <option value="member">Member</option>
+                  <option value="staff">Staff</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-2 pt-4">
+                <input
+                  type="checkbox"
+                  id="is_active"
+                  checked={editForm.is_active}
+                  onChange={(e) => setEditForm((p) => ({ ...p, is_active: e.target.checked }))}
+                  className="h-4 w-4 rounded border-input accent-primary"
+                />
+                <Label htmlFor="is_active" className="text-xs cursor-pointer">{t("memberDetail.isActiveLabel")}</Label>
+              </div>
+            </div>
+            {editError && <p className="text-sm text-destructive">{editError}</p>}
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" size="sm" onClick={() => { setShowEdit(false); setEditError(""); }}>
+                {t("common.cancel")}
+              </Button>
+              <Button size="sm" onClick={handleSaveProfile} disabled={saving}>
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t("common.saveChanges")}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* NFC Card QR */}
+      {member.nfc_cards && member.nfc_cards.length > 0 && (
+        <Card className="rounded-xl">
+          <CardContent className="p-4 flex flex-col sm:flex-row gap-5 items-start">
+            <div className="bg-white p-3 rounded-xl border border-border shrink-0">
+              <QRCode
+                value={`${typeof window !== "undefined" ? window.location.origin : ""}/tap?cid=${member.nfc_cards[0].card_id}`}
+                size={120}
+              />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-primary" />
+                NFC Card
+              </p>
+              {member.nfc_cards.map((card: { card_id: string; status: string }) => (
+                <div key={card.card_id} className="flex items-center gap-2">
+                  <span className="font-mono text-xs bg-muted px-2 py-1 rounded">{card.card_id}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${card.status === "active" ? "bg-green-100 text-green-700" : "bg-muted text-muted-foreground"}`}>
+                    {card.status}
+                  </span>
+                </div>
+              ))}
+              <p className="text-xs text-muted-foreground">{t("profile.nfcCardHint")}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stat cards */}
       <div className="grid gap-4 sm:grid-cols-3">
@@ -170,9 +346,7 @@ export default function MemberDetailPage() {
               <div className="divide-y divide-border">
                 {member.recent_taps.map((tap) => (
                   <div key={tap.id} className="flex items-center justify-between py-2 text-sm">
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full capitalize ${TAP_TYPE_COLORS[tap.tap_type] ?? "bg-muted text-muted-foreground"}`}
-                    >
+                    <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${TAP_TYPE_COLORS[tap.tap_type] ?? "bg-muted text-muted-foreground"}`}>
                       {tap.tap_type.replace(/_/g, " ")}
                     </span>
                     <span className="text-xs text-muted-foreground">
@@ -200,12 +374,7 @@ export default function MemberDetailPage() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
-            <Button
-              size="sm"
-              onClick={handleSaveNotes}
-              disabled={savingNotes}
-              className="w-full"
-            >
+            <Button size="sm" onClick={handleSaveNotes} disabled={savingNotes} className="w-full">
               {savingNotes ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : notesSaved ? (

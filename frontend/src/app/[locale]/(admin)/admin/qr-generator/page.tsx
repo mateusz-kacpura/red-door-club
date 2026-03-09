@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { QrCode, Loader2, Download, Eye, Plus } from "lucide-react";
+import { QrCode, Loader2, Download, Eye, Plus, Minus, Trash2, Image } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,12 @@ interface PromoterOption {
   email: string;
 }
 
+type ActionType = "add" | "reduce" | "delete";
+interface ActiveAction {
+  batchId: string;
+  type: ActionType;
+}
+
 const TIERS = ["silver", "gold", "obsidian"];
 
 export default function AdminQrGeneratorPage() {
@@ -51,8 +57,16 @@ export default function AdminQrGeneratorPage() {
   const [error, setError] = useState("");
   const [promoters, setPromoters] = useState<PromoterOption[]>([]);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [pngDownloadingId, setPngDownloadingId] = useState<string | null>(null);
   const [previewBatch, setPreviewBatch] = useState<QrBatchDetail | null>(null);
   const [previewLoading, setPreviewLoading] = useState<string | null>(null);
+
+  // Inline action state
+  const [activeAction, setActiveAction] = useState<ActiveAction | null>(null);
+  const [actionCount, setActionCount] = useState(10);
+  const [actionPassword, setActionPassword] = useState("");
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   const [form, setForm] = useState({
     promoter_id: "",
@@ -122,6 +136,25 @@ export default function AdminQrGeneratorPage() {
     }
   };
 
+  const handleDownloadPng = async (batchId: string) => {
+    setPngDownloadingId(batchId);
+    try {
+      const response = await fetch(`/api/admin/qr-batches/${batchId}/png-zip`);
+      if (!response.ok) throw new Error("PNG download failed");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `qr-batch-${batchId}-png.zip`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      // silent
+    } finally {
+      setPngDownloadingId(null);
+    }
+  };
+
   const handlePreview = async (batchId: string) => {
     if (previewBatch?.id === batchId) {
       setPreviewBatch(null);
@@ -135,6 +168,68 @@ export default function AdminQrGeneratorPage() {
       // silent
     } finally {
       setPreviewLoading(null);
+    }
+  };
+
+  const openAction = (batchId: string, type: ActionType) => {
+    if (activeAction?.batchId === batchId && activeAction.type === type) {
+      setActiveAction(null);
+    } else {
+      setActiveAction({ batchId, type });
+      setActionCount(10);
+      setActionPassword("");
+      setActionError("");
+    }
+  };
+
+  const handleActionSubmit = async () => {
+    if (!activeAction) return;
+    setActionLoading(true);
+    setActionError("");
+    const { batchId, type } = activeAction;
+    try {
+      if (type === "add") {
+        await fetch(`/api/admin/qr-batches/${batchId}/append`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ count: actionCount }),
+        }).then(async (r) => {
+          if (!r.ok) {
+            const err = await r.json().catch(() => ({}));
+            throw new Error(err.detail || "Failed");
+          }
+        });
+      } else if (type === "reduce") {
+        await fetch(`/api/admin/qr-batches/${batchId}/reduce`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ count: actionCount }),
+        }).then(async (r) => {
+          if (!r.ok) {
+            const err = await r.json().catch(() => ({}));
+            throw new Error(err.detail || "Failed");
+          }
+        });
+      } else if (type === "delete") {
+        await fetch(`/api/admin/qr-batches/${batchId}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: actionPassword }),
+        }).then(async (r) => {
+          if (!r.ok) {
+            const err = await r.json().catch(() => ({}));
+            throw new Error(err.detail || "Failed");
+          }
+        });
+      }
+      setActiveAction(null);
+      // Close preview if it was for this batch
+      if (previewBatch?.id === batchId) setPreviewBatch(null);
+      await fetchBatches();
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Error");
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -287,11 +382,11 @@ export default function AdminQrGeneratorPage() {
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-7 text-xs px-3"
+                    className="h-7 text-xs px-2.5"
                     disabled={previewLoading === batch.id}
                     onClick={() => handlePreview(batch.id)}
                   >
@@ -303,21 +398,137 @@ export default function AdminQrGeneratorPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="h-7 text-xs px-3"
+                    className="h-7 text-xs px-2.5"
                     disabled={downloadingId === batch.id}
                     onClick={() => handleDownloadPdf(batch.id)}
                   >
                     {downloadingId === batch.id
                       ? <Loader2 className="h-3 w-3 animate-spin" />
-                      : <><Download className="h-3 w-3 mr-1" />{t("qrGenerator.downloadPdf")}</>
+                      : <><Download className="h-3 w-3 mr-1" />PDF</>
                     }
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs px-2.5"
+                    disabled={pngDownloadingId === batch.id}
+                    onClick={() => handleDownloadPng(batch.id)}
+                  >
+                    {pngDownloadingId === batch.id
+                      ? <Loader2 className="h-3 w-3 animate-spin" />
+                      : <><Image className="h-3 w-3 mr-1" />{t("qrGenerator.downloadPng")}</>
+                    }
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs px-2.5"
+                    onClick={() => openAction(batch.id, "add")}
+                  >
+                    <Plus className="h-3 w-3 mr-1" />{t("qrGenerator.addCodes")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs px-2.5"
+                    onClick={() => openAction(batch.id, "reduce")}
+                  >
+                    <Minus className="h-3 w-3 mr-1" />{t("qrGenerator.reduceCodes")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs px-2.5 text-destructive hover:text-destructive"
+                    onClick={() => openAction(batch.id, "delete")}
+                  >
+                    <Trash2 className="h-3 w-3 mr-1" />{t("qrGenerator.deleteBatch")}
                   </Button>
                 </div>
               </CardContent>
             </Card>
 
+            {/* Inline action panel */}
+            {activeAction?.batchId === batch.id && (
+              <Card className="rounded-xl rounded-t-none border-t-0 bg-muted/30">
+                <CardContent className="p-4 space-y-3">
+                  {activeAction.type === "delete" ? (
+                    <>
+                      <p className="text-xs text-destructive font-medium">
+                        {t("qrGenerator.deleteWarning")}
+                      </p>
+                      <div className="space-y-1">
+                        <Label className="text-xs">{t("qrGenerator.deleteConfirmLabel")}</Label>
+                        <Input
+                          type="password"
+                          className="h-8 text-sm max-w-xs"
+                          value={actionPassword}
+                          onChange={(e) => setActionPassword(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && handleActionSubmit()}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {activeAction.type === "reduce" && (
+                        <p className="text-xs text-muted-foreground">
+                          {t("qrGenerator.reduceWarning")}
+                        </p>
+                      )}
+                      <div className="space-y-1">
+                        <Label className="text-xs">
+                          {activeAction.type === "add"
+                            ? t("qrGenerator.addCodesLabel")
+                            : t("qrGenerator.reduceCodesLabel")}
+                        </Label>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={500}
+                          className="h-8 text-sm max-w-xs"
+                          value={actionCount}
+                          onChange={(e) => setActionCount(parseInt(e.target.value) || 1)}
+                          onKeyDown={(e) => e.key === "Enter" && handleActionSubmit()}
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {actionError && (
+                    <p className="text-xs text-destructive">{actionError}</p>
+                  )}
+
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      className="h-7 text-xs"
+                      variant={activeAction.type === "delete" ? "destructive" : "default"}
+                      disabled={actionLoading || (activeAction.type === "delete" && !actionPassword)}
+                      onClick={handleActionSubmit}
+                    >
+                      {actionLoading
+                        ? <Loader2 className="h-3 w-3 animate-spin" />
+                        : activeAction.type === "add"
+                          ? t("qrGenerator.confirmAdd")
+                          : activeAction.type === "reduce"
+                            ? t("qrGenerator.confirmReduce")
+                            : t("qrGenerator.confirmDelete")
+                      }
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => setActiveAction(null)}
+                    >
+                      {t("common.cancel")}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Inline preview panel */}
-            {previewBatch?.id === batch.id && (
+            {previewBatch?.id === batch.id && !activeAction?.batchId && (
               <Card className="rounded-xl rounded-t-none border-t-0 bg-muted/30">
                 <CardContent className="p-4">
                   <p className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">

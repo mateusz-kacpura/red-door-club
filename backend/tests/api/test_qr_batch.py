@@ -499,3 +499,257 @@ async def test_register_mark_converted_failure_does_not_block_registration(
 
     # Registration should succeed even though mark_converted threw
     assert response.status_code == 201
+
+
+# ── POST /admin/qr-batches/{id}/append ───────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_append_codes_success(qr_client: AsyncClient, mock_db_session):
+    """POST /{id}/append returns 200 with updated batch (count reflects appended total)."""
+    batch = _make_batch_row(count=15, tier="silver")
+
+    count_result = MagicMock()
+    count_result.scalar.return_value = 0
+    mock_db_session.execute = AsyncMock(return_value=count_result)
+
+    with patch("app.services.qr_batch.append_codes", AsyncMock(return_value=batch)):
+        response = await qr_client.post(f"{BASE}/{batch.id}/append", json={"count": 5})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 15
+    assert data["tier"] == "silver"
+    assert data["converted_count"] == 0
+    assert data["conversion_rate"] == 0.0
+
+
+@pytest.mark.anyio
+async def test_append_codes_not_found(qr_client: AsyncClient):
+    """POST /{id}/append returns 404 when batch does not exist."""
+    with patch("app.services.qr_batch.append_codes", AsyncMock(return_value=None)):
+        response = await qr_client.post(f"{BASE}/{uuid4()}/append", json={"count": 5})
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_append_codes_count_too_large(qr_client: AsyncClient):
+    """POST /{id}/append rejects count > 500 with 422."""
+    response = await qr_client.post(f"{BASE}/{uuid4()}/append", json={"count": 501})
+    assert response.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_append_codes_count_zero_rejected(qr_client: AsyncClient):
+    """POST /{id}/append rejects count < 1 with 422."""
+    response = await qr_client.post(f"{BASE}/{uuid4()}/append", json={"count": 0})
+    assert response.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_append_codes_reflects_converted_count(qr_client: AsyncClient, mock_db_session):
+    """POST /{id}/append correctly returns converted_count from db."""
+    batch = _make_batch_row(count=12)
+
+    count_result = MagicMock()
+    count_result.scalar.return_value = 4  # 4 of 12 converted
+    mock_db_session.execute = AsyncMock(return_value=count_result)
+
+    with patch("app.services.qr_batch.append_codes", AsyncMock(return_value=batch)):
+        response = await qr_client.post(f"{BASE}/{batch.id}/append", json={"count": 2})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["converted_count"] == 4
+    assert data["conversion_rate"] == pytest.approx(4 / 12, abs=0.01)
+
+
+# ── POST /admin/qr-batches/{id}/reduce ───────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_reduce_codes_success(qr_client: AsyncClient, mock_db_session):
+    """POST /{id}/reduce returns 200 with updated batch (count after removal)."""
+    batch = _make_batch_row(count=7, tier="gold")
+
+    count_result = MagicMock()
+    count_result.scalar.return_value = 0
+    mock_db_session.execute = AsyncMock(return_value=count_result)
+
+    with patch("app.services.qr_batch.reduce_codes", AsyncMock(return_value=batch)):
+        response = await qr_client.post(f"{BASE}/{batch.id}/reduce", json={"count": 3})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 7
+    assert data["tier"] == "gold"
+
+
+@pytest.mark.anyio
+async def test_reduce_codes_not_found(qr_client: AsyncClient):
+    """POST /{id}/reduce returns 404 when batch does not exist."""
+    with patch("app.services.qr_batch.reduce_codes", AsyncMock(return_value=None)):
+        response = await qr_client.post(f"{BASE}/{uuid4()}/reduce", json={"count": 2})
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_reduce_codes_count_too_large(qr_client: AsyncClient):
+    """POST /{id}/reduce rejects count > 500 with 422."""
+    response = await qr_client.post(f"{BASE}/{uuid4()}/reduce", json={"count": 501})
+    assert response.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_reduce_codes_count_zero_rejected(qr_client: AsyncClient):
+    """POST /{id}/reduce rejects count < 1 with 422."""
+    response = await qr_client.post(f"{BASE}/{uuid4()}/reduce", json={"count": 0})
+    assert response.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_reduce_codes_preserves_converted_count(qr_client: AsyncClient, mock_db_session):
+    """POST /{id}/reduce correctly returns remaining converted_count."""
+    batch = _make_batch_row(count=5)
+
+    count_result = MagicMock()
+    count_result.scalar.return_value = 2
+    mock_db_session.execute = AsyncMock(return_value=count_result)
+
+    with patch("app.services.qr_batch.reduce_codes", AsyncMock(return_value=batch)):
+        response = await qr_client.post(f"{BASE}/{batch.id}/reduce", json={"count": 3})
+
+    assert response.status_code == 200
+    assert response.json()["converted_count"] == 2
+    assert response.json()["conversion_rate"] == pytest.approx(2 / 5, abs=0.01)
+
+
+# ── DELETE /admin/qr-batches/{id} ────────────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_delete_batch_success(
+    qr_client: AsyncClient, admin_user: MockAdminUser, mock_db_session
+):
+    """DELETE /{id} with correct password returns 204 and deletes the batch."""
+    batch = _make_batch_row()
+
+    result = MagicMock()
+    result.scalar_one_or_none.return_value = batch
+    mock_db_session.execute = AsyncMock(return_value=result)
+    mock_db_session.delete = AsyncMock()
+    mock_db_session.commit = AsyncMock()
+
+    with patch("app.core.security.verify_password", return_value=True):
+        response = await qr_client.request(
+            "DELETE", f"{BASE}/{batch.id}", json={"password": "correct_password"}
+        )
+
+    assert response.status_code == 204
+    mock_db_session.delete.assert_awaited_once_with(batch)
+    mock_db_session.commit.assert_awaited_once()
+
+
+@pytest.mark.anyio
+async def test_delete_batch_wrong_password(qr_client: AsyncClient):
+    """DELETE /{id} with wrong password returns 403 without touching the database."""
+    with patch("app.core.security.verify_password", return_value=False):
+        response = await qr_client.request(
+            "DELETE", f"{BASE}/{uuid4()}", json={"password": "wrong_password"}
+        )
+
+    assert response.status_code == 403
+    assert "Incorrect" in response.json()["detail"]
+
+
+@pytest.mark.anyio
+async def test_delete_batch_not_found(qr_client: AsyncClient, mock_db_session):
+    """DELETE /{id} returns 404 when batch does not exist (after password check)."""
+    result = MagicMock()
+    result.scalar_one_or_none.return_value = None
+    mock_db_session.execute = AsyncMock(return_value=result)
+
+    with patch("app.core.security.verify_password", return_value=True):
+        response = await qr_client.request(
+            "DELETE", f"{BASE}/{uuid4()}", json={"password": "correct_password"}
+        )
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_delete_batch_missing_password_field(qr_client: AsyncClient):
+    """DELETE /{id} without password field in body returns 422."""
+    response = await qr_client.request("DELETE", f"{BASE}/{uuid4()}", json={})
+    assert response.status_code == 422
+
+
+# ── GET /admin/qr-batches/{id}/png-zip ───────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_download_png_zip_not_found(qr_client: AsyncClient):
+    """GET /{id}/png-zip returns 404 when batch does not exist."""
+    with patch("app.services.qr_batch.get_batch_with_codes", AsyncMock(return_value=None)):
+        response = await qr_client.get(f"{BASE}/{uuid4()}/png-zip")
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_download_png_zip_success_returns_zip_content_type(qr_client: AsyncClient):
+    """GET /{id}/png-zip returns application/zip with ZIP magic bytes."""
+    batch = _make_batch_row(count=2)
+    codes = [_make_code_row(pass_id="RD-000001"), _make_code_row(pass_id="RD-000002")]
+    fake_zip = b"PK\x03\x04fake zip bytes for testing"
+
+    with (
+        patch("app.services.qr_batch.get_batch_with_codes", AsyncMock(return_value=(batch, codes))),
+        patch("app.services.qr_batch.generate_png_zip", return_value=fake_zip),
+    ):
+        response = await qr_client.get(f"{BASE}/{batch.id}/png-zip")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/zip"
+    assert response.content == fake_zip
+
+
+@pytest.mark.anyio
+async def test_download_png_zip_content_disposition_header(qr_client: AsyncClient):
+    """GET /{id}/png-zip includes Content-Disposition: attachment header."""
+    batch = _make_batch_row()
+    codes = [_make_code_row()]
+    fake_zip = b"PK\x03\x04 fake"
+
+    with (
+        patch("app.services.qr_batch.get_batch_with_codes", AsyncMock(return_value=(batch, codes))),
+        patch("app.services.qr_batch.generate_png_zip", return_value=fake_zip),
+    ):
+        response = await qr_client.get(f"{BASE}/{batch.id}/png-zip")
+
+    assert "attachment" in response.headers.get("content-disposition", "").lower()
+    assert ".zip" in response.headers.get("content-disposition", "")
+
+
+@pytest.mark.anyio
+async def test_download_png_zip_calls_generate_with_correct_args(qr_client: AsyncClient):
+    """GET /{id}/png-zip passes batch and codes to generate_png_zip."""
+    batch = _make_batch_row(promo_code="PRO-07", tier="gold")
+    codes = [_make_code_row(pass_id="RD-000010"), _make_code_row(pass_id="RD-000011")]
+    fake_zip = b"PK\x03\x04"
+
+    mock_generate = MagicMock(return_value=fake_zip)
+
+    with (
+        patch("app.services.qr_batch.get_batch_with_codes", AsyncMock(return_value=(batch, codes))),
+        patch("app.services.qr_batch.generate_png_zip", mock_generate),
+    ):
+        response = await qr_client.get(f"{BASE}/{batch.id}/png-zip")
+
+    assert response.status_code == 200
+    mock_generate.assert_called_once()
+    call_args = mock_generate.call_args
+    assert call_args.args[0] is batch
+    assert call_args.args[1] is codes

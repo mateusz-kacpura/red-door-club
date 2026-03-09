@@ -46,3 +46,13 @@ class QrBatchRead(BaseSchema):
 class QrBatchDetail(QrBatchRead):
     """QR batch with its codes."""
     codes: list[QrCodeRead] = []
+
+
+class QrBatchModify(BaseSchema):
+    """Schema for appending or reducing QR codes in an existing batch."""
+    count: int = Field(ge=1, le=500)
+
+
+class QrBatchDeleteRequest(BaseSchema):
+    """Schema for deleting a batch with admin password confirmation."""
+    password: str

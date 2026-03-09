@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "Zapisz zmiany",
+    "saveChanges": "Zapisz zmiany",
     "cancel": "Anuluj",
     "edit": "Edytuj",
     "loading": "Ładowanie...",
@@ -40,7 +41,12 @@
     "promoters": "Promotorzy",
     "corporate": "Korporacje",
     "qrGenerator": "Generator QR",
-    "theRedDoor": "The Red Door"
+    "theRedDoor": "The Red Door",
+    "overview": "Przegląd",
+    "members": "Członkowie",
+    "floorView": "Widok sali",
+    "checklist": "Lista kontrolna",
+    "memberDashboard": "Panel użytkownika"
   },
   "auth": {
     "loginTitle": "Logowanie",
@@ -219,7 +225,9 @@
     "signOutDesc": "Wyloguj się z konta na tym urządzeniu",
     "saveChanges": "Zapisz zmiany",
     "admin": "Administrator",
-    "active": "Aktywny"
+    "active": "Aktywny",
+    "nfcCard": "Moja karta NFC",
+    "nfcCardHint": "Zeskanuj ten kod QR, aby zasymulować tapnięcie kartą NFC."
   },
   "analytics": {
     "title": "Przegląd analityki",
@@ -493,7 +501,16 @@
     "industry": "Branża",
     "revenueRange": "Przedział przychodów",
     "interests": "Zainteresowania",
-    "phone": "Telefon"
+    "phone": "Telefon",
+    "editProfile": "Edytuj profil",
+    "fullNameLabel": "Imię i nazwisko",
+    "emailLabel": "Email",
+    "phoneLabel": "Telefon",
+    "companyLabel": "Firma",
+    "tierLabel": "Poziom",
+    "userTypeLabel": "Typ użytkownika",
+    "isActiveLabel": "Aktywny",
+    "editSaved": "Profil zaktualizowany."
   },
   "floor": {
     "title": "Widok sali na żywo",
@@ -527,7 +544,10 @@
     "minTierLabel": "Minimalny poziom",
     "noRestriction": "Bez ograniczeń",
     "targetSegments": "Docelowe segmenty",
-    "noEvents": "Brak utworzonych wydarzeń."
+    "noEvents": "Brak utworzonych wydarzeń.",
+    "editEvent": "Edytuj wydarzenie",
+    "descriptionLabel": "Opis",
+    "descriptionPlaceholder": "Opcjonalny opis wydarzenia"
   },
   "corporateDetail": {
     "notFound": "Nie znaleziono konta.",
@@ -568,6 +588,18 @@
     "conversions": "konwersji",
     "previewTitle": "Podgląd QR",
     "totalBatches": "{count} partii",
-    "conversionRate": "Współczynnik konwersji"
+    "conversionRate": "Współczynnik konwersji",
+    "downloadPng": "PNG",
+    "addCodes": "Dodaj",
+    "reduceCodes": "Usuń",
+    "deleteBatch": "Usuń partię",
+    "addCodesLabel": "Liczba kodów do dodania",
+    "reduceCodesLabel": "Kody do usunięcia (tylko nieskonwertowane)",
+    "deleteConfirmLabel": "Wpisz swoje hasło, aby potwierdzić usunięcie",
+    "confirmAdd": "Dodaj",
+    "confirmReduce": "Usuń",
+    "confirmDelete": "Potwierdź usunięcie",
+    "deleteWarning": "Ta operacja jest nieodwracalna. Wszystkie kody QR w tej partii zostaną trwale usunięte.",
+    "reduceWarning": "Usuwane są tylko nieskonwertowane kody, zaczynając od najnowszych."
   }
 }
