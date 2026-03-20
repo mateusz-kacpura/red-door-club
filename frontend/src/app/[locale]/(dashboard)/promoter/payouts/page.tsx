@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { apiClient } from "@/lib/api-client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useTranslate } from "@tolgee/react";
 
 interface PayoutRequest {
   id: string;
@@ -26,6 +27,7 @@ const statusColor: Record<string, string> = {
 };
 
 export default function PromoterPayoutsPage() {
+  const { t } = useTranslate();
   const [payouts, setPayouts] = useState<PayoutRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [amount, setAmount] = useState("");
@@ -45,18 +47,18 @@ export default function PromoterPayoutsPage() {
     e.preventDefault();
     const amt = parseFloat(amount);
     if (isNaN(amt) || amt <= 0) {
-      toast.error("Invalid amount");
+      toast.error(t("promoterPayouts.invalidAmount"));
       return;
     }
     setIsRequesting(true);
     try {
       await apiClient.post("/promoters/payouts", { amount: amt });
-      toast.success("Payout requested", { description: `฿${amt.toLocaleString()} request submitted.` });
+      toast.success(t("promoterPayouts.payoutRequested"), { description: t("promoterPayouts.payoutRequestedDesc", { amount: amt.toLocaleString() }) });
       setAmount("");
       setShowForm(false);
       fetchPayouts();
     } catch (err: unknown) {
-      toast.error("Failed", { description: (err as { message?: string })?.message ?? "Could not submit request." });
+      toast.error(t("promoterPayouts.requestFailed"), { description: (err as { message?: string })?.message ?? t("promoterPayouts.requestFailedDesc") });
     } finally {
       setIsRequesting(false);
     }
@@ -74,19 +76,19 @@ export default function PromoterPayoutsPage() {
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-light tracking-wide">Payout Requests</h1>
-          <p className="text-sm text-muted-foreground mt-1">Request commission payouts from earned revenue</p>
+          <h1 className="text-2xl font-light tracking-wide">{t("promoterPayouts.title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("promoterPayouts.subtitle")}</p>
         </div>
         <Button onClick={() => setShowForm((v) => !v)} size="sm">
           <Plus className="h-4 w-4 mr-1" />
-          Request Payout
+          {t("promoterPayouts.requestPayout")}
         </Button>
       </div>
 
       {showForm && (
         <Card className="rounded-xl border-primary/30">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">New Payout Request</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("promoterPayouts.newRequest")}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleRequest} className="flex gap-2">
@@ -94,17 +96,17 @@ export default function PromoterPayoutsPage() {
                 type="number"
                 min={1}
                 step={0.01}
-                placeholder="Amount (฿)"
+                placeholder={t("promoterPayouts.amountPlaceholder")}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="flex-1"
                 required
               />
               <Button type="submit" disabled={isRequesting}>
-                {isRequesting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit"}
+                {isRequesting ? <Loader2 className="h-4 w-4 animate-spin" /> : t("promoterPayouts.submit")}
               </Button>
               <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
-                Cancel
+                {t("promoterPayouts.cancel")}
               </Button>
             </form>
           </CardContent>
@@ -115,7 +117,7 @@ export default function PromoterPayoutsPage() {
         <Card className="rounded-xl border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12 text-center gap-2">
             <Wallet className="h-10 w-10 text-muted-foreground/30" />
-            <p className="text-sm text-muted-foreground">No payout requests yet</p>
+            <p className="text-sm text-muted-foreground">{t("promoterPayouts.noPayouts")}</p>
           </CardContent>
         </Card>
       ) : (
@@ -130,9 +132,9 @@ export default function PromoterPayoutsPage() {
                       day: "numeric", month: "short", year: "numeric",
                     })}
                     {p.processed_at && (
-                      <> · Processed {new Date(p.processed_at).toLocaleDateString("en-GB", {
+                      <> · {t("promoterPayouts.processed", { date: new Date(p.processed_at).toLocaleDateString("en-GB", {
                         day: "numeric", month: "short",
-                      })}</>
+                      }) })}</>
                     )}
                   </p>
                   {p.notes && <p className="text-xs text-muted-foreground mt-0.5">{p.notes}</p>}

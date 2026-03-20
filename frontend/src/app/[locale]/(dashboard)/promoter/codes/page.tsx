@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiClient } from "@/lib/api-client";
 import { toast } from "sonner";
+import { useTranslate } from "@tolgee/react";
 
 interface PromoCode {
   id: string;
@@ -22,6 +23,7 @@ interface PromoCode {
 }
 
 export default function PromoterCodesPage() {
+  const { t } = useTranslate();
   const [codes, setCodes] = useState<PromoCode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newCode, setNewCode] = useState("");
@@ -49,13 +51,13 @@ export default function PromoterCodesPage() {
         quota: 0,
         commission_rate: 0.5,
       });
-      toast.success("Code created", { description: `Code ${newCode.toUpperCase()} is now active.` });
+      toast.success(t("promoterCodes.codeCreated"), { description: t("promoterCodes.codeCreatedDesc", { code: newCode.toUpperCase() }) });
       setNewCode("");
       setNewTier("");
       setShowForm(false);
       fetchCodes();
     } catch (err: unknown) {
-      toast.error("Failed", { description: (err as { message?: string })?.message ?? "Could not create code." });
+      toast.error(t("promoterCodes.createFailed"), { description: (err as { message?: string })?.message ?? t("promoterCodes.createFailedDesc") });
     } finally {
       setIsCreating(false);
     }
@@ -73,27 +75,27 @@ export default function PromoterCodesPage() {
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-light tracking-wide">QR Promo Codes</h1>
-          <p className="text-sm text-muted-foreground mt-1">Share codes to track referrals</p>
+          <h1 className="text-2xl font-light tracking-wide">{t("promoterCodes.title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("promoterCodes.subtitle")}</p>
         </div>
         <Button onClick={() => setShowForm((v) => !v)} size="sm">
           <Plus className="h-4 w-4 mr-1" />
-          New Code
+          {t("promoterCodes.newCode")}
         </Button>
       </div>
 
       {showForm && (
         <Card className="rounded-xl border-primary/30">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Create Promo Code</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("promoterCodes.createTitle")}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleCreate} className="space-y-3">
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <label className="text-xs text-muted-foreground uppercase tracking-wide">Code</label>
+                  <label className="text-xs text-muted-foreground uppercase tracking-wide">{t("promoterCodes.codeLabel")}</label>
                   <Input
-                    placeholder="e.g. PRO-07"
+                    placeholder={t("promoterCodes.codePlaceholder")}
                     value={newCode}
                     onChange={(e) => setNewCode(e.target.value)}
                     className="uppercase"
@@ -101,13 +103,13 @@ export default function PromoterCodesPage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs text-muted-foreground uppercase tracking-wide">Tier Grant (optional)</label>
+                  <label className="text-xs text-muted-foreground uppercase tracking-wide">{t("promoterCodes.tierGrantLabel")}</label>
                   <select
                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                     value={newTier}
                     onChange={(e) => setNewTier(e.target.value)}
                   >
-                    <option value="">No tier</option>
+                    <option value="">{t("promoterCodes.noTier")}</option>
                     <option value="silver">Silver</option>
                     <option value="gold">Gold</option>
                     <option value="founder">Founder</option>
@@ -116,10 +118,10 @@ export default function PromoterCodesPage() {
               </div>
               <div className="flex gap-2">
                 <Button type="submit" size="sm" disabled={isCreating}>
-                  {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create"}
+                  {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : t("promoterCodes.create")}
                 </Button>
                 <Button type="button" variant="outline" size="sm" onClick={() => setShowForm(false)}>
-                  Cancel
+                  {t("promoterCodes.cancel")}
                 </Button>
               </div>
             </form>
@@ -131,7 +133,7 @@ export default function PromoterCodesPage() {
         <Card className="rounded-xl border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12 text-center gap-2">
             <QrCode className="h-10 w-10 text-muted-foreground/30" />
-            <p className="text-sm text-muted-foreground">No promo codes yet</p>
+            <p className="text-sm text-muted-foreground">{t("promoterCodes.noCodes")}</p>
           </CardContent>
         </Card>
       ) : (
@@ -154,8 +156,8 @@ export default function PromoterCodesPage() {
                         )}
                       </div>
                       <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
-                        <span>{code.uses_count} uses</span>
-                        {code.quota > 0 && <span>/ {code.quota} quota</span>}
+                        <span>{t("promoterCodes.uses", { count: code.uses_count })}</span>
+                        {code.quota > 0 && <span>{t("promoterCodes.quota", { quota: code.quota })}</span>}
                         {code.tier_grant && (
                           <Badge variant="outline" className="text-xs capitalize h-4 px-1.5">
                             {code.tier_grant}
@@ -168,7 +170,7 @@ export default function PromoterCodesPage() {
                     <p className="text-sm font-medium text-primary">
                       ฿{Number(code.revenue_attributed).toLocaleString()}
                     </p>
-                    <p className="text-xs text-muted-foreground">attributed</p>
+                    <p className="text-xs text-muted-foreground">{t("promoterCodes.attributed")}</p>
                   </div>
                 </div>
                 {/* QR URL hint */}

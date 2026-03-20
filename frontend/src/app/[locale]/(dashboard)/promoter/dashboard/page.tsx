@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { apiClient } from "@/lib/api-client";
 import { ROUTES } from "@/lib/constants";
+import { useTranslate } from "@tolgee/react";
 
 interface PromoterStats {
   total_codes: number;
@@ -17,6 +18,7 @@ interface PromoterStats {
 }
 
 export default function PromoterDashboardPage() {
+  const { t } = useTranslate();
   const [stats, setStats] = useState<PromoterStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -41,18 +43,18 @@ export default function PromoterDashboardPage() {
   return (
     <div className="space-y-8 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-light tracking-wide">Promoter Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Track your referrals and commissions</p>
+        <h1 className="text-2xl font-light tracking-wide">{t("promoterDashboard.title")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t("promoterDashboard.subtitle")}</p>
       </div>
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {[
-          { label: "Total Codes", value: stats?.total_codes ?? 0, icon: Users, format: (v: number) => v.toString() },
-          { label: "Total Conversions", value: stats?.total_uses ?? 0, icon: TrendingUp, format: (v: number) => v.toString() },
-          { label: "Revenue Attributed", value: stats?.total_revenue ?? 0, icon: DollarSign, format: fmt },
-          { label: "Commission Earned", value: stats?.commission_earned ?? 0, icon: DollarSign, format: fmt },
-          { label: "Pending Payout", value: stats?.pending_payout ?? 0, icon: Wallet, format: fmt },
+          { label: t("promoterDashboard.totalCodes"), value: stats?.total_codes ?? 0, icon: Users, format: (v: number) => v.toString() },
+          { label: t("promoterDashboard.totalConversions"), value: stats?.total_uses ?? 0, icon: TrendingUp, format: (v: number) => v.toString() },
+          { label: t("promoterDashboard.revenueAttributed"), value: stats?.total_revenue ?? 0, icon: DollarSign, format: fmt },
+          { label: t("promoterDashboard.commissionEarned"), value: stats?.commission_earned ?? 0, icon: DollarSign, format: fmt },
+          { label: t("promoterDashboard.pendingPayout"), value: stats?.pending_payout ?? 0, icon: Wallet, format: fmt },
         ].map(({ label, value, icon: Icon, format }) => (
           <Card key={label} className="rounded-xl">
             <CardContent className="p-5 flex items-center gap-4">
@@ -72,12 +74,12 @@ export default function PromoterDashboardPage() {
       <div className="flex flex-col sm:flex-row gap-3">
         <Link href={ROUTES.PROMOTER_CODES} className="flex-1">
           <Button variant="outline" className="w-full justify-between">
-            Manage QR Codes <ArrowRight className="h-4 w-4" />
+            {t("promoterDashboard.manageCodes")} <ArrowRight className="h-4 w-4" />
           </Button>
         </Link>
         <Link href={ROUTES.PROMOTER_PAYOUTS} className="flex-1">
           <Button variant="outline" className="w-full justify-between">
-            Payout Requests <ArrowRight className="h-4 w-4" />
+            {t("promoterDashboard.payoutRequests")} <ArrowRight className="h-4 w-4" />
           </Button>
         </Link>
       </div>
