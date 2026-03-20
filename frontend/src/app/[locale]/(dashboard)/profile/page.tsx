@@ -267,7 +267,8 @@ export default function ProfilePage() {
           </div>
         </Card>
 
-        {/* Interests */}
+        {/* Interests — members only */}
+        {!user?.is_promoter && (
         <Card className="p-4 sm:p-6">
           <h3 className="mb-4 text-base sm:text-lg font-semibold flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
@@ -309,6 +310,7 @@ export default function ProfilePage() {
             </div>
           )}
         </Card>
+        )}
 
         {/* Save / Cancel */}
         {isEditing && (

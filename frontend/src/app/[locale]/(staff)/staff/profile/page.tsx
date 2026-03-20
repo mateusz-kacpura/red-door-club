@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks";
-import { Button, Card, Input, Label, Badge } from "@/components/ui";
+import { Button, Card, Input, Label } from "@/components/ui";
 import { ThemeToggle } from "@/components/theme";
 import {
   User as UserIcon,
@@ -12,7 +12,6 @@ import {
   Phone,
   Building2,
   Briefcase,
-  Sparkles,
   Loader2,
   Settings,
   ArrowLeft,
@@ -20,16 +19,6 @@ import {
 import { useTranslate } from "@tolgee/react";
 import { apiClient } from "@/lib/api-client";
 import type { User } from "@/types";
-
-const INTEREST_OPTIONS = [
-  "Real Estate",
-  "Finance",
-  "Tech",
-  "Networking",
-  "Lifestyle",
-  "Events",
-  "Partnerships",
-];
 
 export default function StaffProfilePage() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -44,7 +33,6 @@ export default function StaffProfilePage() {
     phone: "",
     company_name: "",
     industry: "",
-    interests: [] as string[],
   });
 
   useEffect(() => {
@@ -62,21 +50,11 @@ export default function StaffProfilePage() {
       phone: source?.phone ?? "",
       company_name: source?.company_name ?? "",
       industry: source?.industry ?? "",
-      interests: source?.interests ?? [],
     });
     setIsEditing(true);
   };
 
   const cancelEditing = () => setIsEditing(false);
-
-  const toggleInterest = (interest: string) => {
-    setForm((prev) => ({
-      ...prev,
-      interests: prev.interests.includes(interest)
-        ? prev.interests.filter((i) => i !== interest)
-        : [...prev.interests, interest],
-    }));
-  };
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -86,7 +64,6 @@ export default function StaffProfilePage() {
         phone: form.phone || null,
         company_name: form.company_name || null,
         industry: form.industry || null,
-        interests: form.interests,
       });
       setMemberData((prev) => (prev ? { ...prev, ...updated } : updated));
       setIsEditing(false);
@@ -234,45 +211,6 @@ export default function StaffProfilePage() {
             </div>
           )}
         </div>
-      </Card>
-
-      {/* Interests */}
-      <Card className="p-4">
-        <h3 className="mb-4 text-base font-semibold flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-primary" />
-          {t("profile.interests")}
-        </h3>
-        {isEditing ? (
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">{t("profile.interestsHint")}</p>
-            <div className="grid grid-cols-2 gap-2">
-              {INTEREST_OPTIONS.map((interest) => (
-                <button
-                  key={interest}
-                  type="button"
-                  onClick={() => toggleInterest(interest)}
-                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors text-left
-                    ${form.interests.includes(interest)
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border hover:border-primary/50"
-                    }`}
-                >
-                  {interest}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {displayData.interests && displayData.interests.length > 0 ? (
-              displayData.interests.map((interest) => (
-                <Badge key={interest} variant="secondary">{interest}</Badge>
-              ))
-            ) : (
-              <p className="text-sm text-muted-foreground">{t("profile.noInterests")}</p>
-            )}
-          </div>
-        )}
       </Card>
 
       {/* Save / Cancel */}
