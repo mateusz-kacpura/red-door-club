@@ -46,7 +46,7 @@ export function Header() {
                   onClick={() => setQrOpen(true)}
                 >
                   <QrCode className="h-4 w-4" />
-                  <span className="sr-only">{t("profile.entryQr")}</span>
+                  <span className="sr-only">{t("profile.memberQr")}</span>
                 </Button>
                 <Button variant="ghost" size="sm" asChild className="h-10 px-2 sm:px-3">
                   <Link href={ROUTES.PROFILE} className="flex items-center gap-2">
@@ -78,17 +78,17 @@ export function Header() {
         <Sheet open={qrOpen} onOpenChange={setQrOpen}>
           <SheetContent side="bottom" className="rounded-t-2xl">
             <SheetHeader className="justify-center border-b-0 pb-0">
-              <SheetTitle>{t("profile.entryQr")}</SheetTitle>
+              <SheetTitle>{t("profile.memberQr")}</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col items-center gap-4 px-4 pb-8 pt-4">
               <div className="bg-white p-4 rounded-xl">
                 <QRCode
-                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member=${user.id}`}
+                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/m/${user.id}`}
                   size={220}
                 />
               </div>
               <p className="text-sm text-muted-foreground text-center">
-                {t("profile.entryQrHint")}
+                {t("profile.memberQrHint")}
               </p>
             </div>
           </SheetContent>

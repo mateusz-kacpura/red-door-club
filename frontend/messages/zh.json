@@ -261,7 +261,9 @@
     "connectionQr": "联系二维码",
     "connectionQrHint": "让他人扫描以与您建立联系",
     "entryQr": "入场二维码",
-    "entryQrHint": "在入口处向工作人员出示此二维码"
+    "entryQrHint": "在入口处向工作人员出示此二维码",
+    "memberQr": "我的二维码",
+    "memberQrHint": "在门口向工作人员或其他会员出示此二维码"
   },
   "connect": {
     "title": "建立联系",

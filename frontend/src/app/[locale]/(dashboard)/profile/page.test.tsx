@@ -81,7 +81,7 @@ describe("ProfilePage", () => {
     expect(screen.getAllByText("john@example.com").length).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders Entry QR code with correct URL", async () => {
+  it("renders unified Member QR code with /m/ URL", async () => {
     mockUseAuth.mockReturnValue({
       user: baseUser,
       isAuthenticated: true,
@@ -92,14 +92,14 @@ describe("ProfilePage", () => {
 
     await waitFor(() => {
       const qrCodes = screen.getAllByTestId("qr-code");
-      const entryQr = qrCodes.find((el) =>
-        el.getAttribute("data-value")?.includes("/staff/checkin?member=user-uuid-1")
+      const memberQr = qrCodes.find((el) =>
+        el.getAttribute("data-value")?.includes("/m/user-uuid-1")
       );
-      expect(entryQr).toBeDefined();
+      expect(memberQr).toBeDefined();
     });
   });
 
-  it("shows Entry QR section title and hint", async () => {
+  it("shows Member QR section title and hint", async () => {
     mockUseAuth.mockReturnValue({
       user: baseUser,
       isAuthenticated: true,
@@ -109,12 +109,12 @@ describe("ProfilePage", () => {
     render(<ProfilePage />);
 
     await waitFor(() => {
-      expect(screen.getByText(/entry qr/i)).toBeInTheDocument();
+      expect(screen.getByText(/my qr code/i)).toBeInTheDocument();
     });
     expect(screen.getByText(/show this qr/i)).toBeInTheDocument();
   });
 
-  it("shows tier badge in Entry QR section", async () => {
+  it("shows tier badge in Member QR section", async () => {
     mockUseAuth.mockReturnValue({
       user: baseUser,
       isAuthenticated: true,
@@ -124,13 +124,13 @@ describe("ProfilePage", () => {
     render(<ProfilePage />);
 
     await waitFor(() => {
-      // The tier badge appears both in header and Entry QR section
+      // The tier badge appears both in header and Member QR section
       const goldBadges = screen.getAllByText("gold");
       expect(goldBadges.length).toBeGreaterThanOrEqual(2);
     });
   });
 
-  it("shows Connection QR section", async () => {
+  it("does not show separate Connection QR section", async () => {
     mockUseAuth.mockReturnValue({
       user: baseUser,
       isAuthenticated: true,
@@ -140,7 +140,8 @@ describe("ProfilePage", () => {
     render(<ProfilePage />);
 
     await waitFor(() => {
-      expect(screen.getByText(/connection qr/i)).toBeInTheDocument();
+      expect(screen.getByText(/my qr code/i)).toBeInTheDocument();
     });
+    expect(screen.queryByText(/connection qr/i)).not.toBeInTheDocument();
   });
 });

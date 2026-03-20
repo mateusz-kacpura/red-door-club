@@ -33,6 +33,10 @@ export function parseMemberId(raw: string): string | null {
     }
   }
 
+  // Short URL: /m/<uuid> or https://…/m/<uuid>
+  const mMatch = trimmed.match(/\/m\/([0-9a-f-]{36})/i);
+  if (mMatch && UUID_RE.test(mMatch[1])) return mMatch[1];
+
   // Raw UUID
   if (UUID_RE.test(trimmed)) return trimmed;
 

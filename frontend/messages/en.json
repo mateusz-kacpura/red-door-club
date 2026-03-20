@@ -261,7 +261,9 @@
     "connectionQr": "Connection QR",
     "connectionQrHint": "Let others scan to connect with you",
     "entryQr": "Entry QR",
-    "entryQrHint": "Show this QR to staff at entry"
+    "entryQrHint": "Show this QR to staff at entry",
+    "memberQr": "My QR Code",
+    "memberQrHint": "Show this QR to staff at the door or to other members to connect"
   },
   "connect": {
     "title": "Connect",

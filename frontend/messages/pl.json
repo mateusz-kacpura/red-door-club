@@ -261,7 +261,9 @@
     "connectionQr": "QR do kontaktu",
     "connectionQrHint": "Pozwól innym zeskanować, by się z tobą połączyć",
     "entryQr": "QR wejściowy",
-    "entryQrHint": "Pokaż ten QR personelowi przy wejściu"
+    "entryQrHint": "Pokaż ten QR personelowi przy wejściu",
+    "memberQr": "Mój kod QR",
+    "memberQrHint": "Pokaż ten QR przy wejściu lub innym członkom, aby się połączyć"
   },
   "connect": {
     "title": "Połącz",

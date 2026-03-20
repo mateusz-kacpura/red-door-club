@@ -81,7 +81,7 @@ describe("Header", () => {
       logout: mockLogout,
     });
     render(<Header />);
-    expect(screen.getByText("Entry QR")).toBeInTheDocument();
+    expect(screen.getByText("My QR Code")).toBeInTheDocument();
     expect(screen.getByText("john@example.com")).toBeInTheDocument();
     expect(screen.queryByText("Login")).not.toBeInTheDocument();
   });
@@ -97,7 +97,7 @@ describe("Header", () => {
 
     expect(screen.queryByTestId("qr-code")).not.toBeInTheDocument();
 
-    const qrButton = screen.getByText("Entry QR").closest("button")!;
+    const qrButton = screen.getByText("My QR Code").closest("button")!;
     await userEvent.click(qrButton);
 
     expect(screen.getByTestId("qr-code")).toBeInTheDocument();
@@ -112,11 +112,11 @@ describe("Header", () => {
     });
     render(<Header />);
 
-    const qrButton = screen.getByText("Entry QR").closest("button")!;
+    const qrButton = screen.getByText("My QR Code").closest("button")!;
     await userEvent.click(qrButton);
 
     const qr = screen.getByTestId("qr-code");
-    expect(qr.getAttribute("data-value")).toContain("/staff/checkin?member=user-uuid-1");
+    expect(qr.getAttribute("data-value")).toContain("/m/user-uuid-1");
   });
 
   it("shows hint text in QR sheet", async () => {
@@ -128,10 +128,10 @@ describe("Header", () => {
     });
     render(<Header />);
 
-    const qrButton = screen.getByText("Entry QR").closest("button")!;
+    const qrButton = screen.getByText("My QR Code").closest("button")!;
     await userEvent.click(qrButton);
 
-    expect(screen.getByText("Show this QR to staff at entry")).toBeInTheDocument();
+    expect(screen.getByText("Show this QR to staff at the door or to other members to connect")).toBeInTheDocument();
   });
 
   it("closes QR sheet when backdrop is clicked", async () => {
@@ -143,7 +143,7 @@ describe("Header", () => {
     });
     render(<Header />);
 
-    const qrButton = screen.getByText("Entry QR").closest("button")!;
+    const qrButton = screen.getByText("My QR Code").closest("button")!;
     await userEvent.click(qrButton);
     expect(screen.getByTestId("qr-code")).toBeInTheDocument();
 

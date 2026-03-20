@@ -16,8 +16,7 @@ import {
   Briefcase,
   Sparkles,
   Loader2,
-  UserPlus,
-  DoorOpen,
+  QrCode,
 } from "lucide-react";
 import { useTranslate } from "@tolgee/react";
 import QRCode from "react-qr-code";
@@ -338,17 +337,17 @@ export default function ProfilePage() {
           </div>
         </Card>
 
-        {/* Entry QR */}
+        {/* Member QR — unified for entry + connections */}
         {user?.id && (
           <Card className="p-4 sm:p-6">
             <h3 className="mb-4 text-base sm:text-lg font-semibold flex items-center gap-2">
-              <DoorOpen className="h-5 w-5 text-primary" />
-              {t("profile.entryQr")}
+              <QrCode className="h-5 w-5 text-primary" />
+              {t("profile.memberQr")}
             </h3>
             <div className="flex flex-col sm:flex-row gap-6 items-start">
               <div className="bg-white p-3 rounded-xl border border-border shrink-0">
                 <QRCode
-                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member=${user.id}`}
+                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/m/${user.id}`}
                   size={160}
                 />
               </div>
@@ -363,7 +362,7 @@ export default function ProfilePage() {
                     {displayData.tier}
                   </span>
                 )}
-                <p className="text-muted-foreground">{t("profile.entryQrHint")}</p>
+                <p className="text-muted-foreground">{t("profile.memberQrHint")}</p>
               </div>
             </div>
           </Card>
@@ -393,30 +392,6 @@ export default function ProfilePage() {
                   </div>
                 ))}
                 <p className="text-xs text-muted-foreground pt-1">{t("profile.nfcCardHint")}</p>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        {/* Connection QR */}
-        {user?.id && (
-          <Card className="p-4 sm:p-6">
-            <h3 className="mb-4 text-base sm:text-lg font-semibold flex items-center gap-2">
-              <UserPlus className="h-5 w-5 text-primary" />
-              {t("profile.connectionQr")}
-            </h3>
-            <div className="flex flex-col sm:flex-row gap-6 items-start">
-              <div className="bg-white p-3 rounded-xl border border-border shrink-0">
-                <QRCode
-                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/connect?member=${user.id}`}
-                  size={140}
-                />
-              </div>
-              <div className="space-y-2 text-sm">
-                <p className="text-muted-foreground">{t("profile.connectionQrHint")}</p>
-                <p className="text-xs text-muted-foreground bg-muted rounded px-2 py-1 font-mono truncate">
-                  {typeof window !== "undefined" ? window.location.origin : ""}/connect?member={user.id}
-                </p>
               </div>
             </div>
           </Card>
