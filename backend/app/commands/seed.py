@@ -191,6 +191,8 @@ def seed(
         warning("Faker not installed. Using basic random data. For better data: uv add faker --group dev")
 
     if dry_run:
+        if clear:
+            info("[DRY RUN] Would clear existing data before seeding")
         info(f"[DRY RUN] Would create {len(SEED_USERS)} predefined + {count} random users")
         for u in SEED_USERS:
             info(f"  - {u['role']:<8} {u['email']:<30} superuser={u['is_superuser']}")
