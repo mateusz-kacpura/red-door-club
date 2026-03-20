@@ -100,6 +100,8 @@ export const ROUTES = {
   ADMIN_CHURN: "/admin/churn",
   // Phase 6 QR Generator
   ADMIN_QR_GENERATOR: "/admin/qr-generator",
+  // Staff analytics
+  ADMIN_STAFF: "/admin/staff",
   // Staff
   STAFF_HOME: "/staff",
   STAFF_CHECKIN: "/staff/checkin",

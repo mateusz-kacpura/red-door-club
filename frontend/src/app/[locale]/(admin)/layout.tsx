@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Users, CalendarDays, LayoutGrid, ClipboardList, TrendingUp, LogOut,
-  Lock, Receipt, Headphones, Zap, Star, Building2,
+  Lock, Receipt, Headphones, Zap, Star, Building2, Shield,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { ROUTES } from "@/lib/constants";
@@ -28,6 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: t("nav.tabs"), href: ROUTES.ADMIN_TABS, icon: Receipt },
     { name: t("nav.services"), href: ROUTES.ADMIN_SERVICES, icon: Headphones },
     { name: t("nav.activity"), href: ROUTES.ADMIN_ACTIVITY, icon: Zap },
+    { name: t("nav.staffPerformance"), href: ROUTES.ADMIN_STAFF, icon: Shield },
     { name: t("nav.loyalty"), href: ROUTES.ADMIN_LOYALTY, icon: Star },
     { name: t("nav.promoters"), href: ROUTES.ADMIN_PROMOTERS, icon: Users },
     { name: t("nav.corporate"), href: ROUTES.ADMIN_CORPORATE, icon: Building2 },

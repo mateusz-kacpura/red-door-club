@@ -206,6 +206,14 @@ async def get_revenue_analytics(
     return await admin_service.get_revenue_summary()
 
 
+@router.get("/analytics/staff", summary="Staff performance analytics")
+async def get_staff_analytics(
+    current_user: CurrentAdmin,
+    admin_service: AdminSvc,
+):
+    return await admin_service.get_staff_performance()
+
+
 # ── Services (concierge operations) ──────────────────────────────────────────
 
 

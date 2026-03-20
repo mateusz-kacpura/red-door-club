@@ -40,6 +40,7 @@
     "churnRisk": "流失风险",
     "promoters": "推广员",
     "corporate": "企业",
+    "staffPerformance": "员工",
     "qrGenerator": "二维码生成器",
     "theRedDoor": "The Red Door",
     "overview": "概览",
@@ -714,5 +715,26 @@
     "scanNext": "扫描下一个",
     "cameraPermission": "请允许使用摄像头扫描二维码",
     "invalidQr": "无效的二维码"
+  },
+  "staffAnalytics": {
+    "title": "员工绩效",
+    "subtitle": "追踪登记效率并奖励优秀员工",
+    "activeStaff": "活跃员工",
+    "activeStaffDesc": "有登记记录的员工",
+    "monthCheckins": "本月登记",
+    "monthCheckinsDesc": "本月QR码登记总数",
+    "monthRevenue": "本月收入",
+    "monthRevenueDesc": "本月收取的入场费",
+    "topPerformer": "最佳员工",
+    "topPerformerDesc": "本月登记最多",
+    "leaderboard": "员工排行榜",
+    "noData": "暂无员工登记数据。",
+    "colName": "姓名",
+    "colToday": "今日",
+    "colMonth": "本月",
+    "colRevenue": "收入",
+    "colAvgEvent": "均/活动",
+    "colAllTime": "总计",
+    "colEvents": "活动"
   }
 }

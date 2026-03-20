@@ -40,6 +40,7 @@
     "churnRisk": "Ryzyko odpływu",
     "promoters": "Promotorzy",
     "corporate": "Korporacje",
+    "staffPerformance": "Personel",
     "qrGenerator": "Generator QR",
     "theRedDoor": "The Red Door",
     "overview": "Przegląd",
@@ -714,5 +715,26 @@
     "scanNext": "Skanuj następny",
     "cameraPermission": "Zezwól na dostęp do kamery, aby skanować kody QR",
     "invalidQr": "Nieprawidłowy kod QR"
+  },
+  "staffAnalytics": {
+    "title": "Wydajność personelu",
+    "subtitle": "Śledź efektywność odpraw i nagradzaj najlepszych pracowników",
+    "activeStaff": "Aktywny personel",
+    "activeStaffDesc": "Personel z zarejestrowanymi odprawami",
+    "monthCheckins": "Odprawy w tym miesiącu",
+    "monthCheckinsDesc": "Łączne odprawy QR w tym miesiącu",
+    "monthRevenue": "Przychód w tym miesiącu",
+    "monthRevenueDesc": "Opłaty za wstęp zebrane w tym miesiącu",
+    "topPerformer": "Najlepszy pracownik",
+    "topPerformerDesc": "Najwięcej odpraw w tym miesiącu",
+    "leaderboard": "Ranking personelu",
+    "noData": "Brak danych o odprawach personelu.",
+    "colName": "Imię",
+    "colToday": "Dziś",
+    "colMonth": "Miesiąc",
+    "colRevenue": "Przychód",
+    "colAvgEvent": "Śr./Wydarzenie",
+    "colAllTime": "Łącznie",
+    "colEvents": "Wydarzenia"
   }
 }

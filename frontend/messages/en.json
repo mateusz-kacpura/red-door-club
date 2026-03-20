@@ -40,6 +40,7 @@
     "churnRisk": "Churn Risk",
     "promoters": "Promoters",
     "corporate": "Corporate",
+    "staffPerformance": "Staff",
     "qrGenerator": "QR Generator",
     "theRedDoor": "The Red Door",
     "overview": "Overview",
@@ -714,5 +715,26 @@
     "scanNext": "Scan Next",
     "cameraPermission": "Please allow camera access to scan QR codes",
     "invalidQr": "Invalid QR code"
+  },
+  "staffAnalytics": {
+    "title": "Staff Performance",
+    "subtitle": "Track staff checkin efficiency and reward top performers",
+    "activeStaff": "Active Staff",
+    "activeStaffDesc": "Staff with recorded checkins",
+    "monthCheckins": "Checkins This Month",
+    "monthCheckinsDesc": "Total QR checkins this month",
+    "monthRevenue": "Revenue This Month",
+    "monthRevenueDesc": "Entry fees collected this month",
+    "topPerformer": "Top Performer",
+    "topPerformerDesc": "Most checkins this month",
+    "leaderboard": "Staff Leaderboard",
+    "noData": "No staff checkin data available yet.",
+    "colName": "Name",
+    "colToday": "Today",
+    "colMonth": "Month",
+    "colRevenue": "Revenue",
+    "colAvgEvent": "Avg/Event",
+    "colAllTime": "All-Time",
+    "colEvents": "Events"
   }
 }

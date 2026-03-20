@@ -3,15 +3,19 @@
 import uuid
 from datetime import datetime, timedelta
 from decimal import Decimal
+from zoneinfo import ZoneInfo
 
-from sqlalchemy import func, select
+from sqlalchemy import cast, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.types import Numeric
 
 from app.db.models.user import User
 from app.repositories import nfc as nfc_repo
 from app.repositories import service_request as sr_repo
 from app.repositories import tab as tab_repo
 from app.repositories import user as user_repo
+
+BANGKOK_TZ = ZoneInfo("Asia/Bangkok")
 
 
 class AdminService:
@@ -289,3 +293,122 @@ class AdminService:
                 "metadata": event.metadata_,
             })
         return result
+
+    async def get_staff_performance(self) -> dict:
+        """Return staff performance analytics from QR checkin tap events."""
+        from app.db.models.nfc import TapEvent
+
+        now = datetime.now(BANGKOK_TZ)
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+        staff_id_col = TapEvent.metadata_["staff_id"].astext
+        fee_col = func.coalesce(cast(TapEvent.metadata_["fee"].astext, Numeric), 0)
+
+        base_filter = [
+            TapEvent.tap_type == "qr_entry",
+            staff_id_col.isnot(None),
+            staff_id_col != "",
+        ]
+
+        # All-time stats per staff
+        all_time_q = (
+            select(
+                staff_id_col.label("staff_id"),
+                func.count(TapEvent.id).label("total_checkins"),
+                func.coalesce(func.sum(fee_col), 0).label("total_revenue"),
+                func.count(func.distinct(TapEvent.metadata_["event_id"].astext)).label("events_worked"),
+            )
+            .where(*base_filter)
+            .group_by(staff_id_col)
+        )
+        all_time_result = await self.db.execute(all_time_q)
+        all_time_rows = {str(r.staff_id): r for r in all_time_result.all()}
+
+        # Month stats per staff
+        month_q = (
+            select(
+                staff_id_col.label("staff_id"),
+                func.count(TapEvent.id).label("month_checkins"),
+                func.coalesce(func.sum(fee_col), 0).label("month_revenue"),
+            )
+            .where(*base_filter, TapEvent.tapped_at >= month_start)
+            .group_by(staff_id_col)
+        )
+        month_result = await self.db.execute(month_q)
+        month_rows = {str(r.staff_id): r for r in month_result.all()}
+
+        # Today stats per staff
+        today_q = (
+            select(
+                staff_id_col.label("staff_id"),
+                func.count(TapEvent.id).label("today_checkins"),
+            )
+            .where(*base_filter, TapEvent.tapped_at >= today_start)
+            .group_by(staff_id_col)
+        )
+        today_result = await self.db.execute(today_q)
+        today_rows = {str(r.staff_id): r for r in today_result.all()}
+
+        # Collect all staff IDs
+        all_staff_ids = set(all_time_rows.keys())
+
+        # Fetch staff names (LEFT JOIN style — handle deleted accounts)
+        staff_names: dict[str, str] = {}
+        if all_staff_ids:
+            try:
+                staff_uuids = [uuid.UUID(sid) for sid in all_staff_ids]
+            except ValueError:
+                staff_uuids = []
+
+            if staff_uuids:
+                name_result = await self.db.execute(
+                    select(User.id, User.full_name).where(User.id.in_(staff_uuids))
+                )
+                for row in name_result.all():
+                    staff_names[str(row.id)] = row.full_name or "Unknown"
+
+        # Build per-staff list
+        staff_list = []
+        for sid in all_staff_ids:
+            at = all_time_rows.get(sid)
+            mt = month_rows.get(sid)
+            td = today_rows.get(sid)
+
+            total_checkins = at.total_checkins if at else 0
+            events_worked = at.events_worked if at else 0
+            avg_per_event = round(total_checkins / events_worked, 1) if events_worked > 0 else 0
+
+            staff_list.append({
+                "staff_id": sid,
+                "full_name": staff_names.get(sid, "Unknown"),
+                "today_checkins": td.today_checkins if td else 0,
+                "month_checkins": mt.month_checkins if mt else 0,
+                "month_revenue": float(mt.month_revenue) if mt else 0,
+                "total_checkins": total_checkins,
+                "total_revenue": float(at.total_revenue) if at else 0,
+                "events_worked": events_worked,
+                "avg_per_event": avg_per_event,
+            })
+
+        # Sort by month checkins descending
+        staff_list.sort(key=lambda s: s["month_checkins"], reverse=True)
+
+        # Add rank
+        for i, s in enumerate(staff_list):
+            s["rank"] = i + 1
+
+        # Summary
+        total_month_checkins = sum(s["month_checkins"] for s in staff_list)
+        total_month_revenue = sum(s["month_revenue"] for s in staff_list)
+        top_performer = staff_list[0]["full_name"] if staff_list else None
+
+        return {
+            "summary": {
+                "total_staff": len(staff_list),
+                "month_checkins": total_month_checkins,
+                "month_revenue": total_month_revenue,
+                "top_performer": top_performer,
+            },
+            "staff": staff_list,
+        }

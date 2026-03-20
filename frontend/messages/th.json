@@ -40,6 +40,7 @@
     "churnRisk": "ความเสี่ยงการสูญเสียสมาชิก",
     "promoters": "ผู้โปรโมต",
     "corporate": "องค์กร",
+    "staffPerformance": "พนักงาน",
     "qrGenerator": "ตัวสร้าง QR",
     "theRedDoor": "The Red Door",
     "overview": "ภาพรวม",
@@ -714,5 +715,26 @@
     "scanNext": "สแกนถัดไป",
     "cameraPermission": "กรุณาอนุญาตการเข้าถึงกล้องเพื่อสแกน QR โค้ด",
     "invalidQr": "QR โค้ดไม่ถูกต้อง"
+  },
+  "staffAnalytics": {
+    "title": "ประสิทธิภาพพนักงาน",
+    "subtitle": "ติดตามประสิทธิภาพการเช็คอินและให้รางวัลพนักงานดีเด่น",
+    "activeStaff": "พนักงานที่ใช้งาน",
+    "activeStaffDesc": "พนักงานที่มีบันทึกการเช็คอิน",
+    "monthCheckins": "เช็คอินเดือนนี้",
+    "monthCheckinsDesc": "รวมการเช็คอิน QR เดือนนี้",
+    "monthRevenue": "รายได้เดือนนี้",
+    "monthRevenueDesc": "ค่าเข้างานที่เก็บได้เดือนนี้",
+    "topPerformer": "พนักงานดีเด่น",
+    "topPerformerDesc": "เช็คอินมากที่สุดเดือนนี้",
+    "leaderboard": "ตารางจัดอันดับพนักงาน",
+    "noData": "ยังไม่มีข้อมูลการเช็คอินของพนักงาน",
+    "colName": "ชื่อ",
+    "colToday": "วันนี้",
+    "colMonth": "เดือน",
+    "colRevenue": "รายได้",
+    "colAvgEvent": "เฉลี่ย/งาน",
+    "colAllTime": "ทั้งหมด",
+    "colEvents": "งาน"
   }
 }

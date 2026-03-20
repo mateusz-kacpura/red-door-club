@@ -1388,3 +1388,72 @@ async def test_admin_rename_promo_code_not_found(admin_client: AsyncClient, mock
     )
 
     assert response.status_code == 404
+
+
+# ── Staff performance analytics ──────────────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_get_staff_analytics_empty(admin_client: AsyncClient, mock_admin_service: MagicMock):
+    """GET /admin/analytics/staff returns empty summary when no checkins."""
+    mock_admin_service.get_staff_performance = AsyncMock(
+        return_value={
+            "summary": {
+                "total_staff": 0,
+                "month_checkins": 0,
+                "month_revenue": 0,
+                "top_performer": None,
+            },
+            "staff": [],
+        }
+    )
+
+    response = await admin_client.get(f"{settings.API_V1_STR}/admin/analytics/staff")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["summary"]["total_staff"] == 0
+    assert data["summary"]["month_checkins"] == 0
+    assert data["staff"] == []
+
+
+@pytest.mark.anyio
+async def test_get_staff_analytics_with_data(admin_client: AsyncClient, mock_admin_service: MagicMock):
+    """GET /admin/analytics/staff returns staff performance data."""
+    staff_id = str(uuid4())
+    mock_admin_service.get_staff_performance = AsyncMock(
+        return_value={
+            "summary": {
+                "total_staff": 1,
+                "month_checkins": 25,
+                "month_revenue": 12500.0,
+                "top_performer": "Staff Member",
+            },
+            "staff": [
+                {
+                    "rank": 1,
+                    "staff_id": staff_id,
+                    "full_name": "Staff Member",
+                    "today_checkins": 5,
+                    "month_checkins": 25,
+                    "month_revenue": 12500.0,
+                    "total_checkins": 100,
+                    "total_revenue": 50000.0,
+                    "events_worked": 10,
+                    "avg_per_event": 10.0,
+                },
+            ],
+        }
+    )
+
+    response = await admin_client.get(f"{settings.API_V1_STR}/admin/analytics/staff")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["summary"]["total_staff"] == 1
+    assert data["summary"]["month_checkins"] == 25
+    assert data["summary"]["top_performer"] == "Staff Member"
+    assert len(data["staff"]) == 1
+    assert data["staff"][0]["full_name"] == "Staff Member"
+    assert data["staff"][0]["today_checkins"] == 5
+    assert data["staff"][0]["events_worked"] == 10

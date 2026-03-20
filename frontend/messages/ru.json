@@ -40,6 +40,7 @@
     "churnRisk": "Риск оттока",
     "promoters": "Промоутеры",
     "corporate": "Корпоративные",
+    "staffPerformance": "Персонал",
     "qrGenerator": "Генератор QR",
     "theRedDoor": "The Red Door",
     "overview": "Обзор",
@@ -714,5 +715,26 @@
     "scanNext": "Сканировать след.",
     "cameraPermission": "Разрешите доступ к камере для сканирования QR",
     "invalidQr": "Недействительный QR код"
+  },
+  "staffAnalytics": {
+    "title": "Эффективность персонала",
+    "subtitle": "Отслеживайте эффективность регистрации и поощряйте лучших сотрудников",
+    "activeStaff": "Активный персонал",
+    "activeStaffDesc": "Персонал с зарегистрированными регистрациями",
+    "monthCheckins": "Регистрации за месяц",
+    "monthCheckinsDesc": "Всего QR-регистраций за месяц",
+    "monthRevenue": "Доход за месяц",
+    "monthRevenueDesc": "Входные сборы за месяц",
+    "topPerformer": "Лучший сотрудник",
+    "topPerformerDesc": "Больше всего регистраций за месяц",
+    "leaderboard": "Рейтинг персонала",
+    "noData": "Данные о регистрациях персонала пока отсутствуют.",
+    "colName": "Имя",
+    "colToday": "Сегодня",
+    "colMonth": "Месяц",
+    "colRevenue": "Доход",
+    "colAvgEvent": "Ср./Событие",
+    "colAllTime": "Всего",
+    "colEvents": "События"
   }
 }
