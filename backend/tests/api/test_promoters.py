@@ -45,8 +45,9 @@ def _make_promo_code(code="PRO-01"):
     m.tier_grant = None
     m.quota = 0
     m.uses_count = 3
-    m.revenue_attributed = Decimal("1500.00")
-    m.commission_rate = Decimal("0.50")
+    m.reg_commission = Decimal("100.00")
+    m.checkin_commission_flat = None
+    m.checkin_commission_pct = Decimal("10.00")
     m.is_active = True
     m.created_at = datetime.now(UTC)
     return m
@@ -122,13 +123,12 @@ async def test_get_promoter_dashboard_with_codes(
     """GET /promoters/me/dashboard returns computed stats from promo codes."""
     code = _make_promo_code()
     code.uses_count = 10
-    code.revenue_attributed = Decimal("5000.00")
-    code.commission_rate = Decimal("0.50")
 
     mock_result = MagicMock()
     mock_result.scalars.return_value.all.return_value = [code]
     mock_db_session.execute = AsyncMock(return_value=mock_result)
-    mock_db_session.scalar = AsyncMock(return_value=Decimal("0.00"))
+    # db.scalar called 3 times: revenue, commission, pending payout
+    mock_db_session.scalar = AsyncMock(side_effect=[Decimal("5000.00"), Decimal("2500.00"), Decimal("0.00")])
 
     response = await promoter_client.get(f"{settings.API_V1_STR}/promoters/me/dashboard")
 

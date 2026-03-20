@@ -121,6 +121,13 @@ class StaffService:
             description += " (PROMO)"
         await tab_repo.add_item(self.db, tab, description, fee, tap_event_id=tap_event.id)
 
+        # 6b. Record promoter commission for checkin (if member was referred)
+        try:
+            from app.services.promoter import PromoterService
+            await PromoterService.record_checkin_commission(self.db, member, fee)
+        except Exception:
+            pass  # promoter commission failure must not block checkin
+
         # 7. RSVP if not already
         await event_repo.add_rsvp(self.db, event_id, member_id)
 

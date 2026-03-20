@@ -67,6 +67,9 @@ export default function MemberDetailPage() {
   const [generatingCode, setGeneratingCode] = useState(false);
   const [renamingCodeId, setRenamingCodeId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
+  const [regCommission, setRegCommission] = useState<number>(0);
+  const [checkinType, setCheckinType] = useState<"none" | "flat" | "pct">("none");
+  const [checkinValue, setCheckinValue] = useState<number>(0);
 
   useEffect(() => {
     if (!memberId) return;
@@ -153,13 +156,22 @@ export default function MemberDetailPage() {
     if (!member || !newCodeName.trim()) return;
     setGeneratingCode(true);
     try {
-      await apiClient.post("/admin/promo-codes", {
+      const payload: Record<string, unknown> = {
         code: newCodeName.trim().toUpperCase(),
         promoter_id: member.id,
         quota: 0,
-        commission_rate: 0.5,
-      });
+        reg_commission: regCommission,
+      };
+      if (checkinType === "flat") {
+        payload.checkin_commission_flat = checkinValue;
+      } else if (checkinType === "pct") {
+        payload.checkin_commission_pct = checkinValue;
+      }
+      await apiClient.post("/admin/promo-codes", payload);
       setNewCodeName("");
+      setRegCommission(0);
+      setCheckinType("none");
+      setCheckinValue(0);
       // Re-fetch member detail
       const data = await apiClient.get<MemberDetail>(`/admin/members/${member.id}`);
       setMember(data);
@@ -461,7 +473,15 @@ export default function MemberDetailPage() {
                       )}
                       <div className="flex items-center gap-3 text-xs text-muted-foreground">
                         <span>{t("memberDetail.promoterCodeUses", { count: pc.uses_count })}</span>
-                        <span>{t("memberDetail.promoterCodeRevenue", { amount: formatAmount(pc.revenue_attributed) })}</span>
+                        <span>{t("memberDetail.promoterRegCommission")}: {formatAmount(pc.reg_commission)}</span>
+                        <span>
+                          {t("memberDetail.promoterCheckinCommission")}:{" "}
+                          {pc.checkin_commission_flat !== null
+                            ? formatAmount(pc.checkin_commission_flat)
+                            : pc.checkin_commission_pct !== null
+                              ? `${pc.checkin_commission_pct}%`
+                              : t("memberDetail.promoterCommissionNone")}
+                        </span>
                       </div>
                       <p className="text-xs text-muted-foreground bg-muted rounded px-2 py-1 font-mono truncate">
                         {typeof window !== "undefined" ? window.location.origin : ""}/qr-register?promo={pc.code}
@@ -471,7 +491,7 @@ export default function MemberDetailPage() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-3 py-6">
+              <div className="flex flex-col items-center gap-4 py-6">
                 <QrCode className="h-10 w-10 text-muted-foreground/30" />
                 <p className="text-sm text-muted-foreground">{t("memberDetail.promoterNoCode")}</p>
                 <div className="flex gap-2 items-center">
@@ -481,7 +501,44 @@ export default function MemberDetailPage() {
                     className="uppercase h-8 font-mono max-w-[200px]"
                     placeholder={t("memberDetail.promoterCodeNamePlaceholder")}
                   />
-                  <Button size="sm" onClick={handleGenerateCode} disabled={generatingCode || !newCodeName.trim()}>
+                </div>
+                <div className="grid gap-3 w-full max-w-xs text-sm">
+                  <div className="flex items-center gap-2">
+                    <Label className="w-28 text-xs shrink-0">{t("memberDetail.promoterRegCommission")}</Label>
+                    <Input
+                      type="number"
+                      min={0}
+                      value={regCommission}
+                      onChange={(e) => setRegCommission(Number(e.target.value))}
+                      className="h-8"
+                      placeholder="0"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Label className="w-28 text-xs shrink-0">{t("memberDetail.promoterCheckinCommission")}</Label>
+                    <select
+                      value={checkinType}
+                      onChange={(e) => { setCheckinType(e.target.value as "none" | "flat" | "pct"); setCheckinValue(0); }}
+                      className="h-8 rounded-md border border-input bg-background px-2 text-xs"
+                    >
+                      <option value="none">{t("memberDetail.promoterCommissionNone")}</option>
+                      <option value="flat">{t("memberDetail.promoterCommissionFlat")}</option>
+                      <option value="pct">{t("memberDetail.promoterCommissionPct")}</option>
+                    </select>
+                    {checkinType !== "none" && (
+                      <Input
+                        type="number"
+                        min={0}
+                        max={checkinType === "pct" ? 100 : undefined}
+                        value={checkinValue}
+                        onChange={(e) => setCheckinValue(Number(e.target.value))}
+                        className="h-8 w-20"
+                        placeholder="0"
+                      />
+                    )}
+                  </div>
+                </div>
+                <Button size="sm" onClick={handleGenerateCode} disabled={generatingCode || !newCodeName.trim()}>
                     {generatingCode ? <Loader2 className="h-4 w-4 animate-spin" /> : (
                       <>
                         <Plus className="h-4 w-4 mr-1" />
@@ -489,7 +546,6 @@ export default function MemberDetailPage() {
                       </>
                     )}
                   </Button>
-                </div>
               </div>
             )}
           </CardContent>

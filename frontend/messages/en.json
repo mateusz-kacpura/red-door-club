@@ -593,7 +593,13 @@
     "promoterCodeUses": "{count} uses",
     "promoterCodeRevenue": "{amount} revenue",
     "makeStaff": "Make Staff",
-    "revokeStaff": "Revoke Staff"
+    "revokeStaff": "Revoke Staff",
+    "promoterRegCommission": "Registration",
+    "promoterCheckinCommission": "Check-in",
+    "promoterCommissionFlat": "Flat (THB)",
+    "promoterCommissionPct": "Percentage (%)",
+    "promoterCommissionNone": "None",
+    "promoterCommissionType": "Type"
   },
   "floor": {
     "title": "Live Floor View",

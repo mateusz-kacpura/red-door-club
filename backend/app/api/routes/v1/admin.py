@@ -31,13 +31,18 @@ class AdminCreatePromoCode(BaseModel):
     promoter_id: uuid.UUID
     tier_grant: str | None = None
     quota: int = 0
-    commission_rate: float = 0.50
+    reg_commission: float = 0
+    checkin_commission_flat: float | None = None
+    checkin_commission_pct: float | None = None
 
 
 class AdminUpdatePromoCode(BaseModel):
     code: str | None = None
     is_active: bool | None = None
     quota: int | None = None
+    reg_commission: float | None = None
+    checkin_commission_flat: float | None = None
+    checkin_commission_pct: float | None = None
 
 
 class AdminApprovePayoutRequest(BaseModel):
@@ -428,7 +433,9 @@ async def admin_create_promo_code(
         promoter_id=payload.promoter_id,
         tier_grant=payload.tier_grant,
         quota=payload.quota,
-        commission_rate=payload.commission_rate,
+        reg_commission=payload.reg_commission,
+        checkin_commission_flat=payload.checkin_commission_flat,
+        checkin_commission_pct=payload.checkin_commission_pct,
     )
     db.add(code)
     await db.commit()
@@ -456,6 +463,14 @@ async def admin_update_promo_code(
         code.is_active = payload.is_active
     if payload.quota is not None:
         code.quota = payload.quota
+    if payload.reg_commission is not None:
+        code.reg_commission = payload.reg_commission
+    if payload.checkin_commission_flat is not None:
+        code.checkin_commission_flat = payload.checkin_commission_flat
+        code.checkin_commission_pct = None  # mutual exclusion
+    if payload.checkin_commission_pct is not None:
+        code.checkin_commission_pct = payload.checkin_commission_pct
+        code.checkin_commission_flat = None  # mutual exclusion
     await db.commit()
     await db.refresh(code)
     return PromoCodeRead.model_validate(code)
@@ -562,7 +577,7 @@ async def get_promoter_analytics(
     total_uses = await db.scalar(select(func.sum(PromoCode.uses_count))) or 0
 
     total_revenue = await db.scalar(
-        select(func.coalesce(func.sum(PromoCode.revenue_attributed), 0))
+        select(func.coalesce(func.sum(PromoCodeUse.revenue_amount), 0))
     ) or 0
 
     # Top promoter by uses

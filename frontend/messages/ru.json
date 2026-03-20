@@ -593,7 +593,13 @@
     "promoterCodeUses": "{count} использований",
     "promoterCodeRevenue": "{amount} дохода",
     "makeStaff": "Назначить персоналом",
-    "revokeStaff": "Снять роль персонала"
+    "revokeStaff": "Снять роль персонала",
+    "promoterRegCommission": "Регистрация",
+    "promoterCheckinCommission": "Чек-ин",
+    "promoterCommissionFlat": "Фикс. (THB)",
+    "promoterCommissionPct": "Процент (%)",
+    "promoterCommissionNone": "Нет",
+    "promoterCommissionType": "Тип"
   },
   "floor": {
     "title": "Вид зала в реальном времени",

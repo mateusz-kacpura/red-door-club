@@ -593,7 +593,13 @@
     "promoterCodeUses": "使用 {count} 次",
     "promoterCodeRevenue": "收入 {amount}",
     "makeStaff": "设为工作人员",
-    "revokeStaff": "撤销工作人员"
+    "revokeStaff": "撤销工作人员",
+    "promoterRegCommission": "注册",
+    "promoterCheckinCommission": "签到",
+    "promoterCommissionFlat": "固定 (THB)",
+    "promoterCommissionPct": "百分比 (%)",
+    "promoterCommissionNone": "无",
+    "promoterCommissionType": "类型"
   },
   "floor": {
     "title": "实时场地视图",

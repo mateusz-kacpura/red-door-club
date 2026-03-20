@@ -1279,8 +1279,9 @@ async def test_get_member_detail_returns_promoter_stats_and_codes(
                 "tier_grant": None,
                 "quota": 0,
                 "uses_count": 5,
-                "revenue_attributed": 2500.0,
-                "commission_rate": 0.5,
+                "reg_commission": 100.0,
+                "checkin_commission_flat": None,
+                "checkin_commission_pct": 10.0,
                 "is_active": True,
                 "created_at": datetime.now(UTC).isoformat(),
             }
@@ -1315,8 +1316,9 @@ async def test_admin_create_promo_code(admin_client: AsyncClient, mock_db_sessio
     mock_code.tier_grant = None
     mock_code.quota = 0
     mock_code.uses_count = 0
-    mock_code.revenue_attributed = Decimal("0.00")
-    mock_code.commission_rate = Decimal("0.50")
+    mock_code.reg_commission = Decimal("100.00")
+    mock_code.checkin_commission_flat = None
+    mock_code.checkin_commission_pct = Decimal("10.00")
     mock_code.is_active = True
     mock_code.created_at = datetime.now(UTC)
 
@@ -1329,14 +1331,15 @@ async def test_admin_create_promo_code(admin_client: AsyncClient, mock_db_sessio
                 "code": "newcode",
                 "promoter_id": str(promoter_id),
                 "quota": 0,
-                "commission_rate": 0.5,
+                "reg_commission": 100,
+                "checkin_commission_pct": 10,
             },
         )
 
     assert response.status_code == 201
     data = response.json()
     assert data["code"] == "NEWCODE"
-    assert float(data["commission_rate"]) == 0.5
+    assert float(data["reg_commission"]) == 100.0
 
 
 # ── Promoter: admin rename promo code ──────────────────────────────────────
@@ -1354,8 +1357,9 @@ async def test_admin_rename_promo_code(admin_client: AsyncClient, mock_db_sessio
     mock_code.tier_grant = None
     mock_code.quota = 0
     mock_code.uses_count = 3
-    mock_code.revenue_attributed = Decimal("1000.00")
-    mock_code.commission_rate = Decimal("0.50")
+    mock_code.reg_commission = Decimal("100.00")
+    mock_code.checkin_commission_flat = None
+    mock_code.checkin_commission_pct = Decimal("10.00")
     mock_code.is_active = True
     mock_code.created_at = datetime.now(UTC)
 

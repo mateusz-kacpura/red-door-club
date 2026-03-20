@@ -593,7 +593,13 @@
     "promoterCodeUses": "ใช้แล้ว {count} ครั้ง",
     "promoterCodeRevenue": "รายได้ {amount}",
     "makeStaff": "แต่งตั้งเป็นพนักงาน",
-    "revokeStaff": "ถอดถอนพนักงาน"
+    "revokeStaff": "ถอดถอนพนักงาน",
+    "promoterRegCommission": "ลงทะเบียน",
+    "promoterCheckinCommission": "เช็คอิน",
+    "promoterCommissionFlat": "จำนวนคงที่ (THB)",
+    "promoterCommissionPct": "เปอร์เซ็นต์ (%)",
+    "promoterCommissionNone": "ไม่มี",
+    "promoterCommissionType": "ประเภท"
   },
   "floor": {
     "title": "มุมมองพื้นสด",

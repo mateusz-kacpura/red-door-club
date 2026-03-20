@@ -26,8 +26,9 @@ class PromoCode(Base):
     tier_grant: Mapped[str | None] = mapped_column(String(50), nullable=True)
     quota: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
     uses_count: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
-    revenue_attributed: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, server_default="0")
-    commission_rate: Mapped[Decimal] = mapped_column(Numeric(5, 4), nullable=False, server_default="0.5")
+    reg_commission: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, server_default="0")
+    checkin_commission_flat: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)
+    checkin_commission_pct: Mapped[Decimal | None] = mapped_column(Numeric(5, 2), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="true")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
@@ -48,6 +49,7 @@ class PromoCodeUse(Base):
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
+    use_type: Mapped[str] = mapped_column(String(20), nullable=False, server_default="'registration'")
     revenue_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, server_default="0")
     commission_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, server_default="0")
     created_at: Mapped[datetime] = mapped_column(

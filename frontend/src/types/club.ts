@@ -170,8 +170,9 @@ export interface PromoCodeAdmin {
   tier_grant: string | null;
   quota: number;
   uses_count: number;
-  revenue_attributed: number;
-  commission_rate: number;
+  reg_commission: number;
+  checkin_commission_flat: number | null;
+  checkin_commission_pct: number | null;
   is_active: boolean;
   created_at: string | null;
 }

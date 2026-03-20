@@ -27,7 +27,7 @@ class PromoterService:
         - user.referred_by_code
         - user.tier (if code has tier_grant or tier_override provided)
         - promo_code.uses_count
-        - Creates PromoCodeUse record
+        - Creates PromoCodeUse record with registration commission
 
         Returns None if the code is not found or inactive.
         """
@@ -53,14 +53,63 @@ class PromoterService:
         # Bump counter
         promo.uses_count += 1
 
-        # Create use record
+        # Create use record with registration commission
         use = PromoCodeUse(
             code_id=promo.id,
             user_id=user.id,
+            use_type="registration",
+            commission_amount=promo.reg_commission,
         )
         db.add(use)
         await db.commit()
         return promo
+
+    @staticmethod
+    async def record_checkin_commission(
+        db: AsyncSession,
+        member: User,
+        fee: Decimal,
+    ) -> PromoCodeUse | None:
+        """Record checkin commission if the member was referred by a promo code.
+
+        Only records commission when fee > 0 (no commission on free entries).
+        """
+        if not member.referred_by_code:
+            return None
+
+        if fee <= 0:
+            return None
+
+        result = await db.execute(
+            select(PromoCode).where(
+                PromoCode.code == member.referred_by_code,
+                PromoCode.is_active == True,  # noqa: E712
+            )
+        )
+        promo = result.scalar_one_or_none()
+        if promo is None:
+            return None
+
+        # Calculate commission
+        commission = Decimal("0")
+        if promo.checkin_commission_flat is not None:
+            commission = promo.checkin_commission_flat
+        elif promo.checkin_commission_pct is not None:
+            commission = (fee * promo.checkin_commission_pct / Decimal("100")).quantize(Decimal("0.01"))
+
+        if commission <= 0:
+            return None
+
+        use = PromoCodeUse(
+            code_id=promo.id,
+            user_id=member.id,
+            use_type="checkin",
+            revenue_amount=fee,
+            commission_amount=commission,
+        )
+        db.add(use)
+        await db.flush()
+        return use
 
     @staticmethod
     async def get_stats(db: AsyncSession, promoter_id: UUID) -> dict:
@@ -69,10 +118,23 @@ class PromoterService:
             select(PromoCode).where(PromoCode.promoter_id == promoter_id)
         )
         codes = list(codes_result.scalars().all())
+        code_ids = [c.id for c in codes]
 
         total_uses = sum(c.uses_count for c in codes)
-        total_revenue = sum(c.revenue_attributed for c in codes)
-        commission_earned = sum(c.revenue_attributed * c.commission_rate for c in codes)
+
+        # Sum commission and revenue from actual PromoCodeUse records
+        if code_ids:
+            total_revenue = await db.scalar(
+                select(func.coalesce(func.sum(PromoCodeUse.revenue_amount), 0))
+                .where(PromoCodeUse.code_id.in_(code_ids))
+            ) or Decimal("0")
+            commission_earned = await db.scalar(
+                select(func.coalesce(func.sum(PromoCodeUse.commission_amount), 0))
+                .where(PromoCodeUse.code_id.in_(code_ids))
+            ) or Decimal("0")
+        else:
+            total_revenue = Decimal("0")
+            commission_earned = Decimal("0")
 
         # Pending payout
         pending_result = await db.scalar(
@@ -93,15 +155,26 @@ class PromoterService:
     @staticmethod
     async def get_leaderboard(db: AsyncSession, limit: int = 10) -> list[dict]:
         """Return top promoters by conversion count."""
+        # Subquery to sum revenue from PromoCodeUse per code
+        revenue_subq = (
+            select(
+                PromoCodeUse.code_id,
+                func.coalesce(func.sum(PromoCodeUse.revenue_amount), 0).label("revenue"),
+            )
+            .group_by(PromoCodeUse.code_id)
+            .subquery()
+        )
+
         result = await db.execute(
             select(
                 User.id,
                 User.full_name,
                 User.company_name,
                 func.sum(PromoCode.uses_count).label("total_uses"),
-                func.sum(PromoCode.revenue_attributed).label("total_revenue"),
+                func.coalesce(func.sum(revenue_subq.c.revenue), 0).label("total_revenue"),
             )
             .join(PromoCode, PromoCode.promoter_id == User.id)
+            .outerjoin(revenue_subq, revenue_subq.c.code_id == PromoCode.id)
             .where(User.is_promoter == True)  # noqa: E712
             .group_by(User.id, User.full_name, User.company_name)
             .order_by(func.sum(PromoCode.uses_count).desc())

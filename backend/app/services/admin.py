@@ -212,8 +212,9 @@ class AdminService:
                     "tier_grant": c.tier_grant,
                     "quota": c.quota,
                     "uses_count": c.uses_count,
-                    "revenue_attributed": float(c.revenue_attributed),
-                    "commission_rate": float(c.commission_rate),
+                    "reg_commission": float(c.reg_commission),
+                    "checkin_commission_flat": float(c.checkin_commission_flat) if c.checkin_commission_flat is not None else None,
+                    "checkin_commission_pct": float(c.checkin_commission_pct) if c.checkin_commission_pct is not None else None,
                     "is_active": c.is_active,
                     "created_at": c.created_at.isoformat() if c.created_at else None,
                 }

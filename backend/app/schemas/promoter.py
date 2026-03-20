@@ -4,7 +4,7 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class PromoCodeRead(BaseModel):
@@ -14,8 +14,9 @@ class PromoCodeRead(BaseModel):
     tier_grant: str | None
     quota: int
     uses_count: int
-    revenue_attributed: Decimal
-    commission_rate: Decimal
+    reg_commission: Decimal
+    checkin_commission_flat: Decimal | None
+    checkin_commission_pct: Decimal | None
     is_active: bool
     created_at: datetime
 
@@ -26,18 +27,36 @@ class PromoCodeCreate(BaseModel):
     code: str = Field(min_length=3, max_length=50)
     tier_grant: str | None = None
     quota: int = Field(default=0, ge=0)
-    commission_rate: Decimal = Field(default=Decimal("0.50"), ge=0, le=1)
+    reg_commission: Decimal = Field(default=Decimal("0"), ge=0)
+    checkin_commission_flat: Decimal | None = Field(default=None, ge=0)
+    checkin_commission_pct: Decimal | None = Field(default=None, ge=0, le=100)
+
+    @model_validator(mode="after")
+    def check_checkin_commission_mutual_exclusion(self) -> "PromoCodeCreate":
+        if self.checkin_commission_flat is not None and self.checkin_commission_pct is not None:
+            raise ValueError("Only one of checkin_commission_flat or checkin_commission_pct can be set.")
+        return self
 
 
 class PromoCodeUpdate(BaseModel):
     is_active: bool | None = None
     quota: int | None = Field(default=None, ge=0)
+    reg_commission: Decimal | None = Field(default=None, ge=0)
+    checkin_commission_flat: Decimal | None = None
+    checkin_commission_pct: Decimal | None = None
+
+    @model_validator(mode="after")
+    def check_checkin_commission_mutual_exclusion(self) -> "PromoCodeUpdate":
+        if self.checkin_commission_flat is not None and self.checkin_commission_pct is not None:
+            raise ValueError("Only one of checkin_commission_flat or checkin_commission_pct can be set.")
+        return self
 
 
 class PromoCodeUseRead(BaseModel):
     id: UUID
     code_id: UUID
     user_id: UUID
+    use_type: str
     revenue_amount: Decimal
     commission_amount: Decimal
     created_at: datetime

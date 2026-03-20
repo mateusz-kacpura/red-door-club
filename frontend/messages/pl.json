@@ -593,7 +593,13 @@
     "promoterCodeUses": "{count} użyć",
     "promoterCodeRevenue": "{amount} przychodu",
     "makeStaff": "Nadaj rolę personelu",
-    "revokeStaff": "Odbierz rolę personelu"
+    "revokeStaff": "Odbierz rolę personelu",
+    "promoterRegCommission": "Rejestracja",
+    "promoterCheckinCommission": "Check-in",
+    "promoterCommissionFlat": "Kwota (THB)",
+    "promoterCommissionPct": "Procent (%)",
+    "promoterCommissionNone": "Brak",
+    "promoterCommissionType": "Typ"
   },
   "floor": {
     "title": "Widok sali na żywo",
