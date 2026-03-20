@@ -337,8 +337,8 @@ export default function ProfilePage() {
           </div>
         </Card>
 
-        {/* Member QR — unified for entry + connections */}
-        {user?.id && (
+        {/* Member QR — unified for entry + connections (hidden for promoter-only accounts) */}
+        {user?.id && !user?.is_promoter && (
           <Card className="p-4 sm:p-6">
             <h3 className="mb-4 text-base sm:text-lg font-semibold flex items-center gap-2">
               <QrCode className="h-5 w-5 text-primary" />

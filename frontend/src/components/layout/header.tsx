@@ -17,6 +17,7 @@ export function Header() {
   const { toggle } = useSidebarStore();
   const { t } = useTranslate();
   const [qrOpen, setQrOpen] = useState(false);
+  const isMember = isAuthenticated && !user?.is_promoter;
 
   return (
     <>
@@ -39,6 +40,7 @@ export function Header() {
             <ThemeToggle />
             {isAuthenticated ? (
               <>
+                {isMember && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -48,6 +50,7 @@ export function Header() {
                   <QrCode className="h-4 w-4" />
                   <span className="sr-only">{t("profile.memberQr")}</span>
                 </Button>
+                )}
                 <Button variant="ghost" size="sm" asChild className="h-10 px-2 sm:px-3">
                   <Link href={ROUTES.PROFILE} className="flex items-center gap-2">
                     <User className="h-4 w-4" />
@@ -73,8 +76,8 @@ export function Header() {
         </div>
       </header>
 
-      {/* Entry QR Sheet — outside header to avoid backdrop-filter containing block */}
-      {user?.id && (
+      {/* Member QR Sheet — outside header to avoid backdrop-filter containing block */}
+      {isMember && user?.id && (
         <Sheet open={qrOpen} onOpenChange={setQrOpen}>
           <SheetContent side="bottom" className="rounded-t-2xl">
             <SheetHeader className="justify-center border-b-0 pb-0">
