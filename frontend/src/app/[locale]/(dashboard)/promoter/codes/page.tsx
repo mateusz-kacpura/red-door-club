@@ -15,8 +15,9 @@ interface PromoCode {
   tier_grant: string | null;
   quota: number;
   uses_count: number;
-  revenue_attributed: number;
-  commission_rate: number;
+  reg_commission: number;
+  checkin_commission_flat: number | null;
+  checkin_commission_pct: number | null;
   is_active: boolean;
   created_at: string;
 }
@@ -45,8 +46,6 @@ export default function PromoterCodesPage() {
     try {
       await apiClient.post("/promoters/codes", {
         code: newCode.trim().toUpperCase(),
-        quota: 0,
-        commission_rate: 0.5,
       });
       toast.success(t("promoterCodes.codeCreated"), { description: t("promoterCodes.codeCreatedDesc", { code: newCode.toUpperCase() }) });
       setNewCode("");
@@ -139,9 +138,9 @@ export default function PromoterCodesPage() {
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-medium text-primary">
-                      ฿{Number(code.revenue_attributed).toLocaleString()}
+                      ฿{Number(code.reg_commission).toLocaleString()}
                     </p>
-                    <p className="text-xs text-muted-foreground">{t("promoterCodes.attributed")}</p>
+                    <p className="text-xs text-muted-foreground">{t("promoterCodes.commission")}</p>
                   </div>
                 </div>
                 {/* QR URL hint */}

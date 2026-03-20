@@ -546,6 +546,7 @@
     "uses": "{count} 次使用",
     "quota": "/ {quota} 配额",
     "attributed": "归因",
+    "commission": "佣金",
     "codeCreated": "推广码已创建",
     "codeCreatedDesc": "推广码 {code} 现已激活。",
     "createFailed": "失败",

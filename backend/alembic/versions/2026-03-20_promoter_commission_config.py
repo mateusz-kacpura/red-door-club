@@ -38,7 +38,7 @@ def upgrade() -> None:
     # Add use_type discriminator to promo_code_uses
     op.add_column(
         "promo_code_uses",
-        sa.Column("use_type", sa.String(20), nullable=False, server_default="registration"),
+        sa.Column("use_type", sa.String(20), nullable=False, server_default="'registration'"),
     )
 
     # Drop old unused columns

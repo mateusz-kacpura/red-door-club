@@ -546,6 +546,7 @@
     "uses": "{count} використань",
     "quota": "/ {quota} ліміт",
     "attributed": "атрибутовано",
+    "commission": "комісія",
     "codeCreated": "Код створено",
     "codeCreatedDesc": "Код {code} тепер активний.",
     "createFailed": "Помилка",

@@ -546,6 +546,7 @@
     "uses": "{count} использований",
     "quota": "/ {quota} лимит",
     "attributed": "атрибутировано",
+    "commission": "комиссия",
     "codeCreated": "Код создан",
     "codeCreatedDesc": "Код {code} теперь активен.",
     "createFailed": "Ошибка",

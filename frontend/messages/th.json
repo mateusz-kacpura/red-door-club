@@ -546,6 +546,7 @@
     "uses": "{count} ครั้ง",
     "quota": "/ {quota} โควตา",
     "attributed": "ที่เกิดจาก",
+    "commission": "ค่าคอมมิชชั่น",
     "codeCreated": "สร้างโค้ดแล้ว",
     "codeCreatedDesc": "โค้ด {code} ใช้งานได้แล้ว",
     "createFailed": "ล้มเหลว",

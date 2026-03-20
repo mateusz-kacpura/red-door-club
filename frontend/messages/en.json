@@ -546,6 +546,7 @@
     "uses": "{count} uses",
     "quota": "/ {quota} quota",
     "attributed": "attributed",
+    "commission": "commission",
     "codeCreated": "Code created",
     "codeCreatedDesc": "Code {code} is now active.",
     "createFailed": "Failed",

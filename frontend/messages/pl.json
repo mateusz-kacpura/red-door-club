@@ -546,6 +546,7 @@
     "uses": "{count} użyć",
     "quota": "/ {quota} limit",
     "attributed": "przypisane",
+    "commission": "prowizja",
     "codeCreated": "Kod utworzony",
     "codeCreatedDesc": "Kod {code} jest teraz aktywny.",
     "createFailed": "Błąd",
