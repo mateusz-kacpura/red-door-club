@@ -231,6 +231,13 @@
     "saveChanges": "Зберегти зміни",
     "admin": "Адміністратор",
     "active": "Активний",
+    "fullName": "Повне ім'я",
+    "phone": "Телефон",
+    "company": "Компанія",
+    "industry": "Галузь",
+    "interests": "Інтереси",
+    "interestsHint": "Оберіть усі відповідні",
+    "noInterests": "Інтереси ще не обрані",
     "nfcCard": "Моя картка NFC",
     "nfcCardHint": "Відскануйте QR-код для симуляції NFC-тапу."
   },

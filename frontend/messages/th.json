@@ -231,6 +231,13 @@
     "saveChanges": "บันทึกการเปลี่ยนแปลง",
     "admin": "ผู้ดูแลระบบ",
     "active": "ใช้งานอยู่",
+    "fullName": "ชื่อ-นามสกุล",
+    "phone": "โทรศัพท์",
+    "company": "บริษัท",
+    "industry": "อุตสาหกรรม",
+    "interests": "ความสนใจ",
+    "interestsHint": "เลือกทั้งหมดที่เกี่ยวข้อง",
+    "noInterests": "ยังไม่ได้เลือกความสนใจ",
     "nfcCard": "บัตร NFC ของฉัน",
     "nfcCardHint": "สแกน QR code นี้เพื่อจำลองการแตะ NFC"
   },

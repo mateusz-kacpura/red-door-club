@@ -231,6 +231,13 @@
     "saveChanges": "保存更改",
     "admin": "管理员",
     "active": "活跃",
+    "fullName": "全名",
+    "phone": "电话",
+    "company": "公司",
+    "industry": "行业",
+    "interests": "兴趣",
+    "interestsHint": "选择所有适用的",
+    "noInterests": "尚未选择兴趣",
     "nfcCard": "我的NFC卡",
     "nfcCardHint": "扫描此二维码以模拟NFC刷卡"
   },

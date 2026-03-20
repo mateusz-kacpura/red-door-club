@@ -231,6 +231,13 @@
     "saveChanges": "Zapisz zmiany",
     "admin": "Administrator",
     "active": "Aktywny",
+    "fullName": "Imię i nazwisko",
+    "phone": "Telefon",
+    "company": "Firma",
+    "industry": "Branża",
+    "interests": "Zainteresowania",
+    "interestsHint": "Zaznacz wszystkie pasujące",
+    "noInterests": "Brak wybranych zainteresowań",
     "nfcCard": "Moja karta NFC",
     "nfcCardHint": "Zeskanuj ten kod QR, aby zasymulować tapnięcie kartą NFC."
   },

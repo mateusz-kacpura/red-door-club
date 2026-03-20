@@ -231,6 +231,13 @@
     "saveChanges": "Save Changes",
     "admin": "Admin",
     "active": "Active",
+    "fullName": "Full Name",
+    "phone": "Phone",
+    "company": "Company",
+    "industry": "Industry",
+    "interests": "Interests",
+    "interestsHint": "Select all that apply",
+    "noInterests": "No interests selected yet",
     "nfcCard": "My NFC Card",
     "nfcCardHint": "Scan this QR code to simulate an NFC tap."
   },
