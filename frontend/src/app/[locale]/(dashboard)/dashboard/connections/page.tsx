@@ -9,11 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { apiClient } from "@/lib/api-client";
 import type { Connection } from "@/types";
 
-const CONNECTION_TYPE_LABELS: Record<string, string> = {
-  tap: "NFC Tap",
-  staff_intro: "Introduction",
-  event_match: "Event Match",
-  manual: "Manual",
+const CONNECTION_TYPE_KEYS: Record<string, string> = {
+  tap: "connections.typeNfcTap",
+  staff_intro: "connections.typeIntroduction",
+  event_match: "connections.typeEventMatch",
+  manual: "connections.typeManual",
 };
 
 interface SuggestedConnection {
@@ -68,7 +68,7 @@ export default function ConnectionsPage() {
       <div>
         <h1 className="text-2xl font-light tracking-wide">{t("connections.title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Your network within The Red Door Club
+          {t("connections.subtitle")}
         </p>
       </div>
 
@@ -84,7 +84,7 @@ export default function ConnectionsPage() {
           <div className="flex items-center gap-2">
             <Network className="h-4 w-4 text-primary" />
             <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-              Suggested for You
+              {t("connections.suggestedForYou")}
             </h2>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -93,7 +93,7 @@ export default function ConnectionsPage() {
                 <CardContent className="p-4 space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{s.full_name ?? "Member"}</p>
+                      <p className="font-medium truncate">{s.full_name ?? t("common.member")}</p>
                       {s.company_name && (
                         <p className="text-xs text-muted-foreground truncate flex items-center gap-1 mt-0.5">
                           <Building2 className="h-3 w-3 shrink-0" />
@@ -109,12 +109,12 @@ export default function ConnectionsPage() {
                   </div>
                   {s.shared_segments.length > 0 && (
                     <p className="text-xs text-primary">
-                      {s.shared_segments.length} shared interest{s.shared_segments.length !== 1 ? "s" : ""}
+                      {s.shared_segments.length} {t(s.shared_segments.length !== 1 ? "connections.sharedInterests" : "connections.sharedInterest")}
                       {" "}· {s.shared_segments.slice(0, 2).join(", ")}
                     </p>
                   )}
                   <p className="text-xs text-muted-foreground">
-                    Tap NFC cards to connect instantly
+                    {t("connections.tapToConnect")}
                   </p>
                 </CardContent>
               </Card>
@@ -128,7 +128,7 @@ export default function ConnectionsPage() {
         <div className="space-y-3">
           {connections.length > 0 && (
             <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-              Your Network
+              {t("connections.yourNetwork")}
             </h2>
           )}
 
@@ -137,7 +137,7 @@ export default function ConnectionsPage() {
               <Users className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>{t("connections.noConnections")}</p>
               <p className="text-sm mt-1">
-                Tap NFC cards with other members to connect instantly.
+                {t("connections.tapWithOthers")}
               </p>
             </div>
           )}
@@ -151,7 +151,7 @@ export default function ConnectionsPage() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <p className="font-medium truncate">
-                          {other?.full_name ?? "Anonymous Member"}
+                          {other?.full_name ?? t("connections.anonymousMember")}
                         </p>
                         {other?.company_name && (
                           <p className="text-xs text-muted-foreground truncate flex items-center gap-1 mt-0.5">
@@ -176,7 +176,7 @@ export default function ConnectionsPage() {
 
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span className="bg-muted px-2 py-0.5 rounded-full">
-                        {CONNECTION_TYPE_LABELS[conn.connection_type] ?? conn.connection_type}
+                        {CONNECTION_TYPE_KEYS[conn.connection_type] ? t(CONNECTION_TYPE_KEYS[conn.connection_type]) : conn.connection_type}
                       </span>
                       <span>{formatDate(conn.created_at)}</span>
                     </div>
@@ -220,7 +220,7 @@ export default function ConnectionsPage() {
               {gaps.priority_suggestions.slice(0, 3).map((s) => (
                 <Card key={s.member_id} className="rounded-xl">
                   <CardContent className="p-4 space-y-1">
-                    <p className="font-medium text-sm">{s.full_name ?? "Member"}</p>
+                    <p className="font-medium text-sm">{s.full_name ?? t("common.member")}</p>
                     {s.company_name && (
                       <p className="text-xs text-muted-foreground">{s.company_name}</p>
                     )}

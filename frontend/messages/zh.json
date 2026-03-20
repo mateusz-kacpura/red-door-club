@@ -19,7 +19,8 @@
     "export": "导出",
     "download": "下载",
     "refresh": "刷新",
-    "unknown": "未知"
+    "unknown": "未知",
+    "member": "会员"
   },
   "nav": {
     "member": "会员",
@@ -92,7 +93,10 @@
     "missYou": "我们想念您！以下是回归的方法：",
     "completeProfile": "完善个人资料以查看匹配",
     "thisWeekTopPicks": "本周精选",
-    "inVenueNow": "正在场馆内"
+    "inVenueNow": "正在场馆内",
+    "toastPayment": "消费已添加至账单",
+    "toastLocker": "储物柜更新",
+    "toastPoints": "已获得RD积分"
   },
   "events": {
     "title": "活动",
@@ -112,6 +116,18 @@
   },
   "connections": {
     "title": "人脉",
+    "subtitle": "您在 The Red Door Club 的社交网络",
+    "suggestedForYou": "为您推荐",
+    "yourNetwork": "您的人脉",
+    "sharedInterest": "共同兴趣",
+    "sharedInterests": "共同兴趣",
+    "tapToConnect": "刷NFC卡即刻连接",
+    "tapWithOthers": "与其他会员刷NFC卡即刻建立连接。",
+    "anonymousMember": "匿名会员",
+    "typeNfcTap": "NFC刷卡",
+    "typeIntroduction": "介绍",
+    "typeEventMatch": "活动匹配",
+    "typeManual": "手动",
     "networkGaps": "人脉空缺",
     "missingSegments": "缺失的领域",
     "prioritySuggestions": "优先推荐",
@@ -736,5 +752,22 @@
     "colAvgEvent": "均/活动",
     "colAllTime": "总计",
     "colEvents": "活动"
+  },
+  "tips": {
+    "visitSoon": "快来看看吧——我们想念您！您的会员权益正在等待。",
+    "rsvpReconnect": "预约下一次俱乐部活动，重新连接您的人脉。",
+    "openTab": "在吧台开个账单，体验Red Door Club的完整服务。",
+    "checkEvents": "查看即将举行的活动——新鲜事即将发生。",
+    "tapNfcGrow": "刷NFC卡拓展您的人脉网络。",
+    "doingWell": "做得很好！探索新活动以深化您的人脉。",
+    "activeMember": "您是活跃会员——请继续保持！",
+    "connectNfc": "通过NFC刷卡与更多会员建立联系。",
+    "addCompany": "在您的个人资料中添加公司名称，让其他会员了解您。",
+    "rsvpEvents": "预约即将举行的俱乐部活动，结识潜在合作伙伴。",
+    "updateInterests": "更新您的兴趣爱好，让匹配引擎为您找到理想的人脉。",
+    "openTabExperience": "在吧台开个账单，体验Red Door的完整服务。",
+    "profileComplete": "您的资料已完善——继续与社区互动吧！",
+    "completeProfileSuggestions": "完善您的资料（行业、收入范围）以获得更多推荐。",
+    "tapNfcVenue": "在场馆内刷NFC卡，即刻与匹配的会员建立联系。"
   }
 }

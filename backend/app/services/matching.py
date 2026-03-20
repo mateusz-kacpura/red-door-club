@@ -300,11 +300,11 @@ class MatchingEngine:
         top = await MatchingEngine.get_enhanced_suggestions(db, user, limit=3)
         next_steps: list[str] = []
         if not user.segment_groups:
-            next_steps.append("Update your interests so the matching engine can find ideal connections.")
+            next_steps.append("tips.updateInterests")
         if len(top) < 3:
-            next_steps.append("Complete your profile (industry, revenue range) to get more suggestions.")
+            next_steps.append("tips.completeProfileSuggestions")
         if not next_steps:
-            next_steps.append("Tap NFC cards at the venue to instantly connect with matched members.")
+            next_steps.append("tips.tapNfcVenue")
         return {
             "top_suggestions": top,
             "next_steps": next_steps,
@@ -503,20 +503,20 @@ class MatchingEngine:
         # Top segments
         top_segments = user.segment_groups or []
 
-        # Suggested next steps based on profile completeness
+        # Suggested next steps based on profile completeness (i18n keys)
         suggested_steps: list[str] = []
         if conn_count < 5:
-            suggested_steps.append("Connect with more members via NFC tap to grow your network.")
+            suggested_steps.append("tips.connectNfc")
         if not user.company_name:
-            suggested_steps.append("Add your company name to your profile so members know what you do.")
+            suggested_steps.append("tips.addCompany")
         if events_attended < 3:
-            suggested_steps.append("RSVP to upcoming club events to meet potential partners.")
+            suggested_steps.append("tips.rsvpEvents")
         if not top_segments:
-            suggested_steps.append("Update your interests so the matching engine can find your ideal connections.")
+            suggested_steps.append("tips.updateInterests")
         if total_spent == 0:
-            suggested_steps.append("Open a tab at the bar to get the full Red Door experience.")
+            suggested_steps.append("tips.openTabExperience")
         if not suggested_steps:
-            suggested_steps.append("Your profile is complete — keep engaging with the community!")
+            suggested_steps.append("tips.profileComplete")
 
         # Potential matches (segment overlap count)
         match_score_count = 0

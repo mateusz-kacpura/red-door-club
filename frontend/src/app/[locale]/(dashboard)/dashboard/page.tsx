@@ -73,11 +73,11 @@ export default function DashboardPage() {
   useWebSocket("/api/v1/ws/member/live", (data) => {
     const msg = data as MemberNotification;
     if (msg.tap_type === "payment_tap") {
-      toast.success("Payment added to tab", { description: msg.message, duration: 5000 });
+      toast.success(t("dashboard.toastPayment"), { description: msg.message, duration: 5000 });
     } else if (msg.tap_type === "locker_access") {
-      toast.info("Locker update", { description: msg.message, duration: 5000 });
+      toast.info(t("dashboard.toastLocker"), { description: msg.message, duration: 5000 });
     } else if (msg.action === "points_earned") {
-      toast.success("RD Points earned", { description: msg.message, duration: 5000 });
+      toast.success(t("dashboard.toastPoints"), { description: msg.message, duration: 5000 });
       apiClient.get<{ balance: number }>("/members/points").then((d) => setPoints(d.balance)).catch(() => {});
     }
   });
@@ -89,7 +89,7 @@ export default function DashboardPage() {
     return t("dashboard.greetingEvening");
   };
 
-  const firstName = (user as { name?: string } | null)?.name?.split(" ")[0] ?? "Member";
+  const firstName = (user as { name?: string } | null)?.name?.split(" ")[0] ?? t("common.member");
 
   return (
     <div className="space-y-8">
@@ -114,7 +114,7 @@ export default function DashboardPage() {
             {engagementRisk.tips.map((tip, i) => (
               <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                 <span className="text-orange-400 mt-0.5">•</span>
-                {tip}
+                {t(tip)}
               </li>
             ))}
           </ul>
@@ -204,7 +204,7 @@ export default function DashboardPage() {
                 <Card key={s.member_id} className="rounded-xl">
                   <CardContent className="p-4 flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{s.full_name ?? "Member"}</p>
+                      <p className="font-medium truncate">{s.full_name ?? t("common.member")}</p>
                       {s.company_name && (
                         <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                           <Building2 className="h-3 w-3 shrink-0" />
@@ -213,7 +213,7 @@ export default function DashboardPage() {
                       )}
                       {s.shared_segments.length > 0 && (
                         <p className="text-xs text-primary mt-1">
-                          {s.shared_segments.length} shared interest{s.shared_segments.length !== 1 ? "s" : ""}
+                          {s.shared_segments.length} {t(s.shared_segments.length !== 1 ? "connections.sharedInterests" : "connections.sharedInterest")}
                         </p>
                       )}
                     </div>
@@ -240,7 +240,7 @@ export default function DashboardPage() {
                 report.suggested_next_steps.map((step, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-                    <p className="text-sm text-muted-foreground">{step}</p>
+                    <p className="text-sm text-muted-foreground">{t(step)}</p>
                   </div>
                 ))
               ) : (

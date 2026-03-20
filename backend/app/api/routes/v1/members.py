@@ -244,19 +244,19 @@ async def get_my_engagement_health(
     tips: list[str] = []
     if risk in ("high", "critical"):
         tips += [
-            "Visit us soon — we miss you! Your membership benefits are waiting.",
-            "RSVP to the next club event to reconnect with your network.",
-            "Open a tab at the bar to enjoy full Red Door Club hospitality.",
+            "tips.visitSoon",
+            "tips.rsvpReconnect",
+            "tips.openTab",
         ]
     elif risk == "medium":
         tips += [
-            "Check the upcoming events — something new is happening soon.",
-            "Tap your NFC card to grow your connection network.",
+            "tips.checkEvents",
+            "tips.tapNfcGrow",
         ]
     elif risk == "low":
-        tips.append("You're doing well! Explore new events to deepen your network.")
+        tips.append("tips.doingWell")
     else:
-        tips.append("You're an active member — keep up the great engagement!")
+        tips.append("tips.activeMember")
 
     return {"risk_level": risk, "tips": tips}
 

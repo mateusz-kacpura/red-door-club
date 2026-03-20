@@ -19,7 +19,8 @@
     "export": "Eksportuj",
     "download": "Pobierz",
     "refresh": "Odśwież",
-    "unknown": "Nieznany"
+    "unknown": "Nieznany",
+    "member": "Członek"
   },
   "nav": {
     "member": "Członek",
@@ -92,7 +93,10 @@
     "missYou": "Tęsknimy za tobą! Oto jak wrócić:",
     "completeProfile": "Uzupełnij profil, aby zobaczyć dopasowania",
     "thisWeekTopPicks": "Najlepsze kontakty tego tygodnia",
-    "inVenueNow": "Obecny w lokalu"
+    "inVenueNow": "Obecny w lokalu",
+    "toastPayment": "Płatność dodana do rachunku",
+    "toastLocker": "Aktualizacja szafki",
+    "toastPoints": "Zdobyto punkty RD"
   },
   "events": {
     "title": "Wydarzenia",
@@ -112,6 +116,18 @@
   },
   "connections": {
     "title": "Kontakty",
+    "subtitle": "Twoja sieć w The Red Door Club",
+    "suggestedForYou": "Sugerowane dla Ciebie",
+    "yourNetwork": "Twoja sieć",
+    "sharedInterest": "wspólne zainteresowanie",
+    "sharedInterests": "wspólne zainteresowania",
+    "tapToConnect": "Zbliż kartę NFC, aby się połączyć",
+    "tapWithOthers": "Zbliż karty NFC z innymi członkami, aby natychmiast się połączyć.",
+    "anonymousMember": "Anonimowy członek",
+    "typeNfcTap": "NFC Tap",
+    "typeIntroduction": "Przedstawienie",
+    "typeEventMatch": "Dopasowanie z wydarzenia",
+    "typeManual": "Ręczne",
     "networkGaps": "Luki w sieci",
     "missingSegments": "Brakujące segmenty",
     "prioritySuggestions": "Priorytetowe sugestie",
@@ -736,5 +752,22 @@
     "colAvgEvent": "Śr./Wydarzenie",
     "colAllTime": "Łącznie",
     "colEvents": "Wydarzenia"
+  },
+  "tips": {
+    "visitSoon": "Odwiedź nas wkrótce — tęsknimy! Twoje benefity czekają.",
+    "rsvpReconnect": "Zapisz się na najbliższe wydarzenie, aby odnowić kontakty.",
+    "openTab": "Otwórz rachunek w barze i ciesz się pełną gościnnością Red Door Club.",
+    "checkEvents": "Sprawdź nadchodzące wydarzenia — coś nowego jest już za rogiem.",
+    "tapNfcGrow": "Zbliż kartę NFC, aby rozbudować swoją sieć kontaktów.",
+    "doingWell": "Świetnie ci idzie! Odkrywaj nowe wydarzenia, aby pogłębić relacje.",
+    "activeMember": "Jesteś aktywnym członkiem — tak trzymaj!",
+    "connectNfc": "Połącz się z innymi członkami przez NFC, aby rozwinąć sieć kontaktów.",
+    "addCompany": "Dodaj nazwę firmy do profilu, aby inni wiedzieli, czym się zajmujesz.",
+    "rsvpEvents": "Zapisz się na nadchodzące wydarzenia, aby poznać potencjalnych partnerów.",
+    "updateInterests": "Zaktualizuj swoje zainteresowania, aby silnik dopasowań znalazł idealne kontakty.",
+    "openTabExperience": "Otwórz rachunek w barze, aby w pełni doświadczyć Red Door.",
+    "profileComplete": "Twój profil jest kompletny — angażuj się dalej w społeczność!",
+    "completeProfileSuggestions": "Uzupełnij profil (branża, zakres przychodów), aby otrzymać więcej sugestii.",
+    "tapNfcVenue": "Zbliż karty NFC w lokalu, aby natychmiast połączyć się z dopasowanymi członkami."
   }
 }
