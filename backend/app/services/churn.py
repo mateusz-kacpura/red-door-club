@@ -118,14 +118,13 @@ class ChurnPredictionEngine:
         factors.append({"name": "loyalty_earning", "impact": loyalty_score, "detail": loyalty_detail})
 
         # ── Factor 4: No event RSVP in 60 days ──────────────────────────────
-        d60_ago_str = d60_ago.isoformat()
         rsvp_result = await db.execute(
             text(
                 "SELECT COUNT(*) FROM event_rsvps er "
                 "JOIN events e ON e.id = er.event_id "
                 "WHERE er.member_id = :uid AND e.starts_at >= :since"
             ),
-            {"uid": str(member.id), "since": d60_ago_str},
+            {"uid": str(member.id), "since": d60_ago},
         )
         recent_rsvps = rsvp_result.scalar() or 0
         if recent_rsvps == 0:

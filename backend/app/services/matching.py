@@ -495,7 +495,7 @@ class MatchingEngine:
         from app.db.models.event import Event
         from sqlalchemy import text
         rsvp_result = await db.execute(
-            text("SELECT COUNT(*) FROM event_rsvps WHERE user_id = :uid"),
+            text("SELECT COUNT(*) FROM event_rsvps WHERE member_id = :uid"),
             {"uid": user.id},
         )
         events_attended = rsvp_result.scalar() or 0
@@ -507,8 +507,8 @@ class MatchingEngine:
         suggested_steps: list[str] = []
         if conn_count < 5:
             suggested_steps.append("Connect with more members via NFC tap to grow your network.")
-        if not user.bio:
-            suggested_steps.append("Add a bio to your profile so members know what you do.")
+        if not user.company_name:
+            suggested_steps.append("Add your company name to your profile so members know what you do.")
         if events_attended < 3:
             suggested_steps.append("RSVP to upcoming club events to meet potential partners.")
         if not top_segments:
