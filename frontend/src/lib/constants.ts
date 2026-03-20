@@ -90,6 +90,7 @@ export const ROUTES = {
   PROMOTER_DASHBOARD: "/promoter/dashboard",
   PROMOTER_CODES: "/promoter/codes",
   PROMOTER_PAYOUTS: "/promoter/payouts",
+  PROMOTER_REFERRALS: "/promoter/referrals",
   ADMIN_PROMOTERS: "/admin/promoters",
   // Phase 5C
   ADMIN_CORPORATE: "/admin/corporate",

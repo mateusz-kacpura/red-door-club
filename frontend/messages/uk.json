@@ -51,6 +51,7 @@
     "promoterDashboard": "Панель",
     "promoCodes": "Коди",
     "payouts": "Виплати",
+    "referrals": "Реферали",
     "profile": "Профіль"
   },
   "auth": {
@@ -529,6 +530,13 @@
     "requestFailed": "Помилка",
     "requestFailedDesc": "Не вдалося надіслати запит.",
     "invalidAmount": "Невірна сума"
+  },
+  "promoterReferrals": {
+    "title": "Реферали",
+    "subtitle": "Користувачі, зареєстровані за вашим QR-кодом",
+    "noReferrals": "Рефералів поки немає",
+    "registeredAt": "Зареєстрований {date}",
+    "anonymous": "Анонім"
   },
   "memberDetail": {
     "notFound": "Учасника не знайдено.",

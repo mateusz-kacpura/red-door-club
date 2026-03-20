@@ -51,6 +51,7 @@
     "promoterDashboard": "Panel",
     "promoCodes": "Kody",
     "payouts": "Wypłaty",
+    "referrals": "Poleceni",
     "profile": "Profil"
   },
   "auth": {
@@ -529,6 +530,13 @@
     "requestFailed": "Błąd",
     "requestFailedDesc": "Nie udało się wysłać żądania.",
     "invalidAmount": "Nieprawidłowa kwota"
+  },
+  "promoterReferrals": {
+    "title": "Poleceni",
+    "subtitle": "Użytkownicy zarejestrowani za pomocą Twojego kodu QR",
+    "noReferrals": "Brak poleconych użytkowników",
+    "registeredAt": "Zarejestrowany {date}",
+    "anonymous": "Anonim"
   },
   "memberDetail": {
     "notFound": "Nie znaleziono członka.",

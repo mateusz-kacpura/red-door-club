@@ -51,6 +51,7 @@
     "promoterDashboard": "仪表板",
     "promoCodes": "推广码",
     "payouts": "提现",
+    "referrals": "推荐用户",
     "profile": "个人资料"
   },
   "auth": {
@@ -529,6 +530,13 @@
     "requestFailed": "失败",
     "requestFailedDesc": "无法提交请求。",
     "invalidAmount": "无效金额"
+  },
+  "promoterReferrals": {
+    "title": "推荐用户",
+    "subtitle": "通过您的二维码注册的用户",
+    "noReferrals": "暂无推荐用户",
+    "registeredAt": "注册于 {date}",
+    "anonymous": "匿名"
   },
   "memberDetail": {
     "notFound": "未找到会员",

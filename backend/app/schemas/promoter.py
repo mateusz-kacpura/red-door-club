@@ -69,5 +69,11 @@ class PromoterStatsRead(BaseModel):
     pending_payout: Decimal
 
 
+class ReferralRead(BaseModel):
+    user_full_name: str | None
+    promo_code: str
+    registered_at: datetime
+
+
 class AdminApprovePayoutRequest(BaseModel):
     notes: str | None = None

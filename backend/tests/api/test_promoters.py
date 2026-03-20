@@ -237,6 +237,45 @@ async def test_request_payout_zero_amount_rejected(promoter_client: AsyncClient)
     assert response.status_code in (400, 422)
 
 
+# ── GET /promoters/me/referrals ───────────────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_list_referrals_empty(promoter_client: AsyncClient, mock_db_session):
+    """GET /promoters/me/referrals returns empty list when no referrals."""
+    mock_result = MagicMock()
+    mock_result.all.return_value = []
+    mock_db_session.execute = AsyncMock(return_value=mock_result)
+
+    response = await promoter_client.get(f"{settings.API_V1_STR}/promoters/me/referrals")
+
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+@pytest.mark.anyio
+async def test_list_referrals_with_data(promoter_client: AsyncClient, mock_db_session):
+    """GET /promoters/me/referrals returns referred users."""
+    now = datetime.now(UTC)
+    row = MagicMock()
+    row.full_name = "Jane Doe"
+    row.code = "VIP-01"
+    row.created_at = now
+
+    mock_result = MagicMock()
+    mock_result.all.return_value = [row]
+    mock_db_session.execute = AsyncMock(return_value=mock_result)
+
+    response = await promoter_client.get(f"{settings.API_V1_STR}/promoters/me/referrals")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["user_full_name"] == "Jane Doe"
+    assert data[0]["promo_code"] == "VIP-01"
+    assert "registered_at" in data[0]
+
+
 # ── GET /promoters/leaderboard ────────────────────────────────────────────────
 
 

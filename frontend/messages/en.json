@@ -51,6 +51,7 @@
     "promoterDashboard": "Dashboard",
     "promoCodes": "Codes",
     "payouts": "Payouts",
+    "referrals": "Referrals",
     "profile": "Profile"
   },
   "auth": {
@@ -529,6 +530,13 @@
     "requestFailed": "Failed",
     "requestFailedDesc": "Could not submit request.",
     "invalidAmount": "Invalid amount"
+  },
+  "promoterReferrals": {
+    "title": "Referrals",
+    "subtitle": "Users who registered with your QR code",
+    "noReferrals": "No referrals yet",
+    "registeredAt": "Registered {date}",
+    "anonymous": "Anonymous"
   },
   "memberDetail": {
     "notFound": "Member not found.",

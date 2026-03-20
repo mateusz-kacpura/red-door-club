@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants";
-import { LayoutDashboard, CalendarDays, Users, Wrench, Shield, Lock, Receipt, Headphones, Zap, Network, Star, GitFork, AlertTriangle, QrCode, Megaphone, Ticket, Wallet, UserCircle } from "lucide-react";
+import { LayoutDashboard, CalendarDays, Users, UserPlus, Wrench, Shield, Lock, Receipt, Headphones, Zap, Network, Star, GitFork, AlertTriangle, QrCode, Megaphone, Ticket, Wallet, UserCircle } from "lucide-react";
 import { useSidebarStore } from "@/stores";
 import { useAuthStore } from "@/stores";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui";
@@ -22,6 +22,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const promoterNavigation = [
     { name: t("nav.promoterDashboard", { defaultValue: "Dashboard" }), href: ROUTES.PROMOTER_DASHBOARD, icon: Megaphone },
     { name: t("nav.promoCodes", { defaultValue: "Codes" }), href: ROUTES.PROMOTER_CODES, icon: Ticket },
+    { name: t("nav.referrals", { defaultValue: "Referrals" }), href: ROUTES.PROMOTER_REFERRALS, icon: UserPlus },
     { name: t("nav.payouts", { defaultValue: "Payouts" }), href: ROUTES.PROMOTER_PAYOUTS, icon: Wallet },
     { name: t("nav.profile", { defaultValue: "Profile" }), href: ROUTES.PROFILE, icon: UserCircle },
   ];

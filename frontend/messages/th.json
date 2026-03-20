@@ -51,6 +51,7 @@
     "promoterDashboard": "แดชบอร์ด",
     "promoCodes": "โค้ด",
     "payouts": "การจ่ายเงิน",
+    "referrals": "ผู้ถูกแนะนำ",
     "profile": "โปรไฟล์"
   },
   "auth": {
@@ -529,6 +530,13 @@
     "requestFailed": "ล้มเหลว",
     "requestFailedDesc": "ไม่สามารถส่งคำขอได้",
     "invalidAmount": "จำนวนไม่ถูกต้อง"
+  },
+  "promoterReferrals": {
+    "title": "ผู้ถูกแนะนำ",
+    "subtitle": "ผู้ใช้ที่ลงทะเบียนด้วยรหัส QR ของคุณ",
+    "noReferrals": "ยังไม่มีผู้ถูกแนะนำ",
+    "registeredAt": "ลงทะเบียนเมื่อ {date}",
+    "anonymous": "ไม่ระบุชื่อ"
   },
   "memberDetail": {
     "notFound": "ไม่พบสมาชิก",

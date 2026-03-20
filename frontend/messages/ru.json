@@ -51,6 +51,7 @@
     "promoterDashboard": "Панель",
     "promoCodes": "Коды",
     "payouts": "Выплаты",
+    "referrals": "Рефералы",
     "profile": "Профиль"
   },
   "auth": {
@@ -529,6 +530,13 @@
     "requestFailed": "Ошибка",
     "requestFailedDesc": "Не удалось отправить запрос.",
     "invalidAmount": "Неверная сумма"
+  },
+  "promoterReferrals": {
+    "title": "Рефералы",
+    "subtitle": "Пользователи, зарегистрировавшиеся по вашему QR-коду",
+    "noReferrals": "Рефералов пока нет",
+    "registeredAt": "Зарегистрирован {date}",
+    "anonymous": "Аноним"
   },
   "memberDetail": {
     "notFound": "Участник не найден.",
