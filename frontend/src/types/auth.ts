@@ -7,6 +7,10 @@ export interface User {
   email: string;
   name?: string;
   full_name?: string;
+  phone?: string;
+  company_name?: string;
+  industry?: string;
+  interests?: string[];
   is_active: boolean;
   is_superuser?: boolean;
   role?: string;
