@@ -46,7 +46,12 @@
     "members": "Członkowie",
     "floorView": "Widok sali",
     "checklist": "Lista kontrolna",
-    "memberDashboard": "Panel użytkownika"
+    "memberDashboard": "Panel użytkownika",
+    "promoter": "Promotor",
+    "promoterDashboard": "Panel",
+    "promoCodes": "Kody",
+    "payouts": "Wypłaty",
+    "profile": "Profil"
   },
   "auth": {
     "loginTitle": "Logowanie",

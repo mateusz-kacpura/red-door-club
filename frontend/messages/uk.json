@@ -46,7 +46,12 @@
     "members": "Учасники",
     "floorView": "Вид залу",
     "checklist": "Контрольний список",
-    "memberDashboard": "Панель учасника"
+    "memberDashboard": "Панель учасника",
+    "promoter": "Промоутер",
+    "promoterDashboard": "Панель",
+    "promoCodes": "Коди",
+    "payouts": "Виплати",
+    "profile": "Профіль"
   },
   "auth": {
     "loginTitle": "Вхід",

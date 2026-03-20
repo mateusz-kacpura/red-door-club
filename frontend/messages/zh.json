@@ -46,7 +46,12 @@
     "members": "会员",
     "floorView": "场地视图",
     "checklist": "检查清单",
-    "memberDashboard": "会员仪表板"
+    "memberDashboard": "会员仪表板",
+    "promoter": "推广员",
+    "promoterDashboard": "仪表板",
+    "promoCodes": "推广码",
+    "payouts": "提现",
+    "profile": "个人资料"
   },
   "auth": {
     "loginTitle": "登录",

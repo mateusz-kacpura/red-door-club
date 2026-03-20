@@ -46,7 +46,12 @@
     "members": "Members",
     "floorView": "Floor View",
     "checklist": "Checklist",
-    "memberDashboard": "Member Dashboard"
+    "memberDashboard": "Member Dashboard",
+    "promoter": "Promoter",
+    "promoterDashboard": "Dashboard",
+    "promoCodes": "Codes",
+    "payouts": "Payouts",
+    "profile": "Profile"
   },
   "auth": {
     "loginTitle": "Login",

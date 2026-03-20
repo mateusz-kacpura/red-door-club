@@ -46,7 +46,12 @@
     "members": "สมาชิก",
     "floorView": "มุมมองพื้น",
     "checklist": "รายการตรวจสอบ",
-    "memberDashboard": "แดชบอร์ดสมาชิก"
+    "memberDashboard": "แดชบอร์ดสมาชิก",
+    "promoter": "โปรโมเตอร์",
+    "promoterDashboard": "แดชบอร์ด",
+    "promoCodes": "โค้ด",
+    "payouts": "การจ่ายเงิน",
+    "profile": "โปรไฟล์"
   },
   "auth": {
     "loginTitle": "เข้าสู่ระบบ",
