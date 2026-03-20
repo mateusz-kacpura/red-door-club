@@ -97,9 +97,16 @@ export default function StaffScannerPage() {
       cancelled = true;
       const s = scannerRef.current;
       if (s) {
-        s.stop()
-          .then(() => s.clear())
-          .catch(() => {});
+        try {
+          const state = s.getState();
+          if (state === 2 /* SCANNING */ || state === 3 /* PAUSED */) {
+            s.stop()
+              .then(() => s.clear())
+              .catch(() => {});
+          }
+        } catch {
+          // scanner not initialized yet
+        }
       }
     };
   }, [router]);
