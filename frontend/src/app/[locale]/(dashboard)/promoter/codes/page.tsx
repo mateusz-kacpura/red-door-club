@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { QrCode, Plus, Loader2, CheckCircle, XCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiClient } from "@/lib/api-client";
@@ -27,7 +26,6 @@ export default function PromoterCodesPage() {
   const [codes, setCodes] = useState<PromoCode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [newCode, setNewCode] = useState("");
-  const [newTier, setNewTier] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
@@ -47,13 +45,11 @@ export default function PromoterCodesPage() {
     try {
       await apiClient.post("/promoters/codes", {
         code: newCode.trim().toUpperCase(),
-        tier_grant: newTier || null,
         quota: 0,
         commission_rate: 0.5,
       });
       toast.success(t("promoterCodes.codeCreated"), { description: t("promoterCodes.codeCreatedDesc", { code: newCode.toUpperCase() }) });
       setNewCode("");
-      setNewTier("");
       setShowForm(false);
       fetchCodes();
     } catch (err: unknown) {
@@ -90,40 +86,20 @@ export default function PromoterCodesPage() {
             <CardTitle className="text-sm font-medium">{t("promoterCodes.createTitle")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleCreate} className="space-y-3">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label className="text-xs text-muted-foreground uppercase tracking-wide">{t("promoterCodes.codeLabel")}</label>
-                  <Input
-                    placeholder={t("promoterCodes.codePlaceholder")}
-                    value={newCode}
-                    onChange={(e) => setNewCode(e.target.value)}
-                    className="uppercase"
-                    required
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs text-muted-foreground uppercase tracking-wide">{t("promoterCodes.tierGrantLabel")}</label>
-                  <select
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    value={newTier}
-                    onChange={(e) => setNewTier(e.target.value)}
-                  >
-                    <option value="">{t("promoterCodes.noTier")}</option>
-                    <option value="silver">Silver</option>
-                    <option value="gold">Gold</option>
-                    <option value="founder">Founder</option>
-                  </select>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Button type="submit" size="sm" disabled={isCreating}>
-                  {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : t("promoterCodes.create")}
-                </Button>
-                <Button type="button" variant="outline" size="sm" onClick={() => setShowForm(false)}>
-                  {t("promoterCodes.cancel")}
-                </Button>
-              </div>
+            <form onSubmit={handleCreate} className="flex gap-2">
+              <Input
+                placeholder={t("promoterCodes.codePlaceholder")}
+                value={newCode}
+                onChange={(e) => setNewCode(e.target.value)}
+                className="uppercase flex-1"
+                required
+              />
+              <Button type="submit" size="sm" disabled={isCreating}>
+                {isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : t("promoterCodes.create")}
+              </Button>
+              <Button type="button" variant="outline" size="sm" onClick={() => setShowForm(false)}>
+                {t("promoterCodes.cancel")}
+              </Button>
             </form>
           </CardContent>
         </Card>
@@ -158,11 +134,6 @@ export default function PromoterCodesPage() {
                       <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
                         <span>{t("promoterCodes.uses", { count: code.uses_count })}</span>
                         {code.quota > 0 && <span>{t("promoterCodes.quota", { quota: code.quota })}</span>}
-                        {code.tier_grant && (
-                          <Badge variant="outline" className="text-xs capitalize h-4 px-1.5">
-                            {code.tier_grant}
-                          </Badge>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -175,7 +146,7 @@ export default function PromoterCodesPage() {
                 </div>
                 {/* QR URL hint */}
                 <p className="mt-3 text-xs text-muted-foreground bg-muted rounded px-2 py-1 font-mono truncate">
-                  {typeof window !== "undefined" ? window.location.origin : ""}/qr-register?promo={code.code}{code.tier_grant ? `&tier=${code.tier_grant}` : ""}
+                  {typeof window !== "undefined" ? window.location.origin : ""}/qr-register?promo={code.code}
                 </p>
               </CardContent>
             </Card>
