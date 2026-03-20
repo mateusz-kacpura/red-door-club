@@ -19,59 +19,61 @@ export function Header() {
   const [qrOpen, setQrOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-14 items-center justify-between px-3 sm:px-6">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-10 w-10 p-0 md:hidden"
-          onClick={toggle}
-        >
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
+    <>
+      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex h-14 items-center justify-between px-3 sm:px-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-10 w-10 p-0 md:hidden"
+            onClick={toggle}
+          >
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle menu</span>
+          </Button>
 
-        <div className="hidden md:block" />
+          <div className="hidden md:block" />
 
-        <div className="flex items-center gap-2 sm:gap-3">
-          <LanguageSwitcher />
-          <ThemeToggle />
-          {isAuthenticated ? (
-            <>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-10 w-10 p-0"
-                onClick={() => setQrOpen(true)}
-              >
-                <QrCode className="h-4 w-4" />
-                <span className="sr-only">{t("profile.entryQr")}</span>
-              </Button>
-              <Button variant="ghost" size="sm" asChild className="h-10 px-2 sm:px-3">
-                <Link href={ROUTES.PROFILE} className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span className="hidden max-w-32 truncate sm:inline">{user?.email}</span>
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" onClick={logout} className="h-10 w-10 p-0 sm:w-auto sm:px-3">
-                <LogOut className="h-4 w-4" />
-                <span className="sr-only sm:not-sr-only sm:ml-2">{t("common.logout")}</span>
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button variant="ghost" size="sm" asChild className="h-10">
-                <Link href={ROUTES.LOGIN}>{t("common.login")}</Link>
-              </Button>
-              <Button size="sm" asChild className="h-10">
-                <Link href={ROUTES.REGISTER}>{t("common.register")}</Link>
-              </Button>
-            </>
-          )}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <LanguageSwitcher />
+            <ThemeToggle />
+            {isAuthenticated ? (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-10 w-10 p-0"
+                  onClick={() => setQrOpen(true)}
+                >
+                  <QrCode className="h-4 w-4" />
+                  <span className="sr-only">{t("profile.entryQr")}</span>
+                </Button>
+                <Button variant="ghost" size="sm" asChild className="h-10 px-2 sm:px-3">
+                  <Link href={ROUTES.PROFILE} className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span className="hidden max-w-32 truncate sm:inline">{user?.email}</span>
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="sm" onClick={logout} className="h-10 w-10 p-0 sm:w-auto sm:px-3">
+                  <LogOut className="h-4 w-4" />
+                  <span className="sr-only sm:not-sr-only sm:ml-2">{t("common.logout")}</span>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild className="h-10">
+                  <Link href={ROUTES.LOGIN}>{t("common.login")}</Link>
+                </Button>
+                <Button size="sm" asChild className="h-10">
+                  <Link href={ROUTES.REGISTER}>{t("common.register")}</Link>
+                </Button>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Entry QR Sheet */}
+      {/* Entry QR Sheet — outside header to avoid backdrop-filter containing block */}
       {user?.id && (
         <Sheet open={qrOpen} onOpenChange={setQrOpen}>
           <SheetContent side="bottom" className="rounded-t-2xl">
@@ -92,6 +94,6 @@ export function Header() {
           </SheetContent>
         </Sheet>
       )}
-    </header>
+    </>
   );
 }
