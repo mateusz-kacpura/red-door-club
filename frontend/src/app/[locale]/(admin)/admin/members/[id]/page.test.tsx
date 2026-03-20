@@ -20,8 +20,9 @@ vi.mock("next/navigation", () => ({
 
 const mockGet = vi.hoisted(() => vi.fn());
 const mockPatch = vi.hoisted(() => vi.fn());
+const mockPost = vi.hoisted(() => vi.fn());
 vi.mock("@/lib/api-client", () => ({
-  apiClient: { get: mockGet, patch: mockPatch },
+  apiClient: { get: mockGet, patch: mockPatch, post: mockPost },
   ApiError: class ApiError extends Error { name = "ApiError"; },
 }));
 
@@ -53,6 +54,7 @@ describe("MemberDetailPage", () => {
   beforeEach(() => {
     mockGet.mockReset();
     mockPatch.mockReset();
+    mockPost.mockReset();
     mockPush.mockReset();
   });
 
@@ -261,6 +263,153 @@ describe("MemberDetailPage", () => {
     render(<MemberDetailPage />);
     await waitFor(() => {
       expect(screen.getByText("RD-NFC-001")).toBeInTheDocument();
+    });
+  });
+
+  // ── Promoter Stats ────────────────────────────────────────────────────────
+
+  it("shows promoter stat cards when member is a promoter with stats", async () => {
+    mockGet.mockResolvedValue(makeMember({
+      user_type: "promoter",
+      promoter_stats: {
+        total_codes: 2,
+        total_uses: 15,
+        total_revenue: 5000,
+        commission_earned: 2500,
+        pending_payout: 500,
+      },
+    }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Total Codes")).toBeInTheDocument();
+    });
+    expect(screen.getByText("2")).toBeInTheDocument();
+    expect(screen.getByText("15")).toBeInTheDocument();
+    expect(screen.getByText("Conversions")).toBeInTheDocument();
+  });
+
+  it("shows regular stat cards when member is not a promoter", async () => {
+    mockGet.mockResolvedValue(makeMember({ user_type: "member" }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Connections")).toBeInTheDocument();
+    });
+    expect(screen.getByText("Total Spent")).toBeInTheDocument();
+    expect(screen.queryByText("Total Codes")).not.toBeInTheDocument();
+  });
+
+  // ── Promoter QR Code Section ──────────────────────────────────────────────
+
+  it("shows promoter QR code section with code when promoter has codes", async () => {
+    mockGet.mockResolvedValue(makeMember({
+      user_type: "promoter",
+      is_promoter: true,
+      promoter_stats: { total_codes: 1, total_uses: 3, total_revenue: 1000, commission_earned: 500, pending_payout: 0 },
+      promoter_codes: [{
+        id: "code-uuid-1",
+        code: "VIP2026",
+        tier_grant: null,
+        quota: 0,
+        uses_count: 3,
+        revenue_attributed: 1000,
+        commission_rate: 0.5,
+        is_active: true,
+        created_at: new Date().toISOString(),
+      }],
+    }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Promoter QR Code")).toBeInTheDocument();
+    });
+    expect(screen.getByText("VIP2026")).toBeInTheDocument();
+    // QR code rendered
+    const qrCodes = screen.getAllByTestId("qr-code");
+    const promoQr = qrCodes.find(el => el.getAttribute("data-value")?.includes("qr-register?promo=VIP2026"));
+    expect(promoQr).toBeTruthy();
+  });
+
+  it("shows 'no code' state with generate form when promoter has no codes", async () => {
+    mockGet.mockResolvedValue(makeMember({
+      user_type: "promoter",
+      is_promoter: true,
+      promoter_stats: { total_codes: 0, total_uses: 0, total_revenue: 0, commission_earned: 0, pending_payout: 0 },
+      promoter_codes: [],
+    }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Promoter QR Code")).toBeInTheDocument();
+    });
+    expect(screen.getByText(/hasn't generated a QR code/i)).toBeInTheDocument();
+    expect(screen.getByText("Generate")).toBeInTheDocument();
+  });
+
+  it("does not show promoter QR section for non-promoter members", async () => {
+    mockGet.mockResolvedValue(makeMember({ user_type: "member", is_promoter: false }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("Promoter QR Code")).not.toBeInTheDocument();
+  });
+
+  it("calls POST to generate a promo code when Generate button clicked", async () => {
+    const member = makeMember({
+      user_type: "promoter",
+      is_promoter: true,
+      promoter_stats: { total_codes: 0, total_uses: 0, total_revenue: 0, commission_earned: 0, pending_payout: 0 },
+      promoter_codes: [],
+    });
+    mockGet.mockResolvedValue(member);
+    mockPost.mockResolvedValue({});
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Generate")).toBeInTheDocument();
+    });
+    // Type code name
+    const input = screen.getByPlaceholderText("CODE NAME");
+    await userEvent.type(input, "NEWCODE");
+    // Re-mock get for re-fetch after generate
+    mockGet.mockResolvedValue({ ...member, promoter_codes: [{ id: "new-id", code: "NEWCODE", uses_count: 0, revenue_attributed: 0, is_active: true, created_at: new Date().toISOString() }] });
+    await userEvent.click(screen.getByText("Generate"));
+    await waitFor(() => {
+      expect(mockPost).toHaveBeenCalledWith("/admin/promo-codes", expect.objectContaining({
+        code: "NEWCODE",
+        promoter_id: "member-uuid-1",
+      }));
+    });
+  });
+
+  it("shows rename input when pencil icon clicked on promoter code", async () => {
+    mockGet.mockResolvedValue(makeMember({
+      user_type: "promoter",
+      is_promoter: true,
+      promoter_stats: { total_codes: 1, total_uses: 0, total_revenue: 0, commission_earned: 0, pending_payout: 0 },
+      promoter_codes: [{
+        id: "code-uuid-1",
+        code: "OLDCODE",
+        tier_grant: null,
+        quota: 0,
+        uses_count: 0,
+        revenue_attributed: 0,
+        commission_rate: 0.5,
+        is_active: true,
+        created_at: new Date().toISOString(),
+      }],
+    }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("OLDCODE")).toBeInTheDocument();
+    });
+    // The pencil button is the small ghost button next to "OLDCODE" text
+    // It's within the same flex container as the code name
+    const codeText = screen.getByText("OLDCODE");
+    const container = codeText.closest("div");
+    const pencilBtn = container?.querySelector("button");
+    expect(pencilBtn).toBeTruthy();
+    await userEvent.click(pencilBtn!);
+    // Rename input should appear with current code value
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("OLDCODE")).toBeInTheDocument();
     });
   });
 });

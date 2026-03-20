@@ -164,12 +164,26 @@ export interface PromoterStats {
   pending_payout: number;
 }
 
+export interface PromoCodeAdmin {
+  id: string;
+  code: string;
+  tier_grant: string | null;
+  quota: number;
+  uses_count: number;
+  revenue_attributed: number;
+  commission_rate: number;
+  is_active: boolean;
+  created_at: string | null;
+}
+
 export interface MemberDetail extends ClubMember {
   connections_count: number;
   tab_total: number;
   service_requests_count: number;
   recent_taps: TapEventAdminRead[];
+  nfc_cards?: { card_id: string; status: string; tier_at_issue: string | null }[];
   promoter_stats?: PromoterStats;
+  promoter_codes?: PromoCodeAdmin[];
 }
 
 export interface ServiceRequestAdminRead extends ServiceRequest {

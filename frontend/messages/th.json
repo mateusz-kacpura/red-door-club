@@ -560,7 +560,13 @@
     "promoterConversions": "การแปลง",
     "promoterRevenue": "รายได้ที่เกิดจาก",
     "promoterCommission": "ค่าคอมมิชชันที่ได้รับ",
-    "promoterPendingPayout": "รอการจ่าย"
+    "promoterPendingPayout": "รอการจ่าย",
+    "promoterQrTitle": "QR โค้ดโปรโมเตอร์",
+    "promoterNoCode": "โปรโมเตอร์นี้ยังไม่ได้สร้าง QR โค้ด",
+    "promoterGenerate": "สร้าง",
+    "promoterCodeNamePlaceholder": "ชื่อโค้ด",
+    "promoterCodeUses": "ใช้แล้ว {count} ครั้ง",
+    "promoterCodeRevenue": "รายได้ {amount}"
   },
   "floor": {
     "title": "มุมมองพื้นสด",

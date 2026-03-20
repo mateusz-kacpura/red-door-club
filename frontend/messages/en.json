@@ -560,7 +560,13 @@
     "promoterConversions": "Conversions",
     "promoterRevenue": "Revenue Attributed",
     "promoterCommission": "Commission Earned",
-    "promoterPendingPayout": "Pending Payout"
+    "promoterPendingPayout": "Pending Payout",
+    "promoterQrTitle": "Promoter QR Code",
+    "promoterNoCode": "This promoter hasn't generated a QR code yet.",
+    "promoterGenerate": "Generate",
+    "promoterCodeNamePlaceholder": "CODE NAME",
+    "promoterCodeUses": "{count} uses",
+    "promoterCodeRevenue": "{amount} revenue"
   },
   "floor": {
     "title": "Live Floor View",

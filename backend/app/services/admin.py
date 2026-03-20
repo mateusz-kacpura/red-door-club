@@ -192,12 +192,33 @@ class AdminService:
             for t in recent_taps_raw
         ]
 
-        # Promoter stats (only for promoters)
+        # Promoter stats + codes (only for promoters)
         promoter_stats: dict | None = None
+        promoter_codes: list[dict] | None = None
         if member.is_promoter or member.user_type == "promoter":
             from app.services.promoter import PromoterService
-            promoter_svc = PromoterService(self.db)
-            promoter_stats = await promoter_svc.get_stats(member_id)
+            promoter_stats = await PromoterService.get_stats(self.db, member_id)
+
+            from app.db.models.promoter import PromoCode
+            codes_result = await self.db.execute(
+                select(PromoCode)
+                .where(PromoCode.promoter_id == member_id)
+                .order_by(PromoCode.created_at.desc())
+            )
+            promoter_codes = [
+                {
+                    "id": str(c.id),
+                    "code": c.code,
+                    "tier_grant": c.tier_grant,
+                    "quota": c.quota,
+                    "uses_count": c.uses_count,
+                    "revenue_attributed": float(c.revenue_attributed),
+                    "commission_rate": float(c.commission_rate),
+                    "is_active": c.is_active,
+                    "created_at": c.created_at.isoformat() if c.created_at else None,
+                }
+                for c in codes_result.scalars().all()
+            ]
 
         result = {
             "id": str(member.id),
@@ -228,6 +249,8 @@ class AdminService:
         }
         if promoter_stats is not None:
             result["promoter_stats"] = promoter_stats
+        if promoter_codes is not None:
+            result["promoter_codes"] = promoter_codes
         return result
 
     async def update_member_notes(self, member_id: uuid.UUID, notes: str | None) -> dict:

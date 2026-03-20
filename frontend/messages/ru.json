@@ -560,7 +560,13 @@
     "promoterConversions": "Конверсии",
     "promoterRevenue": "Атрибутированная выручка",
     "promoterCommission": "Заработанная комиссия",
-    "promoterPendingPayout": "Ожидающая выплата"
+    "promoterPendingPayout": "Ожидающая выплата",
+    "promoterQrTitle": "QR-код промоутера",
+    "promoterNoCode": "Этот промоутер ещё не сгенерировал QR-код.",
+    "promoterGenerate": "Сгенерировать",
+    "promoterCodeNamePlaceholder": "НАЗВАНИЕ КОДА",
+    "promoterCodeUses": "{count} использований",
+    "promoterCodeRevenue": "{amount} дохода"
   },
   "floor": {
     "title": "Вид зала в реальном времени",

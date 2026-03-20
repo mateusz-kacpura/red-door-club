@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard, TrendingUp, Wallet } from "lucide-react";
+import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard, TrendingUp, Wallet, QrCode, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,6 +56,12 @@ export default function MemberDetailPage() {
   const [saving, setSaving] = useState(false);
   const [editError, setEditError] = useState("");
   const [editSaved, setEditSaved] = useState(false);
+
+  // Promoter code state
+  const [newCodeName, setNewCodeName] = useState("");
+  const [generatingCode, setGeneratingCode] = useState(false);
+  const [renamingCodeId, setRenamingCodeId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
 
   useEffect(() => {
     if (!memberId) return;
@@ -116,6 +122,45 @@ export default function MemberDetailPage() {
       if (err instanceof ApiError) setEditError(err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleGenerateCode = async () => {
+    if (!member || !newCodeName.trim()) return;
+    setGeneratingCode(true);
+    try {
+      await apiClient.post("/admin/promo-codes", {
+        code: newCodeName.trim().toUpperCase(),
+        promoter_id: member.id,
+        quota: 0,
+        commission_rate: 0.5,
+      });
+      setNewCodeName("");
+      // Re-fetch member detail
+      const data = await apiClient.get<MemberDetail>(`/admin/members/${member.id}`);
+      setMember(data);
+    } catch {
+      // silent
+    } finally {
+      setGeneratingCode(false);
+    }
+  };
+
+  const handleRenameCode = async (codeId: string) => {
+    if (!renameValue.trim()) return;
+    try {
+      await apiClient.patch(`/admin/promo-codes/${codeId}`, {
+        code: renameValue.trim().toUpperCase(),
+      });
+      setRenamingCodeId(null);
+      setRenameValue("");
+      // Re-fetch member detail
+      if (member) {
+        const data = await apiClient.get<MemberDetail>(`/admin/members/${member.id}`);
+        setMember(data);
+      }
+    } catch {
+      // silent
     }
   };
 
@@ -296,6 +341,92 @@ export default function MemberDetailPage() {
               ))}
               <p className="text-xs text-muted-foreground">{t("profile.nfcCardHint")}</p>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Promoter QR Code */}
+      {(member.user_type === "promoter" || member.is_promoter) && (
+        <Card className="rounded-xl">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <QrCode className="h-4 w-4 text-primary" />
+              {t("memberDetail.promoterQrTitle")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {member.promoter_codes && member.promoter_codes.length > 0 ? (
+              <div className="space-y-4">
+                {member.promoter_codes.map((pc) => (
+                  <div key={pc.id} className="flex flex-col sm:flex-row gap-4 items-start">
+                    <div className="bg-white p-3 rounded-xl border border-border shrink-0">
+                      <QRCode
+                        value={`${typeof window !== "undefined" ? window.location.origin : ""}/qr-register?promo=${pc.code}`}
+                        size={120}
+                      />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      {renamingCodeId === pc.id ? (
+                        <div className="flex gap-2 items-center">
+                          <Input
+                            value={renameValue}
+                            onChange={(e) => setRenameValue(e.target.value)}
+                            className="uppercase h-8 font-mono max-w-[200px]"
+                            placeholder={t("memberDetail.promoterCodeNamePlaceholder")}
+                          />
+                          <Button size="sm" variant="ghost" className="h-8 px-2" onClick={() => handleRenameCode(pc.id)}>
+                            <Check className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button size="sm" variant="ghost" className="h-8 px-2" onClick={() => { setRenamingCodeId(null); setRenameValue(""); }}>
+                            <X className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <p className="font-mono font-medium tracking-wider text-lg">{pc.code}</p>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 px-2"
+                            onClick={() => { setRenamingCodeId(pc.id); setRenameValue(pc.code); }}
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span>{t("memberDetail.promoterCodeUses", { count: pc.uses_count })}</span>
+                        <span>{t("memberDetail.promoterCodeRevenue", { amount: formatAmount(pc.revenue_attributed) })}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground bg-muted rounded px-2 py-1 font-mono truncate">
+                        {typeof window !== "undefined" ? window.location.origin : ""}/qr-register?promo={pc.code}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-3 py-6">
+                <QrCode className="h-10 w-10 text-muted-foreground/30" />
+                <p className="text-sm text-muted-foreground">{t("memberDetail.promoterNoCode")}</p>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    value={newCodeName}
+                    onChange={(e) => setNewCodeName(e.target.value)}
+                    className="uppercase h-8 font-mono max-w-[200px]"
+                    placeholder={t("memberDetail.promoterCodeNamePlaceholder")}
+                  />
+                  <Button size="sm" onClick={handleGenerateCode} disabled={generatingCode || !newCodeName.trim()}>
+                    {generatingCode ? <Loader2 className="h-4 w-4 animate-spin" /> : (
+                      <>
+                        <Plus className="h-4 w-4 mr-1" />
+                        {t("memberDetail.promoterGenerate")}
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

@@ -1239,3 +1239,148 @@ async def test_update_member_multiple_fields(admin_client: AsyncClient, mock_use
     assert data["full_name"] == "Bob Smith"
     assert data["tier"] == "gold"
     assert data["company_name"] == "Smith & Co"
+
+
+# ── Promoter: member detail with stats + codes ──────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_get_member_detail_returns_promoter_stats_and_codes(
+    admin_client: AsyncClient, mock_admin_service: MagicMock
+):
+    """GET /admin/members/{id} returns promoter_stats and promoter_codes for promoters."""
+    member_id = uuid4()
+    mock_admin_service.get_member_detail.return_value = {
+        "id": str(member_id),
+        "email": "promoter@example.com",
+        "full_name": "Pro Moter",
+        "tier": None,
+        "user_type": "promoter",
+        "role": "user",
+        "is_active": True,
+        "is_promoter": True,
+        "staff_notes": None,
+        "connections_count": 0,
+        "tab_total": 0,
+        "service_requests_count": 0,
+        "recent_taps": [],
+        "nfc_cards": [],
+        "promoter_stats": {
+            "total_codes": 1,
+            "total_uses": 5,
+            "total_revenue": 2500.0,
+            "commission_earned": 1250.0,
+            "pending_payout": 0.0,
+        },
+        "promoter_codes": [
+            {
+                "id": str(uuid4()),
+                "code": "VIP2026",
+                "tier_grant": None,
+                "quota": 0,
+                "uses_count": 5,
+                "revenue_attributed": 2500.0,
+                "commission_rate": 0.5,
+                "is_active": True,
+                "created_at": datetime.now(UTC).isoformat(),
+            }
+        ],
+    }
+
+    response = await admin_client.get(f"{settings.API_V1_STR}/admin/members/{member_id}")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["user_type"] == "promoter"
+    assert data["promoter_stats"]["total_codes"] == 1
+    assert data["promoter_stats"]["total_uses"] == 5
+    assert data["promoter_stats"]["commission_earned"] == 1250.0
+    assert len(data["promoter_codes"]) == 1
+    assert data["promoter_codes"][0]["code"] == "VIP2026"
+
+
+# ── Promoter: admin create promo code ──────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_admin_create_promo_code(admin_client: AsyncClient, mock_db_session):
+    """POST /admin/promo-codes creates a promo code for a promoter."""
+    promoter_id = uuid4()
+    code_id = uuid4()
+
+    mock_code = MagicMock()
+    mock_code.id = code_id
+    mock_code.code = "NEWCODE"
+    mock_code.promoter_id = promoter_id
+    mock_code.tier_grant = None
+    mock_code.quota = 0
+    mock_code.uses_count = 0
+    mock_code.revenue_attributed = Decimal("0.00")
+    mock_code.commission_rate = Decimal("0.50")
+    mock_code.is_active = True
+    mock_code.created_at = datetime.now(UTC)
+
+    mock_db_session.refresh = AsyncMock()
+
+    with patch("app.db.models.promoter.PromoCode", return_value=mock_code):
+        response = await admin_client.post(
+            f"{settings.API_V1_STR}/admin/promo-codes",
+            json={
+                "code": "newcode",
+                "promoter_id": str(promoter_id),
+                "quota": 0,
+                "commission_rate": 0.5,
+            },
+        )
+
+    assert response.status_code == 201
+    data = response.json()
+    assert data["code"] == "NEWCODE"
+    assert float(data["commission_rate"]) == 0.5
+
+
+# ── Promoter: admin rename promo code ──────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_admin_rename_promo_code(admin_client: AsyncClient, mock_db_session):
+    """PATCH /admin/promo-codes/{id} renames a promo code."""
+    code_id = uuid4()
+
+    mock_code = MagicMock()
+    mock_code.id = code_id
+    mock_code.code = "OLDCODE"
+    mock_code.promoter_id = uuid4()
+    mock_code.tier_grant = None
+    mock_code.quota = 0
+    mock_code.uses_count = 3
+    mock_code.revenue_attributed = Decimal("1000.00")
+    mock_code.commission_rate = Decimal("0.50")
+    mock_code.is_active = True
+    mock_code.created_at = datetime.now(UTC)
+
+    mock_db_session.get = AsyncMock(return_value=mock_code)
+    mock_db_session.refresh = AsyncMock()
+
+    response = await admin_client.patch(
+        f"{settings.API_V1_STR}/admin/promo-codes/{code_id}",
+        json={"code": "NEWNAME"},
+    )
+
+    assert response.status_code == 200
+    # Code should have been renamed (uppercased)
+    assert mock_code.code == "NEWNAME"
+    mock_db_session.commit.assert_awaited()
+
+
+@pytest.mark.anyio
+async def test_admin_rename_promo_code_not_found(admin_client: AsyncClient, mock_db_session):
+    """PATCH /admin/promo-codes/{id} returns 404 for non-existent code."""
+    mock_db_session.get = AsyncMock(return_value=None)
+
+    response = await admin_client.patch(
+        f"{settings.API_V1_STR}/admin/promo-codes/{uuid4()}",
+        json={"code": "NEWNAME"},
+    )
+
+    assert response.status_code == 404

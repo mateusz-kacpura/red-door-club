@@ -560,7 +560,13 @@
     "promoterConversions": "Konwersje",
     "promoterRevenue": "Przypisany przychód",
     "promoterCommission": "Zarobiona prowizja",
-    "promoterPendingPayout": "Oczekująca wypłata"
+    "promoterPendingPayout": "Oczekująca wypłata",
+    "promoterQrTitle": "Kod QR promotora",
+    "promoterNoCode": "Ten promotor nie wygenerował jeszcze kodu QR.",
+    "promoterGenerate": "Generuj",
+    "promoterCodeNamePlaceholder": "NAZWA KODU",
+    "promoterCodeUses": "{count} użyć",
+    "promoterCodeRevenue": "{amount} przychodu"
   },
   "floor": {
     "title": "Widok sali na żywo",

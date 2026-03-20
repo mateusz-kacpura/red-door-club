@@ -35,6 +35,7 @@ class AdminCreatePromoCode(BaseModel):
 
 
 class AdminUpdatePromoCode(BaseModel):
+    code: str | None = None
     is_active: bool | None = None
     quota: int | None = None
 
@@ -408,6 +409,8 @@ async def admin_update_promo_code(
     code = await db.get(PromoCode, code_id)
     if code is None:
         raise NotFoundError(message="Promo code not found.")
+    if payload.code is not None:
+        code.code = payload.code.upper()
     if payload.is_active is not None:
         code.is_active = payload.is_active
     if payload.quota is not None:

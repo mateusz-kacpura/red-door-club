@@ -560,7 +560,13 @@
     "promoterConversions": "转化",
     "promoterRevenue": "归因收入",
     "promoterCommission": "已赚取佣金",
-    "promoterPendingPayout": "待付款"
+    "promoterPendingPayout": "待付款",
+    "promoterQrTitle": "推广员二维码",
+    "promoterNoCode": "该推广员尚未生成二维码。",
+    "promoterGenerate": "生成",
+    "promoterCodeNamePlaceholder": "代码名称",
+    "promoterCodeUses": "使用 {count} 次",
+    "promoterCodeRevenue": "收入 {amount}"
   },
   "floor": {
     "title": "实时场地视图",
