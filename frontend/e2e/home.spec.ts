@@ -48,12 +48,11 @@ async function mockAuthAndDashboard(page: Page) {
 test.describe("Home — Unauthenticated", () => {
   test("/ shows the home landing page with login link", async ({ page }) => {
     // No storageState — user is anonymous
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "commit" });
 
-    // The home page shows links to Login and Register (it's a landing page, not a redirect)
-    await expect(page.getByRole("link", { name: "Login" }).first()).toBeVisible({
-      timeout: 5000,
-    });
+    // The home page redirects unauthenticated users to /login
+    await page.waitForURL("**/login**", { timeout: 15000, waitUntil: "commit" });
+    await expect(page.locator("#email")).toBeVisible({ timeout: 5000 });
   });
 
   test("/login page renders heading and form", async ({ page }) => {

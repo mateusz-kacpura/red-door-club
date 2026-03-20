@@ -214,7 +214,7 @@ test.describe("Admin — Smart Matching", () => {
 
     await page.goto("/admin/matching");
 
-    await expect(page.getByText(/no complementary pairs/i)).toBeVisible();
+    await expect(page.getByText(/no deal-flow pairs/i)).toBeVisible();
   });
 });
 
@@ -256,7 +256,7 @@ test.describe("Admin — Churn Risk", () => {
 
     await page.goto("/admin/churn");
 
-    await expect(page.getByText("At Risk Member")).toBeVisible();
+    await expect(page.getByRole("link", { name: "At Risk Member" })).toBeVisible();
   });
 
   test("shows churn score bar value", async ({ page }) => {
