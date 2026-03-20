@@ -240,7 +240,24 @@
     "interestsHint": "Zaznacz wszystkie pasujące",
     "noInterests": "Brak wybranych zainteresowań",
     "nfcCard": "Moja karta NFC",
-    "nfcCardHint": "Zeskanuj ten kod QR, aby zasymulować tapnięcie kartą NFC."
+    "nfcCardHint": "Zeskanuj ten kod QR, aby zasymulować tapnięcie kartą NFC.",
+    "connectionQr": "QR do kontaktu",
+    "connectionQrHint": "Pozwól innym zeskanować, by się z tobą połączyć",
+    "entryQr": "QR wejściowy",
+    "entryQrHint": "Pokaż ten QR personelowi przy wejściu"
+  },
+  "connect": {
+    "title": "Połącz",
+    "connecting": "Łączenie...",
+    "connectWith": "Połącz się z {name}",
+    "connectButton": "Połącz",
+    "success": "Połączono!",
+    "successDesc": "Jesteś teraz połączony z {name}",
+    "alreadyConnected": "Już połączeni",
+    "alreadyConnectedDesc": "Jesteś już połączony z {name}",
+    "cannotSelf": "Nie możesz połączyć się z samym sobą",
+    "notFound": "Nie znaleziono członka",
+    "viewConnections": "Zobacz kontakty"
   },
   "analytics": {
     "title": "Przegląd analityki",
@@ -574,7 +591,9 @@
     "promoterGenerate": "Generuj",
     "promoterCodeNamePlaceholder": "NAZWA KODU",
     "promoterCodeUses": "{count} użyć",
-    "promoterCodeRevenue": "{amount} przychodu"
+    "promoterCodeRevenue": "{amount} przychodu",
+    "makeStaff": "Nadaj rolę personelu",
+    "revokeStaff": "Odbierz rolę personelu"
   },
   "floor": {
     "title": "Widok sali na żywo",
@@ -665,5 +684,29 @@
     "confirmDelete": "Potwierdź usunięcie",
     "deleteWarning": "Ta operacja jest nieodwracalna. Wszystkie kody QR w tej partii zostaną trwale usunięte.",
     "reduceWarning": "Usuwane są tylko nieskonwertowane kody, zaczynając od najnowszych."
+  },
+  "staff": {
+    "title": "Panel personelu",
+    "checkin": "Zamelduj",
+    "checkingIn": "Meldowanie...",
+    "checkedIn": "Zameldowany!",
+    "alreadyCheckedIn": "Już zameldowany",
+    "alreadyCheckedInDesc": "jest już zameldowany na to wydarzenie.",
+    "memberInfo": "Informacje o członku",
+    "selectEvent": "Wybierz wydarzenie",
+    "fee": "Opłata",
+    "promo": "PROMO",
+    "promoEntry": "Darmowe wejście (PROMO)",
+    "entryFee": "Opłata za wejście",
+    "noEventsToday": "Brak zaplanowanych wydarzeń na dziś.",
+    "memberNotFound": "Nie znaleziono członka",
+    "confirm": "Potwierdź",
+    "error": "Błąd",
+    "registerGuest": "Rejestracja gościa",
+    "registerGuestHint": "Niech gość zeskanuje ten QR aby utworzyć konto",
+    "scanQr": "Skanuj kod QR",
+    "scanNext": "Skanuj następny",
+    "cameraPermission": "Zezwól na dostęp do kamery, aby skanować kody QR",
+    "invalidQr": "Nieprawidłowy kod QR"
   }
 }

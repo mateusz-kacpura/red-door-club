@@ -123,6 +123,14 @@ SEED_USERS = [
         "user_type": "promoter",
         "is_promoter": True,
     },
+    {
+        "email": "staff@club.s8lls.com",
+        "full_name": "Staff Door",
+        "role": "staff",
+        "is_superuser": False,
+        "tier": None,
+        "user_type": "staff",
+    },
 ]
 
 

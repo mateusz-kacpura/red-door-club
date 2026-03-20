@@ -792,3 +792,332 @@ async def test_get_engagement_health_does_not_expose_score(member_client: AsyncC
     data = response.json()
     assert "score" not in data
     assert "factors" not in data
+
+
+# ── QR Connection: POST /members/connect ─────────────────────────────────────
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_success(member_client: AsyncClient, mock_user: MockUser, mock_db_session):
+    """POST /members/connect creates a connection between two members."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="target@example.com")
+    target_user.full_name = "Bob Target"
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    with patch("app.repositories.connection.exists", AsyncMock(return_value=False)), \
+         patch("app.repositories.connection.create", AsyncMock()):
+        response = await member_client.post(
+            f"{settings.API_V1_STR}/members/connect",
+            json={"member_id": str(target_id)},
+        )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "connected"
+    assert data["member_name"] == "Bob Target"
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_duplicate(member_client: AsyncClient, mock_user: MockUser, mock_db_session):
+    """POST /members/connect returns 409 when already connected."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="target@example.com")
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    with patch("app.repositories.connection.exists", AsyncMock(return_value=True)):
+        response = await member_client.post(
+            f"{settings.API_V1_STR}/members/connect",
+            json={"member_id": str(target_id)},
+        )
+
+    assert response.status_code == 409
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_self(member_client: AsyncClient, mock_user: MockUser):
+    """POST /members/connect with own id returns 400."""
+    response = await member_client.post(
+        f"{settings.API_V1_STR}/members/connect",
+        json={"member_id": str(mock_user.id)},
+    )
+
+    assert response.status_code == 400
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_not_found(member_client: AsyncClient, mock_db_session):
+    """POST /members/connect with non-existent member returns 404."""
+    mock_db_session.get = AsyncMock(return_value=None)
+
+    response = await member_client.post(
+        f"{settings.API_V1_STR}/members/connect",
+        json={"member_id": str(uuid4())},
+    )
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_missing_member_id(member_client: AsyncClient):
+    """POST /members/connect without member_id returns 400."""
+    response = await member_client.post(
+        f"{settings.API_V1_STR}/members/connect",
+        json={},
+    )
+
+    assert response.status_code == 400
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_invalid_uuid(member_client: AsyncClient):
+    """POST /members/connect with invalid UUID returns 400."""
+    response = await member_client.post(
+        f"{settings.API_V1_STR}/members/connect",
+        json={"member_id": "not-a-valid-uuid"},
+    )
+
+    assert response.status_code == 400
+    assert "Invalid member_id" in response.json()["error"]["message"]
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_inactive_target(member_client: AsyncClient, mock_db_session):
+    """POST /members/connect with inactive target returns 404."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="inactive@example.com")
+    target_user.is_active = False
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    response = await member_client.post(
+        f"{settings.API_V1_STR}/members/connect",
+        json={"member_id": str(target_id)},
+    )
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_creates_with_qr_type(
+    member_client: AsyncClient, mock_user: MockUser, mock_db_session
+):
+    """POST /members/connect calls conn_repo.create with connection_type='qr'."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="target@example.com")
+    target_user.full_name = "Target User"
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    mock_create = AsyncMock()
+    with patch("app.repositories.connection.exists", AsyncMock(return_value=False)), \
+         patch("app.repositories.connection.create", mock_create):
+        await member_client.post(
+            f"{settings.API_V1_STR}/members/connect",
+            json={"member_id": str(target_id)},
+        )
+
+    mock_create.assert_awaited_once()
+    call_kwargs = mock_create.call_args.kwargs
+    assert call_kwargs["connection_type"] == "qr"
+    assert call_kwargs["member_a_id"] == mock_user.id
+    assert call_kwargs["member_b_id"] == target_id
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_commits_transaction(
+    member_client: AsyncClient, mock_db_session
+):
+    """POST /members/connect commits the database transaction on success."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="target@example.com")
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+    mock_db_session.commit = AsyncMock()
+
+    with patch("app.repositories.connection.exists", AsyncMock(return_value=False)), \
+         patch("app.repositories.connection.create", AsyncMock()):
+        await member_client.post(
+            f"{settings.API_V1_STR}/members/connect",
+            json={"member_id": str(target_id)},
+        )
+
+    mock_db_session.commit.assert_awaited_once()
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_error_message(member_client: AsyncClient, mock_user: MockUser):
+    """POST /members/connect with own id returns descriptive error message."""
+    response = await member_client.post(
+        f"{settings.API_V1_STR}/members/connect",
+        json={"member_id": str(mock_user.id)},
+    )
+
+    assert response.status_code == 400
+    assert "Cannot connect with yourself" in response.json()["error"]["message"]
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_duplicate_error_message(
+    member_client: AsyncClient, mock_db_session
+):
+    """POST /members/connect returns descriptive 409 error detail."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="target@example.com")
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    with patch("app.repositories.connection.exists", AsyncMock(return_value=True)):
+        response = await member_client.post(
+            f"{settings.API_V1_STR}/members/connect",
+            json={"member_id": str(target_id)},
+        )
+
+    assert response.status_code == 409
+    assert "Already connected" in response.json()["error"]["message"]
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_response_payload(
+    member_client: AsyncClient, mock_db_session
+):
+    """POST /members/connect returns status and member_name in response."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="target@example.com")
+    target_user.full_name = "Jane Doe"
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    with patch("app.repositories.connection.exists", AsyncMock(return_value=False)), \
+         patch("app.repositories.connection.create", AsyncMock()):
+        response = await member_client.post(
+            f"{settings.API_V1_STR}/members/connect",
+            json={"member_id": str(target_id)},
+        )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert set(data.keys()) == {"status", "member_name"}
+    assert data["status"] == "connected"
+    assert data["member_name"] == "Jane Doe"
+
+
+@pytest.mark.anyio
+async def test_connect_via_qr_null_name(
+    member_client: AsyncClient, mock_db_session
+):
+    """POST /members/connect works when target has no full_name."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="target@example.com")
+    target_user.full_name = None
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    with patch("app.repositories.connection.exists", AsyncMock(return_value=False)), \
+         patch("app.repositories.connection.create", AsyncMock()):
+        response = await member_client.post(
+            f"{settings.API_V1_STR}/members/connect",
+            json={"member_id": str(target_id)},
+        )
+
+    assert response.status_code == 200
+    assert response.json()["member_name"] is None
+
+
+# ── QR Connection: GET /members/{id}/public-profile ──────────────────────────
+
+
+@pytest.mark.anyio
+async def test_get_public_profile_success(member_client: AsyncClient, mock_db_session):
+    """GET /members/{id}/public-profile returns minimal public info."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="target@example.com")
+    target_user.full_name = "Bob Target"
+    target_user.company_name = "TechCo Ltd."
+    target_user.industry = "Technology"
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    response = await member_client.get(
+        f"{settings.API_V1_STR}/members/{target_id}/public-profile"
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["full_name"] == "Bob Target"
+    assert data["company_name"] == "TechCo Ltd."
+    assert data["industry"] == "Technology"
+    assert data["id"] == str(target_id)
+
+
+@pytest.mark.anyio
+async def test_get_public_profile_not_found(member_client: AsyncClient, mock_db_session):
+    """GET /members/{id}/public-profile returns 404 for non-existent member."""
+    mock_db_session.get = AsyncMock(return_value=None)
+
+    response = await member_client.get(
+        f"{settings.API_V1_STR}/members/{uuid4()}/public-profile"
+    )
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_get_public_profile_inactive_member(member_client: AsyncClient, mock_db_session):
+    """GET /members/{id}/public-profile returns 404 for inactive member."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="inactive@example.com")
+    target_user.is_active = False
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    response = await member_client.get(
+        f"{settings.API_V1_STR}/members/{target_id}/public-profile"
+    )
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_get_public_profile_null_fields(member_client: AsyncClient, mock_db_session):
+    """GET /members/{id}/public-profile returns null for optional fields."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="minimal@example.com")
+    target_user.full_name = None
+    target_user.company_name = None
+    target_user.industry = None
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    response = await member_client.get(
+        f"{settings.API_V1_STR}/members/{target_id}/public-profile"
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == str(target_id)
+    assert data["full_name"] is None
+    assert data["company_name"] is None
+    assert data["industry"] is None
+
+
+@pytest.mark.anyio
+async def test_get_public_profile_does_not_expose_email(member_client: AsyncClient, mock_db_session):
+    """GET /members/{id}/public-profile does not return email or sensitive data."""
+    target_id = uuid4()
+    target_user = MockUser(id=target_id, email="secret@example.com")
+
+    mock_db_session.get = AsyncMock(return_value=target_user)
+
+    response = await member_client.get(
+        f"{settings.API_V1_STR}/members/{target_id}/public-profile"
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert "email" not in data
+    assert "hashed_password" not in data
+    assert "tier" not in data
+    assert "interests" not in data

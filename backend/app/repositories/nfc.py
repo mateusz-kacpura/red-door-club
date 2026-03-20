@@ -62,7 +62,7 @@ async def update_card(db: AsyncSession, card: NfcCard, **kwargs) -> NfcCard:
 
 async def log_tap_event(
     db: AsyncSession,
-    card_id: str,
+    card_id: str | None,
     tap_type: str,
     member_id: uuid.UUID | None = None,
     reader_id: str | None = None,

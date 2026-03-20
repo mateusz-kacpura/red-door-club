@@ -21,6 +21,7 @@ class EventBase(BaseSchema):
     ends_at: datetime | None = None
     status: str = Field(default="draft", max_length=50)
     min_tier: str | None = Field(default=None, max_length=50)
+    promo_tiers: list[str] = Field(default_factory=list)
 
 
 class EventCreate(EventBase):
@@ -40,6 +41,7 @@ class EventUpdate(BaseSchema):
     ends_at: datetime | None = None
     status: str | None = Field(default=None, max_length=50)
     min_tier: str | None = None
+    promo_tiers: list[str] | None = None
 
 
 class EventRead(EventBase, TimestampSchema):

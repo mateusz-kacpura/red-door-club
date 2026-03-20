@@ -240,7 +240,24 @@
     "interestsHint": "Выберите все подходящие",
     "noInterests": "Интересы ещё не выбраны",
     "nfcCard": "Моя карта NFC",
-    "nfcCardHint": "Отсканируйте QR-код для симуляции NFC-тапа."
+    "nfcCardHint": "Отсканируйте QR-код для симуляции NFC-тапа.",
+    "connectionQr": "QR для связи",
+    "connectionQrHint": "Позвольте другим отсканировать, чтобы связаться с вами",
+    "entryQr": "QR для входа",
+    "entryQrHint": "Покажите этот QR персоналу при входе"
+  },
+  "connect": {
+    "title": "Связаться",
+    "connecting": "Подключение...",
+    "connectWith": "Связаться с {name}",
+    "connectButton": "Связаться",
+    "success": "Связь установлена!",
+    "successDesc": "Вы теперь связаны с {name}",
+    "alreadyConnected": "Уже в контактах",
+    "alreadyConnectedDesc": "Вы уже связаны с {name}",
+    "cannotSelf": "Нельзя связаться с самим собой",
+    "notFound": "Участник не найден",
+    "viewConnections": "Посмотреть контакты"
   },
   "analytics": {
     "title": "Обзор аналитики",
@@ -574,7 +591,9 @@
     "promoterGenerate": "Сгенерировать",
     "promoterCodeNamePlaceholder": "НАЗВАНИЕ КОДА",
     "promoterCodeUses": "{count} использований",
-    "promoterCodeRevenue": "{amount} дохода"
+    "promoterCodeRevenue": "{amount} дохода",
+    "makeStaff": "Назначить персоналом",
+    "revokeStaff": "Снять роль персонала"
   },
   "floor": {
     "title": "Вид зала в реальном времени",
@@ -665,5 +684,29 @@
     "confirmDelete": "Подтвердить удаление",
     "deleteWarning": "Это действие необратимо. Все QR-коды в этом пакете будут удалены навсегда.",
     "reduceWarning": "Удаляются только неиспользованные коды, начиная с новейших."
+  },
+  "staff": {
+    "title": "Панель персонала",
+    "checkin": "Отметить вход",
+    "checkingIn": "Регистрация...",
+    "checkedIn": "Вход отмечен!",
+    "alreadyCheckedIn": "Уже отмечен",
+    "alreadyCheckedInDesc": "уже отмечен на этом мероприятии.",
+    "memberInfo": "Информация об участнике",
+    "selectEvent": "Выбрать мероприятие",
+    "fee": "Сбор",
+    "promo": "ПРОМО",
+    "promoEntry": "Бесплатный вход (ПРОМО)",
+    "entryFee": "Входной сбор",
+    "noEventsToday": "На сегодня мероприятий нет.",
+    "memberNotFound": "Участник не найден",
+    "confirm": "Подтвердить",
+    "error": "Ошибка",
+    "registerGuest": "Регистрация гостя",
+    "registerGuestHint": "Пусть гость отсканирует этот QR для создания аккаунта",
+    "scanQr": "Сканировать QR",
+    "scanNext": "Сканировать след.",
+    "cameraPermission": "Разрешите доступ к камере для сканирования QR",
+    "invalidQr": "Недействительный QR код"
   }
 }

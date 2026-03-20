@@ -1,19 +1,22 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks";
-import { Button } from "@/components/ui";
+import { Button, Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui";
 import { ThemeToggle } from "@/components/theme";
 import { ROUTES } from "@/lib/constants";
-import { LogOut, User, Menu } from "lucide-react";
+import { LogOut, User, Menu, QrCode } from "lucide-react";
 import { useSidebarStore } from "@/stores";
 import { useTranslate } from "@tolgee/react";
 import { LanguageSwitcher } from "./language-switcher";
+import QRCode from "react-qr-code";
 
 export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
   const { toggle } = useSidebarStore();
   const { t } = useTranslate();
+  const [qrOpen, setQrOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -35,6 +38,15 @@ export function Header() {
           <ThemeToggle />
           {isAuthenticated ? (
             <>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-10 w-10 p-0"
+                onClick={() => setQrOpen(true)}
+              >
+                <QrCode className="h-4 w-4" />
+                <span className="sr-only">{t("profile.entryQr")}</span>
+              </Button>
               <Button variant="ghost" size="sm" asChild className="h-10 px-2 sm:px-3">
                 <Link href={ROUTES.PROFILE} className="flex items-center gap-2">
                   <User className="h-4 w-4" />
@@ -58,6 +70,28 @@ export function Header() {
           )}
         </div>
       </div>
+
+      {/* Entry QR Sheet */}
+      {user?.id && (
+        <Sheet open={qrOpen} onOpenChange={setQrOpen}>
+          <SheetContent side="bottom" className="rounded-t-2xl">
+            <SheetHeader className="justify-center border-b-0 pb-0">
+              <SheetTitle>{t("profile.entryQr")}</SheetTitle>
+            </SheetHeader>
+            <div className="flex flex-col items-center gap-4 px-4 pb-8 pt-4">
+              <div className="bg-white p-4 rounded-xl">
+                <QRCode
+                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member=${user.id}`}
+                  size={220}
+                />
+              </div>
+              <p className="text-sm text-muted-foreground text-center">
+                {t("profile.entryQrHint")}
+              </p>
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
     </header>
   );
 }

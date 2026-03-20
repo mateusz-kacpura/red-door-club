@@ -145,6 +145,7 @@ async def get_current_active_superuser(
 CurrentUser = Annotated[User, Depends(get_current_user)]
 CurrentSuperuser = Annotated[User, Depends(get_current_active_superuser)]
 CurrentAdmin = Annotated[User, Depends(RoleChecker(UserRole.ADMIN))]
+CurrentStaff = Annotated[User, Depends(RoleChecker(UserRole.STAFF))]
 
 
 # === NFC Reader API Key dependency ===

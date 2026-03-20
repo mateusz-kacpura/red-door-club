@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard, TrendingUp, Wallet, QrCode, Plus } from "lucide-react";
+import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard, TrendingUp, Wallet, QrCode, Plus, DoorOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +16,9 @@ import QRCode from "react-qr-code";
 const TIER_COLORS: Record<string, string> = {
   silver: "bg-slate-100 text-slate-700",
   gold: "bg-yellow-100 text-yellow-800",
+  platinum: "bg-purple-100 text-purple-700",
   obsidian: "bg-gray-900 text-white",
+  vip: "bg-red-100 text-red-700",
 };
 
 const TAP_TYPE_COLORS: Record<string, string> = {
@@ -56,6 +58,9 @@ export default function MemberDetailPage() {
   const [saving, setSaving] = useState(false);
   const [editError, setEditError] = useState("");
   const [editSaved, setEditSaved] = useState(false);
+
+  // Staff role state
+  const [togglingStaff, setTogglingStaff] = useState(false);
 
   // Promoter code state
   const [newCodeName, setNewCodeName] = useState("");
@@ -122,6 +127,25 @@ export default function MemberDetailPage() {
       if (err instanceof ApiError) setEditError(err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleToggleStaff = async () => {
+    if (!member || member.role === "admin") return;
+    setTogglingStaff(true);
+    try {
+      const isStaff = member.role === "staff";
+      const endpoint = isStaff
+        ? `/admin/members/${member.id}/revoke-staff`
+        : `/admin/members/${member.id}/make-staff`;
+      await apiClient.post(endpoint, {});
+      const data = await apiClient.get<MemberDetail>(`/admin/members/${member.id}`);
+      setMember(data);
+      setEditForm((p) => ({ ...p, user_type: data.user_type ?? "member" }));
+    } catch {
+      // silent
+    } finally {
+      setTogglingStaff(false);
     }
   };
 
@@ -221,6 +245,23 @@ export default function MemberDetailPage() {
               {showEdit ? <X className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5" />}
               {showEdit ? t("common.cancel") : t("memberDetail.editProfile")}
             </Button>
+            {member.role !== "admin" && (
+              <Button
+                size="sm"
+                variant={member.role === "staff" ? "destructive" : "outline"}
+                className="h-7 text-xs"
+                onClick={handleToggleStaff}
+                disabled={togglingStaff}
+              >
+                {togglingStaff ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : member.role === "staff" ? (
+                  t("memberDetail.revokeStaff")
+                ) : (
+                  t("memberDetail.makeStaff")
+                )}
+              </Button>
+            )}
             {editSaved && (
               <span className="text-xs text-green-600 flex items-center gap-1">
                 <Check className="h-3.5 w-3.5" /> {t("memberDetail.editSaved")}
@@ -275,7 +316,9 @@ export default function MemberDetailPage() {
                   <option value="">— no tier —</option>
                   <option value="silver">Silver</option>
                   <option value="gold">Gold</option>
+                  <option value="platinum">Platinum</option>
                   <option value="obsidian">Obsidian</option>
+                  <option value="vip">VIP</option>
                 </select>
               </div>
               <div className="space-y-1">
@@ -315,6 +358,28 @@ export default function MemberDetailPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* Entry QR */}
+      <Card className="rounded-xl">
+        <CardContent className="p-4 flex flex-col sm:flex-row gap-5 items-start">
+          <div className="bg-white p-3 rounded-xl border border-border shrink-0">
+            <QRCode
+              value={`${typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member=${member.id}`}
+              size={120}
+            />
+          </div>
+          <div className="space-y-2">
+            <p className="text-sm font-medium flex items-center gap-2">
+              <DoorOpen className="h-4 w-4 text-primary" />
+              {t("profile.entryQr")}
+            </p>
+            <p className="text-xs text-muted-foreground">{t("profile.entryQrHint")}</p>
+            <p className="text-xs text-muted-foreground bg-muted rounded px-2 py-1 font-mono truncate">
+              {typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member={member.id}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* NFC Card QR */}
       {member.nfc_cards && member.nfc_cards.length > 0 && (

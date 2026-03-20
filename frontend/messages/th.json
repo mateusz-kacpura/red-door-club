@@ -240,7 +240,24 @@
     "interestsHint": "เลือกทั้งหมดที่เกี่ยวข้อง",
     "noInterests": "ยังไม่ได้เลือกความสนใจ",
     "nfcCard": "บัตร NFC ของฉัน",
-    "nfcCardHint": "สแกน QR code นี้เพื่อจำลองการแตะ NFC"
+    "nfcCardHint": "สแกน QR code นี้เพื่อจำลองการแตะ NFC",
+    "connectionQr": "QR สำหรับเชื่อมต่อ",
+    "connectionQrHint": "ให้คนอื่นสแกนเพื่อเชื่อมต่อกับคุณ",
+    "entryQr": "QR เข้างาน",
+    "entryQrHint": "แสดง QR นี้ให้พนักงานที่ทางเข้า"
+  },
+  "connect": {
+    "title": "เชื่อมต่อ",
+    "connecting": "กำลังเชื่อมต่อ...",
+    "connectWith": "เชื่อมต่อกับ {name}",
+    "connectButton": "เชื่อมต่อ",
+    "success": "เชื่อมต่อแล้ว!",
+    "successDesc": "คุณเชื่อมต่อกับ {name} แล้ว",
+    "alreadyConnected": "เชื่อมต่ออยู่แล้ว",
+    "alreadyConnectedDesc": "คุณเชื่อมต่อกับ {name} อยู่แล้ว",
+    "cannotSelf": "ไม่สามารถเชื่อมต่อกับตัวเองได้",
+    "notFound": "ไม่พบสมาชิก",
+    "viewConnections": "ดูการเชื่อมต่อ"
   },
   "analytics": {
     "title": "ภาพรวมการวิเคราะห์",
@@ -574,7 +591,9 @@
     "promoterGenerate": "สร้าง",
     "promoterCodeNamePlaceholder": "ชื่อโค้ด",
     "promoterCodeUses": "ใช้แล้ว {count} ครั้ง",
-    "promoterCodeRevenue": "รายได้ {amount}"
+    "promoterCodeRevenue": "รายได้ {amount}",
+    "makeStaff": "แต่งตั้งเป็นพนักงาน",
+    "revokeStaff": "ถอดถอนพนักงาน"
   },
   "floor": {
     "title": "มุมมองพื้นสด",
@@ -665,5 +684,29 @@
     "confirmDelete": "ยืนยันการลบ",
     "deleteWarning": "การดำเนินการนี้ไม่สามารถย้อนกลับได้ QR code ทั้งหมดในชุดนี้จะถูกลบอย่างถาวร",
     "reduceWarning": "เฉพาะโค้ดที่ยังไม่ถูกแปลงจะถูกลบ โดยเริ่มจากโค้ดล่าสุด"
+  },
+  "staff": {
+    "title": "แผงพนักงาน",
+    "checkin": "เช็คอิน",
+    "checkingIn": "กำลังเช็คอิน...",
+    "checkedIn": "เช็คอินแล้ว!",
+    "alreadyCheckedIn": "เช็คอินแล้ว",
+    "alreadyCheckedInDesc": "เช็คอินเข้างานนี้แล้ว",
+    "memberInfo": "ข้อมูลสมาชิก",
+    "selectEvent": "เลือกกิจกรรม",
+    "fee": "ค่าธรรมเนียม",
+    "promo": "โปรโม",
+    "promoEntry": "เข้าฟรี (โปรโม)",
+    "entryFee": "ค่าเข้างาน",
+    "noEventsToday": "ไม่มีกิจกรรมที่กำหนดไว้สำหรับวันนี้",
+    "memberNotFound": "ไม่พบสมาชิก",
+    "confirm": "ยืนยัน",
+    "error": "ข้อผิดพลาด",
+    "registerGuest": "ลงทะเบียนแขก",
+    "registerGuestHint": "ให้แขกสแกน QR นี้เพื่อสร้างบัญชี",
+    "scanQr": "สแกน QR โค้ด",
+    "scanNext": "สแกนถัดไป",
+    "cameraPermission": "กรุณาอนุญาตการเข้าถึงกล้องเพื่อสแกน QR โค้ด",
+    "invalidQr": "QR โค้ดไม่ถูกต้อง"
   }
 }

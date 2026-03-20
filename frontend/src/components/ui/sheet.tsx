@@ -13,7 +13,7 @@ interface SheetProps {
 interface SheetContentProps {
   children: React.ReactNode;
   className?: string;
-  side?: "left" | "right";
+  side?: "left" | "right" | "bottom";
 }
 
 export function Sheet({ open, onOpenChange, children }: SheetProps) {
@@ -50,9 +50,13 @@ export function SheetContent({
   return (
     <div
       className={cn(
-        "fixed inset-y-0 z-50 flex w-72 flex-col bg-background shadow-lg",
+        "fixed z-50 flex flex-col bg-background shadow-lg",
         "animate-in duration-300",
-        side === "left" ? "left-0 slide-in-from-left" : "right-0 slide-in-from-right",
+        side === "bottom"
+          ? "inset-x-0 bottom-0 w-full slide-in-from-bottom"
+          : "inset-y-0 w-72",
+        side === "left" && "left-0 slide-in-from-left",
+        side === "right" && "right-0 slide-in-from-right",
         className
       )}
     >

@@ -240,7 +240,24 @@
     "interestsHint": "Оберіть усі відповідні",
     "noInterests": "Інтереси ще не обрані",
     "nfcCard": "Моя картка NFC",
-    "nfcCardHint": "Відскануйте QR-код для симуляції NFC-тапу."
+    "nfcCardHint": "Відскануйте QR-код для симуляції NFC-тапу.",
+    "connectionQr": "QR для зв'язку",
+    "connectionQrHint": "Нехай інші сканують, щоб зв'язатися з вами",
+    "entryQr": "QR для входу",
+    "entryQrHint": "Покажіть цей QR персоналу при вході"
+  },
+  "connect": {
+    "title": "З'єднатися",
+    "connecting": "З'єднання...",
+    "connectWith": "З'єднатися з {name}",
+    "connectButton": "З'єднатися",
+    "success": "З'єднано!",
+    "successDesc": "Ви тепер з'єднані з {name}",
+    "alreadyConnected": "Вже з'єднані",
+    "alreadyConnectedDesc": "Ви вже з'єднані з {name}",
+    "cannotSelf": "Неможливо з'єднатися із самим собою",
+    "notFound": "Учасника не знайдено",
+    "viewConnections": "Переглянути контакти"
   },
   "analytics": {
     "title": "Огляд аналітики",
@@ -574,7 +591,9 @@
     "promoterGenerate": "Згенерувати",
     "promoterCodeNamePlaceholder": "НАЗВА КОДУ",
     "promoterCodeUses": "{count} використань",
-    "promoterCodeRevenue": "{amount} доходу"
+    "promoterCodeRevenue": "{amount} доходу",
+    "makeStaff": "Призначити персоналом",
+    "revokeStaff": "Зняти роль персоналу"
   },
   "floor": {
     "title": "Вид залу в реальному часі",
@@ -665,5 +684,29 @@
     "confirmDelete": "Підтвердити видалення",
     "deleteWarning": "Ця дія незворотна. Усі QR-коди в цьому пакеті будуть видалені назавжди.",
     "reduceWarning": "Видаляються лише невикористані коди, починаючи з найновіших."
+  },
+  "staff": {
+    "title": "Панель персоналу",
+    "checkin": "Відмітити вхід",
+    "checkingIn": "Реєстрація...",
+    "checkedIn": "Вхід відмічено!",
+    "alreadyCheckedIn": "Вже відмічено",
+    "alreadyCheckedInDesc": "вже відмічений на цьому заході.",
+    "memberInfo": "Інформація про учасника",
+    "selectEvent": "Обрати захід",
+    "fee": "Збір",
+    "promo": "ПРОМО",
+    "promoEntry": "Безкоштовний вхід (ПРОМО)",
+    "entryFee": "Вхідний збір",
+    "noEventsToday": "На сьогодні заходів не заплановано.",
+    "memberNotFound": "Учасника не знайдено",
+    "confirm": "Підтвердити",
+    "error": "Помилка",
+    "registerGuest": "Реєстрація гостя",
+    "registerGuestHint": "Нехай гість відсканує цей QR для створення акаунту",
+    "scanQr": "Сканувати QR",
+    "scanNext": "Сканувати наст.",
+    "cameraPermission": "Дозвольте доступ до камери для сканування QR",
+    "invalidQr": "Недійсний QR код"
   }
 }

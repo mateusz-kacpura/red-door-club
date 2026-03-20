@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from app.api.routes.v1 import health
 from app.api.routes.v1 import auth, users
 from app.api.routes.v1 import items
-from app.api.routes.v1 import nfc, members, events, admin, ws, promoters, corporate
+from app.api.routes.v1 import nfc, members, events, admin, ws, promoters, corporate, staff
 
 v1_router = APIRouter()
 
@@ -27,6 +27,9 @@ v1_router.include_router(nfc.router, prefix="/nfc", tags=["nfc"])
 v1_router.include_router(members.router, prefix="/members", tags=["members"])
 v1_router.include_router(events.router, prefix="/events", tags=["events"])
 v1_router.include_router(admin.router, prefix="/admin", tags=["admin"])
+
+# Red Door Club — Staff Door Operations
+v1_router.include_router(staff.router, prefix="/staff", tags=["staff"])
 
 # Red Door Club — Phase 4A: Real-Time WebSocket
 v1_router.include_router(ws.router, prefix="/ws", tags=["websocket"])

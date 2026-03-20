@@ -43,7 +43,7 @@ class TapEvent(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    card_id: Mapped[str] = mapped_column(ForeignKey("nfc_cards.card_id"), nullable=False, index=True)
+    card_id: Mapped[str | None] = mapped_column(ForeignKey("nfc_cards.card_id"), nullable=True, index=True)
     member_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     tap_type: Mapped[str] = mapped_column(String(50), nullable=False)
     reader_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
@@ -52,7 +52,7 @@ class TapEvent(Base):
     tapped_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
 
     # Relationships
-    card: Mapped["NfcCard"] = relationship("NfcCard", back_populates="tap_events")
+    card: Mapped["NfcCard | None"] = relationship("NfcCard", back_populates="tap_events")
     member: Mapped["User"] = relationship("User") # type: ignore
 
     def __repr__(self) -> str:

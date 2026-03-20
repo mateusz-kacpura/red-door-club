@@ -228,13 +228,30 @@ describe("MemberDetailPage", () => {
 
   // ── NFC QR Code ────────────────────────────────────────────────────────────
 
+  it("shows Entry QR for every member", async () => {
+    mockGet.mockResolvedValue(makeMember({ nfc_cards: [] }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    const qrCodes = screen.getAllByTestId("qr-code");
+    const entryQr = qrCodes.find((el) =>
+      el.getAttribute("data-value")?.includes("/staff/checkin?member="),
+    );
+    expect(entryQr).toBeDefined();
+  });
+
   it("does not show NFC QR section when member has no NFC cards", async () => {
     mockGet.mockResolvedValue(makeMember({ nfc_cards: [] }));
     render(<MemberDetailPage />);
     await waitFor(() => {
       expect(screen.getByText("Alice Chen")).toBeInTheDocument();
     });
-    expect(screen.queryByTestId("qr-code")).not.toBeInTheDocument();
+    const qrCodes = screen.getAllByTestId("qr-code");
+    const nfcQr = qrCodes.find((el) =>
+      el.getAttribute("data-value")?.includes("/tap?cid="),
+    );
+    expect(nfcQr).toBeUndefined();
   });
 
   it("shows NFC QR code when member has an NFC card", async () => {
@@ -242,8 +259,13 @@ describe("MemberDetailPage", () => {
     mockGet.mockResolvedValue(makeMember({ nfc_cards: nfcCards }));
     render(<MemberDetailPage />);
     await waitFor(() => {
-      expect(screen.getByTestId("qr-code")).toBeInTheDocument();
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
     });
+    const qrCodes = screen.getAllByTestId("qr-code");
+    const nfcQr = qrCodes.find((el) =>
+      el.getAttribute("data-value")?.includes("/tap?cid="),
+    );
+    expect(nfcQr).toBeDefined();
   });
 
   it("NFC QR code encodes the /tap?cid= URL", async () => {
@@ -251,10 +273,13 @@ describe("MemberDetailPage", () => {
     mockGet.mockResolvedValue(makeMember({ nfc_cards: nfcCards }));
     render(<MemberDetailPage />);
     await waitFor(() => {
-      expect(screen.getByTestId("qr-code")).toBeInTheDocument();
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
     });
-    const qr = screen.getByTestId("qr-code");
-    expect(qr.getAttribute("data-value")).toContain("/tap?cid=RD-NFC-001");
+    const qrCodes = screen.getAllByTestId("qr-code");
+    const nfcQr = qrCodes.find((el) =>
+      el.getAttribute("data-value")?.includes("/tap?cid=RD-NFC-001"),
+    );
+    expect(nfcQr).toBeDefined();
   });
 
   it("shows card_id text alongside the QR code", async () => {
@@ -377,6 +402,91 @@ describe("MemberDetailPage", () => {
         promoter_id: "member-uuid-1",
       }));
     });
+  });
+
+  // ── Staff Role Management ──────────────────────────────────────────────
+
+  it("shows Make Staff button for non-admin members", async () => {
+    mockGet.mockResolvedValue(makeMember({ role: "user" }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText(/make staff/i)).toBeInTheDocument();
+    });
+  });
+
+  it("shows Revoke Staff button for staff members", async () => {
+    mockGet.mockResolvedValue(makeMember({ role: "staff" }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText(/revoke staff/i)).toBeInTheDocument();
+    });
+  });
+
+  it("does not show staff button for admin members", async () => {
+    mockGet.mockResolvedValue(makeMember({ role: "admin" }));
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    expect(screen.queryByText(/make staff/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/revoke staff/i)).not.toBeInTheDocument();
+  });
+
+  it("calls make-staff API when Make Staff is clicked", async () => {
+    const member = makeMember({ role: "user" });
+    mockGet
+      .mockResolvedValueOnce(member)
+      .mockResolvedValueOnce(makeMember({ role: "staff" }));
+    mockPost.mockResolvedValue({ ok: true });
+
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText(/make staff/i)).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByText(/make staff/i));
+
+    await waitFor(() => {
+      expect(mockPost).toHaveBeenCalledWith(
+        "/admin/members/member-uuid-1/make-staff",
+        {}
+      );
+    });
+  });
+
+  it("calls revoke-staff API when Revoke Staff is clicked", async () => {
+    const member = makeMember({ role: "staff" });
+    mockGet
+      .mockResolvedValueOnce(member)
+      .mockResolvedValueOnce(makeMember({ role: "user" }));
+    mockPost.mockResolvedValue({ ok: true });
+
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText(/revoke staff/i)).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByText(/revoke staff/i));
+
+    await waitFor(() => {
+      expect(mockPost).toHaveBeenCalledWith(
+        "/admin/members/member-uuid-1/revoke-staff",
+        {}
+      );
+    });
+  });
+
+  it("shows tier dropdown with platinum and vip in edit form", async () => {
+    mockGet.mockResolvedValue(makeMember());
+    render(<MemberDetailPage />);
+    await waitFor(() => {
+      expect(screen.getByText("Alice Chen")).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByRole("button", { name: /edit profile/i }));
+    const tierSelect = document.querySelector("select") as HTMLSelectElement;
+    const options = Array.from(tierSelect.options).map((o) => o.value);
+    expect(options).toContain("platinum");
+    expect(options).toContain("vip");
   });
 
   it("shows rename input when pencil icon clicked on promoter code", async () => {

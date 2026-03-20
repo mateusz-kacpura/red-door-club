@@ -240,7 +240,24 @@
     "interestsHint": "选择所有适用的",
     "noInterests": "尚未选择兴趣",
     "nfcCard": "我的NFC卡",
-    "nfcCardHint": "扫描此二维码以模拟NFC刷卡"
+    "nfcCardHint": "扫描此二维码以模拟NFC刷卡",
+    "connectionQr": "联系二维码",
+    "connectionQrHint": "让他人扫描以与您建立联系",
+    "entryQr": "入场二维码",
+    "entryQrHint": "在入口处向工作人员出示此二维码"
+  },
+  "connect": {
+    "title": "建立联系",
+    "connecting": "连接中...",
+    "connectWith": "与 {name} 建立联系",
+    "connectButton": "建立联系",
+    "success": "已连接！",
+    "successDesc": "您已与 {name} 建立联系",
+    "alreadyConnected": "已经连接",
+    "alreadyConnectedDesc": "您已与 {name} 建立了联系",
+    "cannotSelf": "不能与自己建立联系",
+    "notFound": "未找到会员",
+    "viewConnections": "查看人脉"
   },
   "analytics": {
     "title": "数据分析概览",
@@ -574,7 +591,9 @@
     "promoterGenerate": "生成",
     "promoterCodeNamePlaceholder": "代码名称",
     "promoterCodeUses": "使用 {count} 次",
-    "promoterCodeRevenue": "收入 {amount}"
+    "promoterCodeRevenue": "收入 {amount}",
+    "makeStaff": "设为工作人员",
+    "revokeStaff": "撤销工作人员"
   },
   "floor": {
     "title": "实时场地视图",
@@ -665,5 +684,29 @@
     "confirmDelete": "确认删除",
     "deleteWarning": "此操作不可撤销，该批次中的所有二维码将被永久删除",
     "reduceWarning": "只有未转化的二维码会被删除，从最新的开始"
+  },
+  "staff": {
+    "title": "工作人员面板",
+    "checkin": "签到",
+    "checkingIn": "签到中...",
+    "checkedIn": "已签到！",
+    "alreadyCheckedIn": "已签到",
+    "alreadyCheckedInDesc": "已在此活动中签到。",
+    "memberInfo": "会员信息",
+    "selectEvent": "选择活动",
+    "fee": "费用",
+    "promo": "促销",
+    "promoEntry": "免费入场（促销）",
+    "entryFee": "入场费",
+    "noEventsToday": "今天没有安排活动。",
+    "memberNotFound": "未找到会员",
+    "confirm": "确认",
+    "error": "错误",
+    "registerGuest": "访客注册",
+    "registerGuestHint": "让访客扫描此二维码创建账户",
+    "scanQr": "扫描二维码",
+    "scanNext": "扫描下一个",
+    "cameraPermission": "请允许使用摄像头扫描二维码",
+    "invalidQr": "无效的二维码"
   }
 }

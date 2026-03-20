@@ -110,6 +110,47 @@ async def update_member_notes(
     return await admin_service.update_member_notes(member_id, payload.notes)
 
 
+# ── Staff role management ────────────────────────────────────────────────────
+
+
+@router.post("/members/{member_id}/make-staff", status_code=200, summary="Grant staff role to a member")
+async def make_staff(
+    member_id: uuid.UUID,
+    current_user: CurrentAdmin,
+    db: DBSession,
+):
+    from app.db.models.user import User
+    from app.core.exceptions import NotFoundError, BadRequestError
+    user = await db.get(User, member_id)
+    if user is None:
+        raise NotFoundError(message="Member not found.")
+    if user.role == "admin":
+        raise BadRequestError(message="Cannot change role of an admin user.")
+    user.role = "staff"
+    user.user_type = "staff"
+    await db.commit()
+    return {"member_id": str(user.id), "role": "staff", "user_type": "staff"}
+
+
+@router.post("/members/{member_id}/revoke-staff", status_code=200, summary="Revoke staff role from a member")
+async def revoke_staff(
+    member_id: uuid.UUID,
+    current_user: CurrentAdmin,
+    db: DBSession,
+):
+    from app.db.models.user import User
+    from app.core.exceptions import NotFoundError, BadRequestError
+    user = await db.get(User, member_id)
+    if user is None:
+        raise NotFoundError(message="Member not found.")
+    if user.role == "admin":
+        raise BadRequestError(message="Cannot change role of an admin user.")
+    user.role = "user"
+    user.user_type = "member"
+    await db.commit()
+    return {"member_id": str(user.id), "role": "user", "user_type": "member"}
+
+
 # ── Floor view ───────────────────────────────────────────────────────────────
 
 

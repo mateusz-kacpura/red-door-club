@@ -285,6 +285,70 @@ async def download_tab_invoice(
         headers={"Content-Disposition": f"attachment; filename=\"invoice-{tab_id}.pdf\""},
     )
 
+# ── QR Connection ─────────────────────────────────────────────────────────────
+
+
+@router.get("/{member_id}/public-profile", summary="Get minimal public profile")
+async def get_public_profile(
+    member_id: uuid.UUID,
+    current_user: CurrentUser,
+    db: DBSession,
+):
+    """Return minimal public info for the connect page."""
+    from app.db.models.user import User
+    from app.core.exceptions import NotFoundError
+
+    target = await db.get(User, member_id)
+    if target is None or not target.is_active:
+        raise NotFoundError(message="Member not found.")
+    return {
+        "id": str(target.id),
+        "full_name": target.full_name,
+        "company_name": target.company_name,
+        "industry": target.industry,
+    }
+
+
+@router.post("/connect", summary="Connect with member via QR code")
+async def connect_via_qr(
+    payload: dict,
+    current_user: CurrentUser,
+    db: DBSession,
+):
+    """Create a connection with another member (initiated by QR scan)."""
+    from app.db.models.user import User
+    from app.repositories import connection as conn_repo
+    from app.core.exceptions import NotFoundError, BadRequestError, AlreadyExistsError
+
+    target_id_str = payload.get("member_id")
+    if not target_id_str:
+        raise BadRequestError(message="member_id is required.")
+    try:
+        target_id = uuid.UUID(target_id_str)
+    except (ValueError, AttributeError):
+        raise BadRequestError(message="Invalid member_id.")
+
+    if target_id == current_user.id:
+        raise BadRequestError(message="Cannot connect with yourself.")
+
+    target = await db.get(User, target_id)
+    if target is None or not target.is_active:
+        raise NotFoundError(message="Member not found.")
+
+    if await conn_repo.exists(db, current_user.id, target_id):
+        raise AlreadyExistsError(message="Already connected.")
+
+    await conn_repo.create(
+        db, member_a_id=current_user.id, member_b_id=target_id, connection_type="qr"
+    )
+    await db.commit()
+
+    return {
+        "status": "connected",
+        "member_name": target.full_name,
+    }
+
+
 # ── Loyalty & Points ──────────────────────────────────────────────────────────
 
 

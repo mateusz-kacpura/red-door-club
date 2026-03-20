@@ -240,7 +240,24 @@
     "interestsHint": "Select all that apply",
     "noInterests": "No interests selected yet",
     "nfcCard": "My NFC Card",
-    "nfcCardHint": "Scan this QR code to simulate an NFC tap."
+    "nfcCardHint": "Scan this QR code to simulate an NFC tap.",
+    "connectionQr": "Connection QR",
+    "connectionQrHint": "Let others scan to connect with you",
+    "entryQr": "Entry QR",
+    "entryQrHint": "Show this QR to staff at entry"
+  },
+  "connect": {
+    "title": "Connect",
+    "connecting": "Connecting...",
+    "connectWith": "Connect with {name}",
+    "connectButton": "Connect",
+    "success": "Connected!",
+    "successDesc": "You are now connected with {name}",
+    "alreadyConnected": "Already connected",
+    "alreadyConnectedDesc": "You are already connected with {name}",
+    "cannotSelf": "Cannot connect with yourself",
+    "notFound": "Member not found",
+    "viewConnections": "View Connections"
   },
   "analytics": {
     "title": "Analytics Overview",
@@ -574,7 +591,9 @@
     "promoterGenerate": "Generate",
     "promoterCodeNamePlaceholder": "CODE NAME",
     "promoterCodeUses": "{count} uses",
-    "promoterCodeRevenue": "{amount} revenue"
+    "promoterCodeRevenue": "{amount} revenue",
+    "makeStaff": "Make Staff",
+    "revokeStaff": "Revoke Staff"
   },
   "floor": {
     "title": "Live Floor View",
@@ -665,5 +684,29 @@
     "confirmDelete": "Confirm Delete",
     "deleteWarning": "This action is irreversible. All QR codes in this batch will be permanently deleted.",
     "reduceWarning": "Only unconverted codes will be removed, starting from the newest."
+  },
+  "staff": {
+    "title": "Staff Panel",
+    "checkin": "Check In",
+    "checkingIn": "Checking in...",
+    "checkedIn": "Checked In!",
+    "alreadyCheckedIn": "Already Checked In",
+    "alreadyCheckedInDesc": "is already checked in to this event.",
+    "memberInfo": "Member Info",
+    "selectEvent": "Select Event",
+    "fee": "Fee",
+    "promo": "PROMO",
+    "promoEntry": "Free entry (PROMO)",
+    "entryFee": "Entry Fee",
+    "noEventsToday": "No events scheduled for today.",
+    "memberNotFound": "Member not found",
+    "confirm": "Confirm",
+    "error": "Error",
+    "registerGuest": "Guest Registration",
+    "registerGuestHint": "Let the guest scan this QR to create their account",
+    "scanQr": "Scan QR Code",
+    "scanNext": "Scan Next",
+    "cameraPermission": "Please allow camera access to scan QR codes",
+    "invalidQr": "Invalid QR code"
   }
 }

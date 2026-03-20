@@ -25,10 +25,15 @@ class UserRole(StrEnum):
 
     Roles hierarchy (higher includes lower permissions):
     - ADMIN: Full system access, can manage users and settings
+    - STAFF: Staff access for door operations (QR checkin, etc.)
     - USER: Standard user access
     """
     ADMIN = "admin"
+    STAFF = "staff"
     USER = "user"
+
+
+_ROLE_RANK = {UserRole.USER.value: 0, UserRole.STAFF.value: 1, UserRole.ADMIN.value: 2}
 
 
 class User(Base, TimestampMixin):
@@ -87,9 +92,7 @@ class User(Base, TimestampMixin):
 
     def has_role(self, required_role: UserRole) -> bool:
         """Check if user has the required role or higher."""
-        if self.role == UserRole.ADMIN.value:
-            return True
-        return self.role == required_role.value
+        return _ROLE_RANK.get(self.role, 0) >= _ROLE_RANK.get(required_role.value, 0)
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email={self.email}, role={self.role})>"

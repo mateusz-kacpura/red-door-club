@@ -16,6 +16,8 @@ import {
   Briefcase,
   Sparkles,
   Loader2,
+  UserPlus,
+  DoorOpen,
 } from "lucide-react";
 import { useTranslate } from "@tolgee/react";
 import QRCode from "react-qr-code";
@@ -336,6 +338,37 @@ export default function ProfilePage() {
           </div>
         </Card>
 
+        {/* Entry QR */}
+        {user?.id && (
+          <Card className="p-4 sm:p-6">
+            <h3 className="mb-4 text-base sm:text-lg font-semibold flex items-center gap-2">
+              <DoorOpen className="h-5 w-5 text-primary" />
+              {t("profile.entryQr")}
+            </h3>
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              <div className="bg-white p-3 rounded-xl border border-border shrink-0">
+                <QRCode
+                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member=${user.id}`}
+                  size={160}
+                />
+              </div>
+              <div className="space-y-3 text-sm">
+                {displayData.tier && (
+                  <span className={`inline-block text-sm px-3 py-1 rounded-full font-semibold capitalize ${
+                    displayData.tier === "vip" ? "bg-red-100 text-red-700" :
+                    displayData.tier === "platinum" ? "bg-purple-100 text-purple-700" :
+                    displayData.tier === "gold" ? "bg-amber-100 text-amber-700" :
+                    "bg-slate-100 text-slate-700"
+                  }`}>
+                    {displayData.tier}
+                  </span>
+                )}
+                <p className="text-muted-foreground">{t("profile.entryQrHint")}</p>
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* NFC Card */}
         {nfcCards.length > 0 && (
           <Card className="p-4 sm:p-6">
@@ -360,6 +393,30 @@ export default function ProfilePage() {
                   </div>
                 ))}
                 <p className="text-xs text-muted-foreground pt-1">{t("profile.nfcCardHint")}</p>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Connection QR */}
+        {user?.id && (
+          <Card className="p-4 sm:p-6">
+            <h3 className="mb-4 text-base sm:text-lg font-semibold flex items-center gap-2">
+              <UserPlus className="h-5 w-5 text-primary" />
+              {t("profile.connectionQr")}
+            </h3>
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              <div className="bg-white p-3 rounded-xl border border-border shrink-0">
+                <QRCode
+                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/connect?member=${user.id}`}
+                  size={140}
+                />
+              </div>
+              <div className="space-y-2 text-sm">
+                <p className="text-muted-foreground">{t("profile.connectionQrHint")}</p>
+                <p className="text-xs text-muted-foreground bg-muted rounded px-2 py-1 font-mono truncate">
+                  {typeof window !== "undefined" ? window.location.origin : ""}/connect?member={user.id}
+                </p>
               </div>
             </div>
           </Card>

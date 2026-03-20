@@ -36,6 +36,8 @@ const SEGMENT_OPTIONS = [
   "Corporate Executives", "Lifestyle & Leisure", "Legal & Advisory", "International Network",
 ];
 
+const PROMO_TIER_OPTIONS = ["silver", "gold", "platinum", "vip"];
+
 const EMPTY_FORM = {
   title: "",
   description: "",
@@ -46,6 +48,7 @@ const EMPTY_FORM = {
   starts_at: "",
   status: "draft",
   min_tier: "",
+  promo_tiers: [] as string[],
 };
 
 function toLocalDatetime(isoString: string): string {
@@ -96,6 +99,15 @@ export default function AdminEventsPage() {
     setShowForm(true);
   };
 
+  const togglePromoTier = (tier: string) => {
+    setForm((prev) => ({
+      ...prev,
+      promo_tiers: prev.promo_tiers.includes(tier)
+        ? prev.promo_tiers.filter((t) => t !== tier)
+        : [...prev.promo_tiers, tier],
+    }));
+  };
+
   const openEdit = (event: ClubEvent) => {
     setForm({
       title: event.title,
@@ -107,6 +119,7 @@ export default function AdminEventsPage() {
       starts_at: toLocalDatetime(event.starts_at),
       status: event.status,
       min_tier: event.min_tier ?? "",
+      promo_tiers: [...((event as ClubEvent & { promo_tiers?: string[] }).promo_tiers ?? [])],
     });
     setEditingId(event.id);
     setError("");
@@ -226,8 +239,22 @@ export default function AdminEventsPage() {
                 <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                   value={form.min_tier} onChange={(e) => setForm((p) => ({ ...p, min_tier: e.target.value }))}>
                   <option value="">{t("adminEvents.noRestriction")}</option>
-                  {["silver", "gold", "obsidian"].map((tier) => <option key={tier} value={tier} className="capitalize">{tier}</option>)}
+                  {["silver", "gold", "platinum", "obsidian", "vip"].map((tier) => <option key={tier} value={tier} className="capitalize">{tier}</option>)}
                 </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t("adminEvents.promoTiersLabel", { defaultValue: "Tiers with free entry (PROMO)" })}</Label>
+              <p className="text-xs text-muted-foreground">{t("adminEvents.promoTiersHint", { defaultValue: "VIP always enters free. Select additional tiers for this event." })}</p>
+              <div className="flex flex-wrap gap-2">
+                {PROMO_TIER_OPTIONS.map((tier) => (
+                  <button key={tier} type="button" onClick={() => togglePromoTier(tier)}
+                    className={`text-xs px-3 py-1.5 rounded-full border transition-colors capitalize
+                      ${form.promo_tiers.includes(tier) ? "border-green-500 bg-green-50 text-green-700" : "border-border hover:border-green-400"}`}>
+                    {tier}
+                  </button>
+                ))}
               </div>
             </div>
 

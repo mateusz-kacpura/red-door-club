@@ -95,3 +95,22 @@ async def is_rsvped(db: AsyncSession, event_id: uuid.UUID, member_id: uuid.UUID)
         )
     )
     return result.first() is not None
+
+
+async def get_published_today(db: AsyncSession, tz: str = "Asia/Bangkok") -> list[Event]:
+    """Get published events starting today in the given timezone."""
+    from zoneinfo import ZoneInfo
+    now = datetime.now(ZoneInfo(tz))
+    day_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    day_end = day_start.replace(hour=23, minute=59, second=59, microsecond=999999)
+
+    result = await db.execute(
+        select(Event)
+        .where(
+            Event.status == "published",
+            Event.starts_at >= day_start,
+            Event.starts_at <= day_end,
+        )
+        .order_by(Event.starts_at.asc())
+    )
+    return list(result.scalars().all())

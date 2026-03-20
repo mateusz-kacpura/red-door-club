@@ -5,7 +5,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String, Table, Column
+from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String, Table, Column, text
 from sqlalchemy.dialects.postgresql import ARRAY, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -43,6 +43,7 @@ class Event(Base, TimestampMixin):
     ends_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="draft")
     min_tier: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    promo_tiers: Mapped[list[str]] = mapped_column(ARRAY(String), server_default=text("'{}'::varchar[]"), nullable=False)
 
     # RSVPs
     attendees: Mapped[List["User"]] = relationship(

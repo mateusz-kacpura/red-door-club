@@ -10,7 +10,7 @@ from app.repositories import event as event_repo
 from app.repositories import nfc as nfc_repo
 from app.schemas.event import EventCreate, EventRead, EventUpdate
 
-TIER_ORDER = {"silver": 1, "gold": 2, "obsidian": 3}
+TIER_ORDER = {"silver": 1, "gold": 2, "platinum": 3, "obsidian": 3, "vip": 4}
 
 
 def _member_tier_value(tier: str | None) -> int:
