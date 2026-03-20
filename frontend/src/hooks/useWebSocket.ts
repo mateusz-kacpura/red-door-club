@@ -2,8 +2,12 @@
 
 import { useEffect, useRef, useCallback } from "react";
 
-const WS_BASE_URL =
-  process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8008";
+function getWsBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_WS_URL) return process.env.NEXT_PUBLIC_WS_URL;
+  if (typeof window === "undefined") return "ws://localhost:8008";
+  const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+  return `${proto}//${window.location.host}`;
+}
 
 const RECONNECT_DELAY_MS = 3000;
 
@@ -42,7 +46,7 @@ export function useWebSocket(
       return;
     }
 
-    const url = `${WS_BASE_URL}${path}?token=${token}`;
+    const url = `${getWsBaseUrl()}${path}?token=${token}`;
     const ws = new WebSocket(url);
     wsRef.current = ws;
 
