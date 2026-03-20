@@ -192,7 +192,14 @@ class AdminService:
             for t in recent_taps_raw
         ]
 
-        return {
+        # Promoter stats (only for promoters)
+        promoter_stats: dict | None = None
+        if member.is_promoter or member.user_type == "promoter":
+            from app.services.promoter import PromoterService
+            promoter_svc = PromoterService(self.db)
+            promoter_stats = await promoter_svc.get_stats(member_id)
+
+        result = {
             "id": str(member.id),
             "email": member.email,
             "phone": member.phone,
@@ -219,6 +226,9 @@ class AdminService:
             "recent_taps": recent_taps,
             "nfc_cards": nfc_cards,
         }
+        if promoter_stats is not None:
+            result["promoter_stats"] = promoter_stats
+        return result
 
     async def update_member_notes(self, member_id: uuid.UUID, notes: str | None) -> dict:
         """Update staff notes for a member."""

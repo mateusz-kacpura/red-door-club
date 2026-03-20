@@ -156,11 +156,20 @@ export interface ClubMember {
   phone?: string | null;
 }
 
+export interface PromoterStats {
+  total_codes: number;
+  total_uses: number;
+  total_revenue: number;
+  commission_earned: number;
+  pending_payout: number;
+}
+
 export interface MemberDetail extends ClubMember {
   connections_count: number;
   tab_total: number;
   service_requests_count: number;
   recent_taps: TapEventAdminRead[];
+  promoter_stats?: PromoterStats;
 }
 
 export interface ServiceRequestAdminRead extends ServiceRequest {

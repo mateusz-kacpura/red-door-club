@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard } from "lucide-react";
+import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard, TrendingUp, Wallet } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -301,35 +301,57 @@ export default function MemberDetailPage() {
       )}
 
       {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
-          <CardContent className="pt-6 flex items-center gap-3">
-            <Users className="h-8 w-8 text-primary/50" />
-            <div>
-              <p className="text-2xl font-light">{member.connections_count}</p>
-              <p className="text-xs text-muted-foreground">{t("memberDetail.connections")}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 flex items-center gap-3">
-            <DollarSign className="h-8 w-8 text-primary/50" />
-            <div>
-              <p className="text-2xl font-light">{formatAmount(member.tab_total)}</p>
-              <p className="text-xs text-muted-foreground">{t("memberDetail.totalSpent")}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6 flex items-center gap-3">
-            <Headphones className="h-8 w-8 text-primary/50" />
-            <div>
-              <p className="text-2xl font-light">{member.service_requests_count}</p>
-              <p className="text-xs text-muted-foreground">{t("memberDetail.serviceRequests")}</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {member.user_type === "promoter" && member.promoter_stats ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { label: t("memberDetail.promoterTotalCodes"), value: member.promoter_stats.total_codes.toString(), icon: Users },
+            { label: t("memberDetail.promoterConversions"), value: member.promoter_stats.total_uses.toString(), icon: TrendingUp },
+            { label: t("memberDetail.promoterRevenue"), value: formatAmount(member.promoter_stats.total_revenue), icon: DollarSign },
+            { label: t("memberDetail.promoterCommission"), value: formatAmount(member.promoter_stats.commission_earned), icon: DollarSign },
+            { label: t("memberDetail.promoterPendingPayout"), value: formatAmount(member.promoter_stats.pending_payout), icon: Wallet },
+          ].map(({ label, value, icon: Icon }) => (
+            <Card key={label}>
+              <CardContent className="pt-6 flex items-center gap-3">
+                <Icon className="h-8 w-8 text-primary/50" />
+                <div>
+                  <p className="text-2xl font-light">{value}</p>
+                  <p className="text-xs text-muted-foreground">{label}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Card>
+            <CardContent className="pt-6 flex items-center gap-3">
+              <Users className="h-8 w-8 text-primary/50" />
+              <div>
+                <p className="text-2xl font-light">{member.connections_count}</p>
+                <p className="text-xs text-muted-foreground">{t("memberDetail.connections")}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6 flex items-center gap-3">
+              <DollarSign className="h-8 w-8 text-primary/50" />
+              <div>
+                <p className="text-2xl font-light">{formatAmount(member.tab_total)}</p>
+                <p className="text-xs text-muted-foreground">{t("memberDetail.totalSpent")}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6 flex items-center gap-3">
+              <Headphones className="h-8 w-8 text-primary/50" />
+              <div>
+                <p className="text-2xl font-light">{member.service_requests_count}</p>
+                <p className="text-xs text-muted-foreground">{t("memberDetail.serviceRequests")}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Recent Taps */}

@@ -558,7 +558,12 @@
     "tierLabel": "Poziom",
     "userTypeLabel": "Typ użytkownika",
     "isActiveLabel": "Aktywny",
-    "editSaved": "Profil zaktualizowany."
+    "editSaved": "Profil zaktualizowany.",
+    "promoterTotalCodes": "Łączne kody",
+    "promoterConversions": "Konwersje",
+    "promoterRevenue": "Przypisany przychód",
+    "promoterCommission": "Zarobiona prowizja",
+    "promoterPendingPayout": "Oczekująca wypłata"
   },
   "floor": {
     "title": "Widok sali na żywo",

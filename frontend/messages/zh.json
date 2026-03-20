@@ -558,7 +558,12 @@
     "tierLabel": "等级",
     "userTypeLabel": "用户类型",
     "isActiveLabel": "活跃",
-    "editSaved": "个人资料已更新"
+    "editSaved": "个人资料已更新",
+    "promoterTotalCodes": "总推广码",
+    "promoterConversions": "转化",
+    "promoterRevenue": "归因收入",
+    "promoterCommission": "已赚取佣金",
+    "promoterPendingPayout": "待付款"
   },
   "floor": {
     "title": "实时场地视图",

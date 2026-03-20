@@ -558,7 +558,12 @@
     "tierLabel": "Уровень",
     "userTypeLabel": "Тип пользователя",
     "isActiveLabel": "Активный",
-    "editSaved": "Профиль обновлён."
+    "editSaved": "Профиль обновлён.",
+    "promoterTotalCodes": "Всего кодов",
+    "promoterConversions": "Конверсии",
+    "promoterRevenue": "Атрибутированная выручка",
+    "promoterCommission": "Заработанная комиссия",
+    "promoterPendingPayout": "Ожидающая выплата"
   },
   "floor": {
     "title": "Вид зала в реальном времени",

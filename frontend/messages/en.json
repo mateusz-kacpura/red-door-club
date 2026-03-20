@@ -558,7 +558,12 @@
     "tierLabel": "Tier",
     "userTypeLabel": "User Type",
     "isActiveLabel": "Active",
-    "editSaved": "Profile updated."
+    "editSaved": "Profile updated.",
+    "promoterTotalCodes": "Total Codes",
+    "promoterConversions": "Conversions",
+    "promoterRevenue": "Revenue Attributed",
+    "promoterCommission": "Commission Earned",
+    "promoterPendingPayout": "Pending Payout"
   },
   "floor": {
     "title": "Live Floor View",
