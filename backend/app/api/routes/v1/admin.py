@@ -367,8 +367,9 @@ async def make_promoter(
     if user is None:
         raise NotFoundError(message="Member not found.")
     user.is_promoter = True
+    user.user_type = "promoter"
     await db.commit()
-    return {"promoter_id": str(user.id), "is_promoter": True}
+    return {"promoter_id": str(user.id), "is_promoter": True, "user_type": "promoter"}
 
 
 @router.post("/promo-codes", status_code=201, summary="Create a promo code for a promoter")

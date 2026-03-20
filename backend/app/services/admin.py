@@ -208,6 +208,7 @@ class AdminService:
             "last_seen_at": member.last_seen_at.isoformat() if member.last_seen_at else None,
             "is_active": member.is_active,
             "is_superuser": member.is_superuser,
+            "is_promoter": member.is_promoter,
             "role": member.role,
             "staff_notes": member.staff_notes,
             "created_at": member.created_at.isoformat() if hasattr(member, "created_at") and member.created_at else None,

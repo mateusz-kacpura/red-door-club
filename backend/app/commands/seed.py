@@ -113,6 +113,14 @@ SEED_USERS = [
         "user_type": "member",
         "loyalty_points": 5000,
         "loyalty_lifetime_points": 12000,
+    },
+    {
+        "email": "promoter@club.s8lls.com",
+        "full_name": "Pro Moter",
+        "role": "user",
+        "is_superuser": False,
+        "tier": None,
+        "user_type": "promoter",
         "is_promoter": True,
     },
 ]

@@ -149,6 +149,7 @@ export interface ClubMember {
   pdpa_consent: boolean;
   last_seen_at: string | null;
   is_active: boolean;
+  is_promoter?: boolean;
   role: string;
   created_at: string;
   staff_notes?: string | null;

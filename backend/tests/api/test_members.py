@@ -35,6 +35,7 @@ class MockUser:
         self.interests = ["technology", "startup"]
         self.tier = "gold"
         self.is_active = True
+        self.is_promoter = False
         self.segment_groups = ["Tech & Founders"]
         self.user_type = "member"
         self.hashed_password = "hashed"

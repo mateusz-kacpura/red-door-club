@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants";
-import { LayoutDashboard, CalendarDays, Users, Wrench, Shield, Lock, Receipt, Headphones, Zap, Network, Star, GitFork, AlertTriangle, QrCode } from "lucide-react";
+import { LayoutDashboard, CalendarDays, Users, Wrench, Shield, Lock, Receipt, Headphones, Zap, Network, Star, GitFork, AlertTriangle, QrCode, Megaphone, Ticket, Wallet, UserCircle } from "lucide-react";
 import { useSidebarStore } from "@/stores";
 import { useAuthStore } from "@/stores";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui";
@@ -17,6 +17,14 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslate();
   const isAdmin = user && (user as { role?: string; is_superuser?: boolean }).role === "admin" ||
     (user as { is_superuser?: boolean } | null)?.is_superuser;
+  const isPromoter = (user as { user_type?: string } | null)?.user_type === "promoter";
+
+  const promoterNavigation = [
+    { name: t("nav.promoterDashboard", { defaultValue: "Dashboard" }), href: ROUTES.PROMOTER_DASHBOARD, icon: Megaphone },
+    { name: t("nav.promoCodes", { defaultValue: "Codes" }), href: ROUTES.PROMOTER_CODES, icon: Ticket },
+    { name: t("nav.payouts", { defaultValue: "Payouts" }), href: ROUTES.PROMOTER_PAYOUTS, icon: Wallet },
+    { name: t("nav.profile", { defaultValue: "Profile" }), href: ROUTES.PROFILE, icon: UserCircle },
+  ];
 
   const memberNavigation = [
     { name: t("nav.dashboard"), href: ROUTES.DASHBOARD, icon: LayoutDashboard },
@@ -67,8 +75,17 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <nav className="flex-1 p-3 space-y-0.5">
-      <p className="text-xs font-medium text-muted-foreground px-3 py-2 uppercase tracking-wider">{t("nav.member")}</p>
-      {renderLinks(memberNavigation)}
+      {isPromoter ? (
+        <>
+          <p className="text-xs font-medium text-muted-foreground px-3 py-2 uppercase tracking-wider">{t("nav.promoter", { defaultValue: "Promoter" })}</p>
+          {renderLinks(promoterNavigation)}
+        </>
+      ) : (
+        <>
+          <p className="text-xs font-medium text-muted-foreground px-3 py-2 uppercase tracking-wider">{t("nav.member")}</p>
+          {renderLinks(memberNavigation)}
+        </>
+      )}
 
       {isAdmin && (
         <>

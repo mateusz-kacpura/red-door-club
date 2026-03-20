@@ -166,7 +166,7 @@ export default function MemberDetailPage() {
                 {member.tier}
               </span>
             )}
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-muted text-muted-foreground capitalize">
+            <span className={`text-xs px-2.5 py-0.5 rounded-full capitalize ${member.user_type === "promoter" ? "bg-purple-100 text-purple-700" : "bg-muted text-muted-foreground"}`}>
               {member.user_type}
             </span>
             <span className={`text-xs px-2.5 py-0.5 rounded-full ${member.is_active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
@@ -242,6 +242,7 @@ export default function MemberDetailPage() {
                 >
                   <option value="prospect">Prospect</option>
                   <option value="member">Member</option>
+                  <option value="promoter">Promoter</option>
                   <option value="staff">Staff</option>
                   <option value="admin">Admin</option>
                 </select>

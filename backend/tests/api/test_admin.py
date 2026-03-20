@@ -81,6 +81,7 @@ def _make_user_read(**kwargs) -> UserRead:
         last_seen_at=None,
         is_active=True,
         is_superuser=False,
+        is_promoter=False,
         role="user",
         staff_notes=None,
         created_at=now,
@@ -1182,6 +1183,23 @@ async def test_update_member_user_type(admin_client: AsyncClient, mock_user_serv
     assert response.status_code == 200
     data = response.json()
     assert data["user_type"] == "member"
+
+
+@pytest.mark.anyio
+async def test_update_member_user_type_promoter(admin_client: AsyncClient, mock_user_service: MagicMock):
+    """PATCH /admin/members/{id} can set user_type to promoter."""
+    member_id = uuid4()
+    mock_user_service.update.return_value = _make_user_read(id=member_id, user_type="promoter", is_promoter=True)
+
+    response = await admin_client.patch(
+        f"{settings.API_V1_STR}/admin/members/{member_id}",
+        json={"user_type": "promoter"},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["user_type"] == "promoter"
+    assert data["is_promoter"] is True
 
 
 @pytest.mark.anyio

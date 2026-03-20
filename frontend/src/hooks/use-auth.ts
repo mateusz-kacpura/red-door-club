@@ -51,7 +51,8 @@ export function useAuth() {
         // Backend may not return user in login response — fetch it if missing
         const user = response.user ?? (await apiClient.get<User>("/auth/me"));
         setUser(user);
-        router.push(ROUTES.DASHBOARD);
+        const destination = user.user_type === "promoter" ? ROUTES.PROMOTER_DASHBOARD : ROUTES.DASHBOARD;
+        router.push(destination);
         return response;
       } catch (error) {
         setLoading(false);

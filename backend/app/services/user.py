@@ -108,6 +108,10 @@ class UserService:
         if "password" in update_data:
             update_data["hashed_password"] = get_password_hash(update_data.pop("password"))
 
+        # Sync is_promoter flag with user_type
+        if "user_type" in update_data:
+            update_data["is_promoter"] = (update_data["user_type"] == "promoter")
+
         updated_user = await user_repo.update(self.db, db_user=user, update_data=update_data)
 
         # Re-compute segments if profile fields changed

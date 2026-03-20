@@ -17,6 +17,16 @@ class UserRole(StrEnum):
     USER = "user"
 
 
+class UserType(StrEnum):
+    """User type enumeration."""
+
+    PROSPECT = "prospect"
+    MEMBER = "member"
+    PROMOTER = "promoter"
+    STAFF = "staff"
+    ADMIN = "admin"
+
+
 class UserBase(BaseSchema):
     """Base user schema."""
 
@@ -27,7 +37,7 @@ class UserBase(BaseSchema):
     industry: str | None = Field(default=None, max_length=100)
     revenue_range: str | None = Field(default=None, max_length=50)
     interests: list[str] = Field(default_factory=list)
-    user_type: str = Field(default="prospect", max_length=50)
+    user_type: UserType = Field(default=UserType.PROSPECT)
     tier: str | None = Field(default=None, max_length=50)
     segment_groups: list[str] = Field(default_factory=list)
     pdpa_consent: bool = False
@@ -61,7 +71,7 @@ class UserUpdate(BaseSchema):
     industry: str | None = Field(default=None, max_length=100)
     revenue_range: str | None = Field(default=None, max_length=50)
     interests: list[str] | None = None
-    user_type: str | None = Field(default=None, max_length=50)
+    user_type: UserType | None = Field(default=None)
     tier: str | None = Field(default=None, max_length=50)
     segment_groups: list[str] | None = None
     last_seen_at: datetime | None = None
@@ -73,6 +83,7 @@ class UserRead(UserBase, TimestampSchema):
     """Schema for reading a user."""
     id: UUID
     is_superuser: bool = False
+    is_promoter: bool = False
     role: UserRole = UserRole.USER
     staff_notes: str | None = None
 

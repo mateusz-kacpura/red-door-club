@@ -26,7 +26,7 @@ class MockPromoterUser:
         self.is_promoter = True
         self.tier = "gold"
         self.segment_groups = []
-        self.user_type = "member"
+        self.user_type = "promoter"
         self.hashed_password = "hashed"
         self.created_at = datetime.now(UTC)
         self.updated_at = datetime.now(UTC)

@@ -13,7 +13,9 @@ export interface User {
   interests?: string[];
   is_active: boolean;
   is_superuser?: boolean;
+  is_promoter?: boolean;
   role?: string;
+  user_type?: string;
   tier?: string | null;
   segment_groups?: string[];
   created_at: string;
