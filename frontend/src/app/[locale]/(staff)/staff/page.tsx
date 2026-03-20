@@ -72,7 +72,7 @@ export default function StaffScannerPage() {
             if (memberId) {
               hasNavigatedRef.current = true;
               try { navigator.vibrate(100); } catch { /* noop */ }
-              scanner.stop().catch(() => {});
+              try { scanner.stop().catch(() => {}); } catch { /* noop */ }
               router.push(`${ROUTES.STAFF_CHECKIN}?member=${memberId}`);
             } else {
               setStatus("invalid_qr");
