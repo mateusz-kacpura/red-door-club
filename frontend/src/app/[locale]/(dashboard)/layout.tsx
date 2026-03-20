@@ -1,10 +1,25 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Header, Sidebar } from "@/components/layout";
+import { useAuthStore } from "@/stores";
+import { ROUTES } from "@/lib/constants";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = useAuthStore((s) => s.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && (user as { role?: string }).role === "staff" && !user.is_superuser) {
+      router.replace(ROUTES.STAFF_HOME);
+    }
+  }, [user, router]);
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />

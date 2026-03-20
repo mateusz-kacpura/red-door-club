@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks";
-import { Button, Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { ThemeToggle } from "@/components/theme";
 import { ROUTES } from "@/lib/constants";
-import { LogOut, User, Menu, QrCode } from "lucide-react";
+import { LogOut, User, Menu, QrCode, X } from "lucide-react";
 import { useSidebarStore } from "@/stores";
 import { useTranslate } from "@tolgee/react";
 import { LanguageSwitcher } from "./language-switcher";
@@ -76,26 +76,27 @@ export function Header() {
         </div>
       </header>
 
-      {/* Member QR Sheet — outside header to avoid backdrop-filter containing block */}
-      {isMember && user?.id && (
-        <Sheet open={qrOpen} onOpenChange={setQrOpen}>
-          <SheetContent side="bottom" className="rounded-t-2xl">
-            <SheetHeader className="justify-center border-b-0 pb-0">
-              <SheetTitle>{t("profile.memberQr")}</SheetTitle>
-            </SheetHeader>
-            <div className="flex flex-col items-center gap-4 px-4 pb-8 pt-4">
-              <div className="bg-white p-4 rounded-xl">
-                <QRCode
-                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/m/${user.id}`}
-                  size={220}
-                />
-              </div>
-              <p className="text-sm text-muted-foreground text-center">
-                {t("profile.memberQrHint")}
-              </p>
-            </div>
-          </SheetContent>
-        </Sheet>
+      {/* Fullscreen Member QR overlay */}
+      {isMember && user?.id && qrOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
+          <button
+            onClick={() => setQrOpen(false)}
+            className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
+          >
+            <X className="h-6 w-6" />
+            <span className="sr-only">{t("common.close")}</span>
+          </button>
+          <h2 className="text-lg font-semibold mb-6">{t("profile.memberQr")}</h2>
+          <div className="bg-white p-6 rounded-2xl">
+            <QRCode
+              value={`${typeof window !== "undefined" ? window.location.origin : ""}/m/${user.id}`}
+              size={280}
+            />
+          </div>
+          <p className="text-sm text-muted-foreground text-center mt-6 px-8">
+            {t("profile.memberQrHint")}
+          </p>
+        </div>
       )}
     </>
   );

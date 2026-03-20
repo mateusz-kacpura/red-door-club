@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants";
-import { LayoutDashboard, CalendarDays, Users, UserPlus, Wrench, Shield, Lock, Receipt, Headphones, Zap, Network, Star, GitFork, AlertTriangle, QrCode, Megaphone, Ticket, Wallet, UserCircle } from "lucide-react";
+import { LayoutDashboard, CalendarDays, Users, UserPlus, Wrench, Shield, Lock, Receipt, Headphones, Zap, Network, Star, GitFork, AlertTriangle, QrCode, Megaphone, Ticket, Wallet, UserCircle, ScanLine } from "lucide-react";
 import { useSidebarStore } from "@/stores";
 import { useAuthStore } from "@/stores";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui";
@@ -18,6 +18,12 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const isAdmin = user && (user as { role?: string; is_superuser?: boolean }).role === "admin" ||
     (user as { is_superuser?: boolean } | null)?.is_superuser;
   const isPromoter = (user as { user_type?: string } | null)?.user_type === "promoter";
+  const isStaffOnly = (user as { role?: string } | null)?.role === "staff" && !isAdmin;
+
+  const staffNavigation = [
+    { name: t("staff.scanQr"), href: ROUTES.STAFF_HOME, icon: ScanLine },
+    { name: t("staff.registerGuest"), href: ROUTES.STAFF_REGISTER_GUEST, icon: UserPlus },
+  ];
 
   const promoterNavigation = [
     { name: t("nav.promoterDashboard", { defaultValue: "Dashboard" }), href: ROUTES.PROMOTER_DASHBOARD, icon: Megaphone },
@@ -76,7 +82,12 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <nav className="flex-1 p-3 space-y-0.5">
-      {isPromoter ? (
+      {isStaffOnly ? (
+        <>
+          <p className="text-xs font-medium text-muted-foreground px-3 py-2 uppercase tracking-wider">{t("staff.title")}</p>
+          {renderLinks(staffNavigation)}
+        </>
+      ) : isPromoter ? (
         <>
           <p className="text-xs font-medium text-muted-foreground px-3 py-2 uppercase tracking-wider">{t("nav.promoter", { defaultValue: "Promoter" })}</p>
           {renderLinks(promoterNavigation)}

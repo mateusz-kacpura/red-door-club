@@ -134,7 +134,7 @@ describe("Header", () => {
     expect(screen.getByText("Show this QR to staff at the door or to other members to connect")).toBeInTheDocument();
   });
 
-  it("closes QR sheet when backdrop is clicked", async () => {
+  it("closes QR overlay when X button is clicked", async () => {
     mockUseAuth.mockReturnValue({
       user: authenticatedUser,
       isAuthenticated: true,
@@ -147,8 +147,8 @@ describe("Header", () => {
     await userEvent.click(qrButton);
     expect(screen.getByTestId("qr-code")).toBeInTheDocument();
 
-    const backdrop = document.querySelector("[aria-hidden='true']")!;
-    await userEvent.click(backdrop);
+    const closeButton = screen.getByText("Close").closest("button")!;
+    await userEvent.click(closeButton);
 
     expect(screen.queryByTestId("qr-code")).not.toBeInTheDocument();
   });
