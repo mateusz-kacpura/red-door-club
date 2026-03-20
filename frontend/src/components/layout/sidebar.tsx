@@ -23,6 +23,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const staffNavigation = [
     { name: t("staff.scanQr"), href: ROUTES.STAFF_HOME, icon: ScanLine },
     { name: t("staff.registerGuest"), href: ROUTES.STAFF_REGISTER_GUEST, icon: UserPlus },
+    { name: t("nav.profile"), href: ROUTES.STAFF_PROFILE, icon: UserCircle },
   ];
 
   const promoterNavigation = [

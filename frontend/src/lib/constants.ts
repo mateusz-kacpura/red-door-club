@@ -106,4 +106,5 @@ export const ROUTES = {
   STAFF_HOME: "/staff",
   STAFF_CHECKIN: "/staff/checkin",
   STAFF_REGISTER_GUEST: "/staff/register-guest",
+  STAFF_PROFILE: "/staff/profile",
 } as const;

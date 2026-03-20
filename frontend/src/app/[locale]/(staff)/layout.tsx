@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { ROUTES } from "@/lib/constants";
 import { useTranslate } from "@tolgee/react";
-import { LogOut, ScanLine, UserPlus } from "lucide-react";
+import { LogOut, ScanLine, UserPlus, User } from "lucide-react";
 
 export default function StaffLayout({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
@@ -57,6 +57,12 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
             className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <UserPlus className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => router.push(ROUTES.STAFF_PROFILE)}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            <User className="h-4 w-4" />
           </button>
           <button
             onClick={logout}
