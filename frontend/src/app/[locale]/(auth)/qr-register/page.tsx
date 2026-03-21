@@ -11,7 +11,7 @@ export default function QRRegisterPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4">
       <div className="mb-8 text-center flex flex-col items-center">
-        <Image src="/icons/logo.svg" alt="S8LLS" width={150} height={54} className="dark:invert-0 invert" priority />
+        <Image src="/icons/logo.svg" alt="S8LLS" width={150} height={54} className="dark:invert-0 invert" unoptimized priority />
         <p className="text-sm text-muted-foreground mt-2 tracking-wider">
           Private Business Club — Bangkok
         </p>

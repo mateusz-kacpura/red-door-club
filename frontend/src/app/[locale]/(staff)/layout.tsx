@@ -41,7 +41,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
       {/* Minimal header for mobile */}
       <header className="border-b px-4 py-3 flex items-center justify-between">
         <div>
-          <Image src="/icons/logo.svg" alt="S8LLS" width={80} height={28} className="dark:invert-0 invert" />
+          <Image src="/icons/logo.svg" alt="S8LLS" width={80} height={28} className="dark:invert-0 invert" unoptimized />
           <p className="text-sm font-medium">{t("staff.title")}</p>
         </div>
         <div className="flex items-center gap-1">

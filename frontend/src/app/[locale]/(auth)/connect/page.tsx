@@ -75,7 +75,7 @@ function ConnectContent() {
   return (
     <div className="text-center max-w-sm mx-auto px-6">
       <div className="mb-8">
-        <Image src="/icons/logo.svg" alt="S8LLS" width={120} height={43} className="dark:invert-0 invert mx-auto" />
+        <Image src="/icons/logo.svg" alt="S8LLS" width={120} height={43} className="dark:invert-0 invert mx-auto" unoptimized />
       </div>
 
       {status === "loading" && (

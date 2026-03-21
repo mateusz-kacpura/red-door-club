@@ -121,7 +121,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           className="flex items-center gap-2"
           onClick={onNavigate}
         >
-          <Image src="/icons/logo.svg" alt="S8LLS" width={100} height={36} className="dark:invert-0 invert" priority />
+          <Image src="/icons/logo.svg" alt="S8LLS" width={100} height={36} className="dark:invert-0 invert" unoptimized priority />
         </Link>
       </div>
       <NavLinks onNavigate={onNavigate} />
@@ -143,7 +143,7 @@ export function Sidebar() {
         <SheetContent side="left" className="w-72 p-0">
           <SheetHeader className="h-14 px-4">
             <SheetTitle>
-              <Image src="/icons/logo.svg" alt="S8LLS" width={100} height={36} className="dark:invert-0 invert" />
+              <Image src="/icons/logo.svg" alt="S8LLS" width={100} height={36} className="dark:invert-0 invert" unoptimized />
             </SheetTitle>
             <SheetClose onClick={close} />
           </SheetHeader>

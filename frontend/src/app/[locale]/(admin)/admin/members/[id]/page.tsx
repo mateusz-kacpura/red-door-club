@@ -336,27 +336,29 @@ export default function MemberDetailPage() {
         </Card>
       )}
 
-      {/* Entry QR */}
-      <Card className="rounded-xl">
-        <CardContent className="p-4 flex flex-col sm:flex-row gap-5 items-start">
-          <div className="bg-white p-3 rounded-xl border border-border shrink-0">
-            <QRCode
-              value={`${typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member=${member.id}`}
-              size={120}
-            />
-          </div>
-          <div className="space-y-2">
-            <p className="text-sm font-medium flex items-center gap-2">
-              <DoorOpen className="h-4 w-4 text-primary" />
-              {t("profile.entryQr")}
-            </p>
-            <p className="text-xs text-muted-foreground">{t("profile.entryQrHint")}</p>
-            <p className="text-xs text-muted-foreground bg-muted rounded px-2 py-1 font-mono truncate">
-              {typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member={member.id}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Entry QR — hide for promoters (they only have promoter QR) */}
+      {member.user_type !== "promoter" && !member.is_promoter && (
+        <Card className="rounded-xl">
+          <CardContent className="p-4 flex flex-col sm:flex-row gap-5 items-start">
+            <div className="bg-white p-3 rounded-xl border border-border shrink-0">
+              <QRCode
+                value={`${typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member=${member.id}`}
+                size={120}
+              />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium flex items-center gap-2">
+                <DoorOpen className="h-4 w-4 text-primary" />
+                {t("profile.entryQr")}
+              </p>
+              <p className="text-xs text-muted-foreground">{t("profile.entryQrHint")}</p>
+              <p className="text-xs text-muted-foreground bg-muted rounded px-2 py-1 font-mono truncate">
+                {typeof window !== "undefined" ? window.location.origin : ""}/staff/checkin?member={member.id}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* NFC Card QR */}
       {member.nfc_cards && member.nfc_cards.length > 0 && (
@@ -469,7 +471,6 @@ export default function MemberDetailPage() {
       {member.user_type === "promoter" && member.promoter_stats ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { label: t("memberDetail.promoterTotalCodes"), value: member.promoter_stats.total_codes.toString(), icon: Users },
             { label: t("memberDetail.promoterConversions"), value: member.promoter_stats.total_uses.toString(), icon: TrendingUp },
             { label: t("memberDetail.promoterRevenue"), value: formatAmount(member.promoter_stats.total_revenue), icon: DollarSign },
             { label: t("memberDetail.promoterCommission"), value: formatAmount(member.promoter_stats.commission_earned), icon: DollarSign },

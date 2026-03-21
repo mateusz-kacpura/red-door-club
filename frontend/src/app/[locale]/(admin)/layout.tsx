@@ -57,7 +57,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Admin Sidebar */}
       <aside className="w-56 shrink-0 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
-          <Image src="/icons/logo.svg" alt="S8LLS" width={80} height={28} className="dark:invert-0 invert" />
+          <Image src="/icons/logo.svg" alt="S8LLS" width={80} height={28} className="dark:invert-0 invert" unoptimized />
           <p className="text-sm font-medium mt-0.5">{t("nav.adminPanel")}</p>
         </div>
 

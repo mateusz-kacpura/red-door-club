@@ -50,7 +50,6 @@ export default function PromoterDashboardPage() {
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {[
-          { label: t("promoterDashboard.totalCodes"), value: stats?.total_codes ?? 0, icon: Users, format: (v: number) => v.toString() },
           { label: t("promoterDashboard.totalConversions"), value: stats?.total_uses ?? 0, icon: TrendingUp, format: (v: number) => v.toString() },
           { label: t("promoterDashboard.revenueAttributed"), value: stats?.total_revenue ?? 0, icon: DollarSign, format: fmt },
           { label: t("promoterDashboard.commissionEarned"), value: stats?.commission_earned ?? 0, icon: DollarSign, format: fmt },

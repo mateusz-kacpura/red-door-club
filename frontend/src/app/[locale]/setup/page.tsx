@@ -54,7 +54,7 @@ function SetupContent() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
       <div className="mb-8 text-center flex flex-col items-center">
-        <Image src="/icons/logo.svg" alt="S8LLS" width={120} height={43} className="dark:invert-0 invert" />
+        <Image src="/icons/logo.svg" alt="S8LLS" width={120} height={43} className="dark:invert-0 invert" unoptimized />
         <h1 className="text-2xl font-light tracking-wide mt-2">Card Activation</h1>
       </div>
 
