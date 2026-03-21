@@ -42,7 +42,7 @@ export default function AdminMatchingPage() {
       `Hi,\n\nI'd like to arrange an introduction between:\n\n` +
       `• ${buyer.full_name ?? "Member"} — ${buyer.company_name ?? buyer.industry ?? "—"}\n` +
       `• ${seller.full_name ?? "Member"} — ${seller.company_name ?? seller.industry ?? "—"}\n\n` +
-      `These members have complementary business profiles and could benefit from a formal introduction.\n\nRed Door Club Concierge`
+      `These members have complementary business profiles and could benefit from a formal introduction.\n\nS8LLS Club Concierge`
     );
     window.open(`mailto:?subject=${subject}&body=${body}`);
   };

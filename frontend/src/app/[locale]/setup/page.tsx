@@ -54,7 +54,7 @@ function SetupContent() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
       <div className="mb-8 text-center">
         <p className="text-xs tracking-[0.3em] text-muted-foreground uppercase">
-          The Red Door Club
+          S8LLS Club
         </p>
         <h1 className="text-2xl font-light tracking-wide mt-2">Card Activation</h1>
       </div>

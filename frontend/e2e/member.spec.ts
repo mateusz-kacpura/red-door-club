@@ -84,7 +84,7 @@ test.describe("Member — Dashboard", () => {
     await page.goto("/dashboard");
 
     await expect(
-      page.getByText("Welcome back to The Red Door Club")
+      page.getByText("Welcome back to S8LLS Club")
     ).toBeVisible({ timeout: 5000 });
   });
 
@@ -127,7 +127,7 @@ test.describe("Member — Dashboard", () => {
     await page.goto("/dashboard");
     // Wait for content to load
     await expect(
-      page.getByText("Welcome back to The Red Door Club")
+      page.getByText("Welcome back to S8LLS Club")
     ).toBeVisible({ timeout: 5000 });
 
     await expect(page.getByText(/we miss you/i)).not.toBeVisible();

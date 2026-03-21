@@ -43,7 +43,7 @@
     "corporate": "Corporate",
     "staffPerformance": "Staff",
     "qrGenerator": "QR Generator",
-    "theRedDoor": "The Red Door",
+    "s8lls": "S8LLS",
     "overview": "Overview",
     "members": "Members",
     "floorView": "Floor View",
@@ -80,11 +80,11 @@
     "greetingMorning": "Good morning",
     "greetingAfternoon": "Good afternoon",
     "greetingEvening": "Good evening",
-    "welcomeBack": "Welcome back to The Red Door Club",
+    "welcomeBack": "Welcome back to S8LLS Club",
     "connections": "Connections",
     "eventsAttended": "Events Attended",
     "totalSpent": "Total Spent",
-    "rdPoints": "RD Points",
+    "rdPoints": "S8 Points",
     "yourMatches": "Your Matches",
     "seeAll": "See all",
     "nextSteps": "Next Steps",
@@ -96,7 +96,7 @@
     "inVenueNow": "In Venue Now",
     "toastPayment": "Payment added to tab",
     "toastLocker": "Locker update",
-    "toastPoints": "RD Points earned"
+    "toastPoints": "S8 Points earned"
   },
   "events": {
     "title": "Events",
@@ -116,7 +116,7 @@
   },
   "connections": {
     "title": "Connections",
-    "subtitle": "Your network within The Red Door Club",
+    "subtitle": "Your network within S8LLS Club",
     "suggestedForYou": "Suggested for You",
     "yourNetwork": "Your Network",
     "sharedInterest": "shared interest",
@@ -177,7 +177,7 @@
     "downloadInvoice": "Download Invoice"
   },
   "loyalty": {
-    "title": "RD Points",
+    "title": "S8 Points",
     "subtitle": "Earn points with every visit and redeem exclusive rewards",
     "currentBalance": "Current Balance",
     "lifetimeEarned": "Lifetime Earned",
@@ -197,7 +197,7 @@
     "rewardStudioSessionDesc": "Exclusive studio recording session",
     "redeemRewards": "Redeem Rewards",
     "redeemedSuccess": "Redeemed: {label}",
-    "pointsDeducted": "{points} RD Points deducted.",
+    "pointsDeducted": "{points} S8 Points deducted.",
     "redemptionFailed": "Redemption failed",
     "insufficientPoints": "Insufficient points or error.",
     "redeem": "Redeem",
@@ -763,7 +763,7 @@
   "tips": {
     "visitSoon": "Visit us soon — we miss you! Your membership benefits are waiting.",
     "rsvpReconnect": "RSVP to the next club event to reconnect with your network.",
-    "openTab": "Open a tab at the bar to enjoy full Red Door Club hospitality.",
+    "openTab": "Open a tab at the bar to enjoy full S8LLS Club hospitality.",
     "checkEvents": "Check the upcoming events — something new is happening soon.",
     "tapNfcGrow": "Tap your NFC card to grow your connection network.",
     "doingWell": "You're doing well! Explore new events to deepen your network.",
@@ -772,7 +772,7 @@
     "addCompany": "Add your company name to your profile so members know what you do.",
     "rsvpEvents": "RSVP to upcoming club events to meet potential partners.",
     "updateInterests": "Update your interests so the matching engine can find your ideal connections.",
-    "openTabExperience": "Open a tab at the bar to get the full Red Door experience.",
+    "openTabExperience": "Open a tab at the bar to get the full S8LLS experience.",
     "profileComplete": "Your profile is complete — keep engaging with the community!",
     "completeProfileSuggestions": "Complete your profile (industry, revenue range) to get more suggestions.",
     "tapNfcVenue": "Tap NFC cards at the venue to instantly connect with matched members."

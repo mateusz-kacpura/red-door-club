@@ -69,7 +69,7 @@ function TapContent() {
       <div className="text-center max-w-sm mx-auto px-6">
         {/* Logo */}
         <p className="text-xs tracking-[0.3em] text-muted-foreground uppercase mb-8">
-          The Red Door Club
+          S8LLS Club
         </p>
 
         {status === "loading" && (

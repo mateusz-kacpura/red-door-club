@@ -41,7 +41,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
       <header className="border-b px-4 py-3 flex items-center justify-between">
         <div>
           <p className="text-xs tracking-[0.15em] text-muted-foreground uppercase">
-            {t("nav.theRedDoor")}
+            {t("nav.s8lls")}
           </p>
           <p className="text-sm font-medium">{t("staff.title")}</p>
         </div>

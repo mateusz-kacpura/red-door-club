@@ -60,7 +60,7 @@ const MOCK_CHECKIN_RESULT = {
 const MOCK_MEMBER_PROFILE = {
   ...STAFF_USER,
   phone: "+66999123456",
-  company_name: "The Red Door",
+  company_name: "S8LLS",
   industry: "Hospitality",
   created_at: "2025-01-15T10:00:00Z",
 };
@@ -358,7 +358,7 @@ test.describe("Staff Pages", () => {
       await expect(page.getByText("Staff User").first()).toBeVisible();
       await expect(page.getByText("staff@thereddoor.club").first()).toBeVisible();
       await expect(page.getByText("+66999123456")).toBeVisible();
-      await expect(page.getByRole("main").getByText("The Red Door")).toBeVisible();
+      await expect(page.getByRole("main").getByText("S8LLS")).toBeVisible();
       await expect(page.getByText("Hospitality")).toBeVisible();
     });
 

@@ -1,5 +1,5 @@
 /**
- * Red Door Club domain types.
+ * S8LLS Club domain types.
  */
 
 export interface NfcCard {

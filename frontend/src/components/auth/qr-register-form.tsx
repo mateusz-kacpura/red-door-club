@@ -337,7 +337,7 @@ export function QRRegisterForm() {
       </Card>
 
       <p className="text-center text-xs text-muted-foreground mt-4">
-        The Red Door Private Business Club — Bangkok
+        S8LLS Private Business Club — Bangkok
       </p>
     </div>
   );

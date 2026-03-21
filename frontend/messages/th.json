@@ -43,7 +43,7 @@
     "corporate": "องค์กร",
     "staffPerformance": "พนักงาน",
     "qrGenerator": "ตัวสร้าง QR",
-    "theRedDoor": "The Red Door",
+    "s8lls": "S8LLS",
     "overview": "ภาพรวม",
     "members": "สมาชิก",
     "floorView": "มุมมองพื้น",
@@ -80,11 +80,11 @@
     "greetingMorning": "สวัสดีตอนเช้า",
     "greetingAfternoon": "สวัสดีตอนบ่าย",
     "greetingEvening": "สวัสดีตอนเย็น",
-    "welcomeBack": "ยินดีต้อนรับกลับสู่ The Red Door Club",
+    "welcomeBack": "ยินดีต้อนรับกลับสู่ S8LLS Club",
     "connections": "การเชื่อมต่อ",
     "eventsAttended": "กิจกรรมที่เข้าร่วม",
     "totalSpent": "ยอดใช้จ่ายทั้งหมด",
-    "rdPoints": "คะแนน RD",
+    "rdPoints": "คะแนน S8",
     "yourMatches": "การจับคู่ของคุณ",
     "seeAll": "ดูทั้งหมด",
     "nextSteps": "ขั้นตอนถัดไป",
@@ -96,7 +96,7 @@
     "inVenueNow": "อยู่ในสถานที่ขณะนี้",
     "toastPayment": "เพิ่มการชำระเงินในบิล",
     "toastLocker": "อัปเดตล็อกเกอร์",
-    "toastPoints": "ได้รับคะแนน RD"
+    "toastPoints": "ได้รับคะแนน S8"
   },
   "events": {
     "title": "กิจกรรม",
@@ -116,7 +116,7 @@
   },
   "connections": {
     "title": "การเชื่อมต่อ",
-    "subtitle": "เครือข่ายของคุณใน The Red Door Club",
+    "subtitle": "เครือข่ายของคุณใน S8LLS Club",
     "suggestedForYou": "แนะนำสำหรับคุณ",
     "yourNetwork": "เครือข่ายของคุณ",
     "sharedInterest": "ความสนใจร่วม",
@@ -177,7 +177,7 @@
     "downloadInvoice": "ดาวน์โหลดใบแจ้งหนี้"
   },
   "loyalty": {
-    "title": "คะแนน RD",
+    "title": "คะแนน S8",
     "subtitle": "รับคะแนนทุกการเยี่ยมชมและแลกรางวัลพิเศษ",
     "currentBalance": "ยอดคงเหลือปัจจุบัน",
     "lifetimeEarned": "คะแนนที่ได้รับตลอดชีวิต",
@@ -197,7 +197,7 @@
     "rewardStudioSessionDesc": "เซสชันบันทึกเสียงสตูดิโอพิเศษ",
     "redeemRewards": "แลกรางวัล",
     "redeemedSuccess": "แลกแล้ว: {label}",
-    "pointsDeducted": "หัก {points} คะแนน RD",
+    "pointsDeducted": "หัก {points} คะแนน S8",
     "redemptionFailed": "การแลกรางวัลล้มเหลว",
     "insufficientPoints": "คะแนนไม่เพียงพอหรือเกิดข้อผิดพลาด",
     "redeem": "แลก",
@@ -763,7 +763,7 @@
   "tips": {
     "visitSoon": "มาเยี่ยมเราเร็วๆ นี้ — เราคิดถึงคุณ! สิทธิพิเศษสมาชิกรอคุณอยู่",
     "rsvpReconnect": "จองกิจกรรมคลับถัดไปเพื่อเชื่อมต่อเครือข่ายของคุณอีกครั้ง",
-    "openTab": "เปิดบิลที่บาร์เพื่อสัมผัสการบริการเต็มรูปแบบของ Red Door Club",
+    "openTab": "เปิดบิลที่บาร์เพื่อสัมผัสการบริการเต็มรูปแบบของ S8LLS Club",
     "checkEvents": "ดูกิจกรรมที่กำลังจะมาถึง — มีสิ่งใหม่ๆ เร็วๆ นี้",
     "tapNfcGrow": "แตะบัตร NFC เพื่อขยายเครือข่ายของคุณ",
     "doingWell": "คุณทำได้ดีมาก! สำรวจกิจกรรมใหม่เพื่อเสริมสร้างเครือข่าย",
@@ -772,7 +772,7 @@
     "addCompany": "เพิ่มชื่อบริษัทในโปรไฟล์เพื่อให้สมาชิกคนอื่นรู้จักคุณ",
     "rsvpEvents": "จองกิจกรรมที่กำลังจะมาเพื่อพบพาร์ทเนอร์ที่มีศักยภาพ",
     "updateInterests": "อัปเดตความสนใจเพื่อให้ระบบจับคู่หาการเชื่อมต่อที่เหมาะสม",
-    "openTabExperience": "เปิดบิลที่บาร์เพื่อสัมผัสประสบการณ์ Red Door เต็มรูปแบบ",
+    "openTabExperience": "เปิดบิลที่บาร์เพื่อสัมผัสประสบการณ์ S8LLS เต็มรูปแบบ",
     "profileComplete": "โปรไฟล์ของคุณสมบูรณ์แล้ว — มีส่วนร่วมกับชุมชนต่อไป!",
     "completeProfileSuggestions": "กรอกโปรไฟล์ (อุตสาหกรรม, ช่วงรายได้) เพื่อรับคำแนะนำเพิ่มเติม",
     "tapNfcVenue": "แตะบัตร NFC ที่สถานที่เพื่อเชื่อมต่อกับสมาชิกที่จับคู่ได้ทันที"

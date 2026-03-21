@@ -6,13 +6,13 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "The Red Door Club",
-  description: "The Red Door — Private Members Club",
+  title: "S8LLS Club",
+  description: "S8LLS — Private Members Club",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Red Door",
+    title: "S8LLS",
   },
 };
 

@@ -56,7 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Admin Sidebar */}
       <aside className="w-56 shrink-0 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
-          <p className="text-xs tracking-[0.2em] text-muted-foreground uppercase">{t("nav.theRedDoor")}</p>
+          <p className="text-xs tracking-[0.2em] text-muted-foreground uppercase">{t("nav.s8lls")}</p>
           <p className="text-sm font-medium mt-0.5">{t("nav.adminPanel")}</p>
         </div>
 

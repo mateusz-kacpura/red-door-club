@@ -62,7 +62,7 @@ export function InstallPrompt() {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white">Add to Home Screen</p>
             <p className="text-xs mt-0.5" style={{ color: "rgba(201,169,110,0.7)" }}>
-              Install The Red Door Club for quick access
+              Install S8LLS Club for quick access
             </p>
           </div>
           <button

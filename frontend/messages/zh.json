@@ -43,7 +43,7 @@
     "corporate": "企业",
     "staffPerformance": "员工",
     "qrGenerator": "二维码生成器",
-    "theRedDoor": "The Red Door",
+    "s8lls": "S8LLS",
     "overview": "概览",
     "members": "会员",
     "floorView": "场地视图",
@@ -80,11 +80,11 @@
     "greetingMorning": "早上好",
     "greetingAfternoon": "下午好",
     "greetingEvening": "晚上好",
-    "welcomeBack": "欢迎回到 The Red Door Club",
+    "welcomeBack": "欢迎回到 S8LLS Club",
     "connections": "人脉",
     "eventsAttended": "参加的活动",
     "totalSpent": "总消费",
-    "rdPoints": "RD积分",
+    "rdPoints": "S8积分",
     "yourMatches": "您的匹配",
     "seeAll": "查看全部",
     "nextSteps": "下一步",
@@ -96,7 +96,7 @@
     "inVenueNow": "正在场馆内",
     "toastPayment": "消费已添加至账单",
     "toastLocker": "储物柜更新",
-    "toastPoints": "已获得RD积分"
+    "toastPoints": "已获得S8积分"
   },
   "events": {
     "title": "活动",
@@ -116,7 +116,7 @@
   },
   "connections": {
     "title": "人脉",
-    "subtitle": "您在 The Red Door Club 的社交网络",
+    "subtitle": "您在 S8LLS Club 的社交网络",
     "suggestedForYou": "为您推荐",
     "yourNetwork": "您的人脉",
     "sharedInterest": "共同兴趣",
@@ -177,7 +177,7 @@
     "downloadInvoice": "下载发票"
   },
   "loyalty": {
-    "title": "RD积分",
+    "title": "S8积分",
     "subtitle": "每次访问赚取积分并兑换专属奖励",
     "currentBalance": "当前余额",
     "lifetimeEarned": "累计获得",
@@ -197,7 +197,7 @@
     "rewardStudioSessionDesc": "专属录音室录制",
     "redeemRewards": "兑换奖励",
     "redeemedSuccess": "已兑换：{label}",
-    "pointsDeducted": "已扣除 {points} RD积分",
+    "pointsDeducted": "已扣除 {points} S8积分",
     "redemptionFailed": "兑换失败",
     "insufficientPoints": "积分不足或发生错误",
     "redeem": "兑换",
@@ -763,7 +763,7 @@
   "tips": {
     "visitSoon": "快来看看吧——我们想念您！您的会员权益正在等待。",
     "rsvpReconnect": "预约下一次俱乐部活动，重新连接您的人脉。",
-    "openTab": "在吧台开个账单，体验Red Door Club的完整服务。",
+    "openTab": "在吧台开个账单，体验S8LLS Club的完整服务。",
     "checkEvents": "查看即将举行的活动——新鲜事即将发生。",
     "tapNfcGrow": "刷NFC卡拓展您的人脉网络。",
     "doingWell": "做得很好！探索新活动以深化您的人脉。",
@@ -772,7 +772,7 @@
     "addCompany": "在您的个人资料中添加公司名称，让其他会员了解您。",
     "rsvpEvents": "预约即将举行的俱乐部活动，结识潜在合作伙伴。",
     "updateInterests": "更新您的兴趣爱好，让匹配引擎为您找到理想的人脉。",
-    "openTabExperience": "在吧台开个账单，体验Red Door的完整服务。",
+    "openTabExperience": "在吧台开个账单，体验S8LLS的完整服务。",
     "profileComplete": "您的资料已完善——继续与社区互动吧！",
     "completeProfileSuggestions": "完善您的资料（行业、收入范围）以获得更多推荐。",
     "tapNfcVenue": "在场馆内刷NFC卡，即刻与匹配的会员建立联系。"

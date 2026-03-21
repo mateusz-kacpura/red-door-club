@@ -120,7 +120,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           className="flex items-center gap-2"
           onClick={onNavigate}
         >
-          <span className="font-light tracking-widest uppercase text-sm">{t("nav.theRedDoor")}</span>
+          <span className="font-light tracking-widest uppercase text-sm">{t("nav.s8lls")}</span>
         </Link>
       </div>
       <NavLinks onNavigate={onNavigate} />
@@ -141,7 +141,7 @@ export function Sidebar() {
       <Sheet open={isOpen} onOpenChange={close}>
         <SheetContent side="left" className="w-72 p-0">
           <SheetHeader className="h-14 px-4">
-            <SheetTitle>{t("nav.theRedDoor")}</SheetTitle>
+            <SheetTitle>{t("nav.s8lls")}</SheetTitle>
             <SheetClose onClick={close} />
           </SheetHeader>
           <NavLinks onNavigate={close} />

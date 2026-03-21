@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { QRRegisterForm } from "@/components/auth/qr-register-form";
 
 export const metadata = {
-  title: "Join The Red Door Club",
+  title: "Join S8LLS Club",
   description: "Complete your membership registration",
 };
 
@@ -11,7 +11,7 @@ export default function QRRegisterPage() {
     <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4">
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-light tracking-widest text-foreground uppercase">
-          The Red Door
+          S8LLS
         </h1>
         <p className="text-sm text-muted-foreground mt-1 tracking-wider">
           Private Business Club — Bangkok

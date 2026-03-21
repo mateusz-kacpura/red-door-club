@@ -14,7 +14,7 @@ const ADMIN_USER = {
   tier: "Obsidian",
   is_active: true,
   segment_groups: ["Finance & Investors", "Tech & Founders"],
-  company_name: "The Red Door",
+  company_name: "S8LLS",
   industry: "Hospitality",
 };
 

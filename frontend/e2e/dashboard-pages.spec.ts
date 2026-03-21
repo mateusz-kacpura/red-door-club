@@ -14,7 +14,7 @@ const ADMIN_USER = {
 const MEMBER_ME = {
   ...ADMIN_USER,
   phone: "+66812345678",
-  company_name: "The Red Door",
+  company_name: "S8LLS",
   industry: "Hospitality",
   interests: ["Tech", "Networking"],
   nfc_cards: [{ card_id: "NFC-001", status: "active" }],
@@ -223,7 +223,7 @@ test.describe("Dashboard — Profile", () => {
 
     // Field values from MEMBER_ME
     await expect(page.getByText("+66812345678")).toBeVisible();
-    await expect(page.getByRole("main").getByText("The Red Door")).toBeVisible();
+    await expect(page.getByRole("main").getByText("S8LLS")).toBeVisible();
     await expect(page.getByText("Hospitality")).toBeVisible();
   });
 

@@ -43,7 +43,7 @@
     "corporate": "Корпоративные",
     "staffPerformance": "Персонал",
     "qrGenerator": "Генератор QR",
-    "theRedDoor": "The Red Door",
+    "s8lls": "S8LLS",
     "overview": "Обзор",
     "members": "Участники",
     "floorView": "Вид зала",
@@ -80,11 +80,11 @@
     "greetingMorning": "Доброе утро",
     "greetingAfternoon": "Добрый день",
     "greetingEvening": "Добрый вечер",
-    "welcomeBack": "Добро пожаловать в The Red Door Club",
+    "welcomeBack": "Добро пожаловать в S8LLS Club",
     "connections": "Контакты",
     "eventsAttended": "Посещённые мероприятия",
     "totalSpent": "Всего потрачено",
-    "rdPoints": "RD Баллы",
+    "rdPoints": "S8 Баллы",
     "yourMatches": "Ваши совпадения",
     "seeAll": "Смотреть все",
     "nextSteps": "Следующие шаги",
@@ -96,7 +96,7 @@
     "inVenueNow": "Сейчас в клубе",
     "toastPayment": "Платёж добавлен к счёту",
     "toastLocker": "Обновление шкафчика",
-    "toastPoints": "Получены баллы RD"
+    "toastPoints": "Получены баллы S8"
   },
   "events": {
     "title": "Мероприятия",
@@ -116,7 +116,7 @@
   },
   "connections": {
     "title": "Контакты",
-    "subtitle": "Ваша сеть в The Red Door Club",
+    "subtitle": "Ваша сеть в S8LLS Club",
     "suggestedForYou": "Рекомендовано для вас",
     "yourNetwork": "Ваша сеть",
     "sharedInterest": "общий интерес",
@@ -177,7 +177,7 @@
     "downloadInvoice": "Скачать счёт"
   },
   "loyalty": {
-    "title": "RD Баллы",
+    "title": "S8 Баллы",
     "subtitle": "Накапливайте баллы за каждый визит и обменивайте на эксклюзивные привилегии",
     "currentBalance": "Текущий баланс",
     "lifetimeEarned": "Накоплено за всё время",
@@ -197,7 +197,7 @@
     "rewardStudioSessionDesc": "Эксклюзивная студийная запись",
     "redeemRewards": "Обменять привилегии",
     "redeemedSuccess": "Обменяно: {label}",
-    "pointsDeducted": "Списано {points} RD Баллов.",
+    "pointsDeducted": "Списано {points} S8 Баллов.",
     "redemptionFailed": "Не удалось обменять",
     "insufficientPoints": "Недостаточно баллов или произошла ошибка.",
     "redeem": "Обменять",
@@ -763,7 +763,7 @@
   "tips": {
     "visitSoon": "Заходите скорее — мы скучаем! Ваши привилегии ждут вас.",
     "rsvpReconnect": "Зарегистрируйтесь на ближайшее мероприятие, чтобы восстановить связи.",
-    "openTab": "Откройте счёт в баре и наслаждайтесь гостеприимством Red Door Club.",
+    "openTab": "Откройте счёт в баре и наслаждайтесь гостеприимством S8LLS Club.",
     "checkEvents": "Проверьте предстоящие мероприятия — скоро будет что-то новое.",
     "tapNfcGrow": "Приложите NFC-карту, чтобы расширить сеть контактов.",
     "doingWell": "Отлично! Исследуйте новые мероприятия, чтобы углубить связи.",
@@ -772,7 +772,7 @@
     "addCompany": "Укажите компанию в профиле, чтобы другие знали, чем вы занимаетесь.",
     "rsvpEvents": "Зарегистрируйтесь на мероприятия, чтобы встретить потенциальных партнёров.",
     "updateInterests": "Обновите интересы, чтобы система подбора нашла идеальные контакты.",
-    "openTabExperience": "Откройте счёт в баре для полного опыта Red Door.",
+    "openTabExperience": "Откройте счёт в баре для полного опыта S8LLS.",
     "profileComplete": "Ваш профиль заполнен — продолжайте общаться с сообществом!",
     "completeProfileSuggestions": "Заполните профиль (отрасль, доход), чтобы получить больше рекомендаций.",
     "tapNfcVenue": "Приложите NFC-карты на площадке для мгновенного соединения с подобранными участниками."

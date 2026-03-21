@@ -1,7 +1,7 @@
 {
-  "name": "Red Door Club",
-  "short_name": "Red Door",
-  "description": "The Red Door — Private Members Club",
+  "name": "S8LLS Club",
+  "short_name": "S8LLS",
+  "description": "S8LLS — Private Members Club",
   "start_url": "/dashboard",
   "display": "standalone",
   "orientation": "portrait",

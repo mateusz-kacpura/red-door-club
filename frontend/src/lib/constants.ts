@@ -2,7 +2,7 @@
  * Application constants.
  */
 
-export const APP_NAME = "red_door";
+export const APP_NAME = "s8lls";
 export const APP_DESCRIPTION = "A FastAPI project";
 
 // API Routes (Next.js internal routes)
