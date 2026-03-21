@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks";
 import { Button } from "@/components/ui";
@@ -10,6 +10,7 @@ import { LogOut, User, Menu, QrCode, X } from "lucide-react";
 import { useSidebarStore } from "@/stores";
 import { useTranslate } from "@tolgee/react";
 import { LanguageSwitcher } from "./language-switcher";
+import { apiClient } from "@/lib/api-client";
 import QRCode from "react-qr-code";
 
 export function Header() {
@@ -18,6 +19,18 @@ export function Header() {
   const { t } = useTranslate();
   const [qrOpen, setQrOpen] = useState(false);
   const isMember = isAuthenticated && !user?.is_promoter;
+  const isPromoter = isAuthenticated && !!user?.is_promoter;
+  const [promoCode, setPromoCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isPromoter) return;
+    apiClient
+      .get<{ code: string }[]>("/promoters/codes")
+      .then((codes) => {
+        if (codes.length > 0) setPromoCode(codes[0].code);
+      })
+      .catch(() => {});
+  }, [isPromoter]);
 
   return (
     <>
@@ -40,7 +53,7 @@ export function Header() {
             <ThemeToggle />
             {isAuthenticated ? (
               <>
-                {isMember && (
+                {(isMember || isPromoter) && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -48,7 +61,9 @@ export function Header() {
                   onClick={() => setQrOpen(true)}
                 >
                   <QrCode className="h-4 w-4" />
-                  <span className="sr-only">{t("profile.memberQr")}</span>
+                  <span className="sr-only">
+                    {isPromoter ? t("promoter.inviteQr") : t("profile.memberQr")}
+                  </span>
                 </Button>
                 )}
                 <Button variant="ghost" size="sm" asChild className="h-10 px-2 sm:px-3">
@@ -95,6 +110,36 @@ export function Header() {
           </div>
           <p className="text-sm text-muted-foreground text-center mt-6 px-8">
             {t("profile.memberQrHint")}
+          </p>
+        </div>
+      )}
+
+      {/* Fullscreen Promoter Invite QR overlay */}
+      {isPromoter && qrOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
+          <button
+            onClick={() => setQrOpen(false)}
+            className="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
+          >
+            <X className="h-6 w-6" />
+            <span className="sr-only">{t("common.close")}</span>
+          </button>
+          <h2 className="text-lg font-semibold mb-6">{t("promoter.inviteQr")}</h2>
+          {promoCode ? (
+            <>
+              <div className="bg-white p-6 rounded-2xl">
+                <QRCode
+                  value={`${typeof window !== "undefined" ? window.location.origin : ""}/qr-register?promo=${promoCode}`}
+                  size={280}
+                />
+              </div>
+              <p className="text-base font-mono font-semibold mt-4">{promoCode}</p>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">{t("promoterCodes.noCodes")}</p>
+          )}
+          <p className="text-sm text-muted-foreground text-center mt-4 px-8">
+            {t("promoter.inviteQrHint")}
           </p>
         </div>
       )}

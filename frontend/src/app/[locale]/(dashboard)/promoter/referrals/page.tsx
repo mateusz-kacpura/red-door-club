@@ -19,7 +19,7 @@ export default function PromoterReferralsPage() {
 
   useEffect(() => {
     apiClient
-      .get<Referral[]>("/promoters/me/referrals")
+      .get<Referral[]>("/promoters/referrals")
       .then(setReferrals)
       .catch(() => {})
       .finally(() => setIsLoading(false));

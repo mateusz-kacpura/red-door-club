@@ -575,6 +575,10 @@
     "registeredAt": "ลงทะเบียนเมื่อ {date}",
     "anonymous": "ไม่ระบุชื่อ"
   },
+  "promoter": {
+    "inviteQr": "QR เชิญ",
+    "inviteQrHint": "แชร์ QR นี้เพื่อเชิญสมาชิกใหม่"
+  },
   "memberDetail": {
     "notFound": "ไม่พบสมาชิก",
     "backToMembers": "กลับไปยังสมาชิก",

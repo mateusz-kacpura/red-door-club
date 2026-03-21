@@ -575,6 +575,10 @@
     "registeredAt": "Registered {date}",
     "anonymous": "Anonymous"
   },
+  "promoter": {
+    "inviteQr": "Invite QR",
+    "inviteQrHint": "Share this QR to invite new members"
+  },
   "memberDetail": {
     "notFound": "Member not found.",
     "backToMembers": "Back to Members",

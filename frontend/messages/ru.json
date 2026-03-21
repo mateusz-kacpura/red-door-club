@@ -575,6 +575,10 @@
     "registeredAt": "Зарегистрирован {date}",
     "anonymous": "Аноним"
   },
+  "promoter": {
+    "inviteQr": "QR Приглашение",
+    "inviteQrHint": "Поделитесь этим QR для приглашения новых участников"
+  },
   "memberDetail": {
     "notFound": "Участник не найден.",
     "backToMembers": "К списку участников",

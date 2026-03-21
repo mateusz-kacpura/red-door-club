@@ -575,6 +575,10 @@
     "registeredAt": "Зареєстрований {date}",
     "anonymous": "Анонім"
   },
+  "promoter": {
+    "inviteQr": "QR Запрошення",
+    "inviteQrHint": "Поділіться цим QR для запрошення нових учасників"
+  },
   "memberDetail": {
     "notFound": "Учасника не знайдено.",
     "backToMembers": "До списку учасників",

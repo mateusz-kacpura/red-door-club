@@ -575,6 +575,10 @@
     "registeredAt": "注册于 {date}",
     "anonymous": "匿名"
   },
+  "promoter": {
+    "inviteQr": "邀请二维码",
+    "inviteQrHint": "分享此二维码邀请新会员"
+  },
   "memberDetail": {
     "notFound": "未找到会员",
     "backToMembers": "返回会员列表",

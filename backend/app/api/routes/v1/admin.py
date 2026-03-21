@@ -416,13 +416,58 @@ async def make_promoter(
     current_user: CurrentAdmin,
     db: DBSession,
 ):
+    import re
+    from sqlalchemy import select
+    from sqlalchemy.exc import IntegrityError
     from app.db.models.user import User
+    from app.db.models.promoter import PromoCode
     from app.core.exceptions import NotFoundError
+
     user = await db.get(User, member_id)
     if user is None:
         raise NotFoundError(message="Member not found.")
+
+    # Idempotency: already a promoter — just return
+    if user.is_promoter:
+        return {"promoter_id": str(user.id), "is_promoter": True, "user_type": user.user_type}
+
     user.is_promoter = True
     user.user_type = "promoter"
+
+    # Auto-generate promo code
+    raw = (user.full_name or user.email.split("@")[0]).upper()
+    sanitized = re.sub(r"[^A-Z0-9]", "", raw)[:12]
+    suffix = str(user.id).replace("-", "")[:6].upper()
+    code_name = f"{sanitized}-{suffix}" if sanitized else f"PROMO-{suffix}"
+
+    # Check if promoter already has a code (e.g. created manually before)
+    existing = await db.execute(
+        select(PromoCode).where(PromoCode.promoter_id == user.id).limit(1)
+    )
+    if not existing.scalar_one_or_none():
+        code = PromoCode(
+            code=code_name,
+            promoter_id=user.id,
+            reg_commission=500,
+        )
+        db.add(code)
+        try:
+            await db.flush()
+        except IntegrityError:
+            await db.rollback()
+            # Code name collision — retry with longer suffix
+            user = await db.get(User, member_id)
+            user.is_promoter = True
+            user.user_type = "promoter"
+            suffix = str(user.id).replace("-", "")[:10].upper()
+            code_name = f"{sanitized}-{suffix}" if sanitized else f"PROMO-{suffix}"
+            code = PromoCode(
+                code=code_name,
+                promoter_id=user.id,
+                reg_commission=500,
+            )
+            db.add(code)
+
     await db.commit()
     return {"promoter_id": str(user.id), "is_promoter": True, "user_type": "promoter"}
 
