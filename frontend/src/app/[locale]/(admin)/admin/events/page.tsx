@@ -19,22 +19,50 @@ const STATUS_COLORS: Record<string, string> = {
   cancelled: "bg-red-100 text-red-700",
 };
 
-const STATUS_TRANSITIONS: Record<string, { label: string; next: string; variant: "default" | "outline" | "destructive" }[]> = {
-  draft: [{ label: "Publish", next: "published", variant: "default" }],
+const STATUS_TRANSITIONS: Record<string, { labelKey: string; next: string; variant: "default" | "outline" | "destructive" }[]> = {
+  draft: [{ labelKey: "adminEvents.publish", next: "published", variant: "default" }],
   published: [
-    { label: "Complete", next: "completed", variant: "outline" },
-    { label: "Cancel", next: "cancelled", variant: "destructive" },
+    { labelKey: "adminEvents.complete", next: "completed", variant: "outline" },
+    { labelKey: "adminEvents.cancel", next: "cancelled", variant: "destructive" },
   ],
-  completed: [{ label: "Reopen", next: "published", variant: "outline" }],
-  cancelled: [{ label: "Reopen", next: "draft", variant: "outline" }],
-  sold_out: [{ label: "Complete", next: "completed", variant: "outline" }],
+  completed: [{ labelKey: "adminEvents.reopen", next: "published", variant: "outline" }],
+  cancelled: [{ labelKey: "adminEvents.reopen", next: "draft", variant: "outline" }],
+  sold_out: [{ labelKey: "adminEvents.complete", next: "completed", variant: "outline" }],
 };
 
 const EVENT_TYPES = ["mixer", "dinner", "workshop", "private_party", "podcast", "corporate"];
-const SEGMENT_OPTIONS = [
-  "Finance & Investors", "Tech & Founders", "Real Estate",
-  "Corporate Executives", "Lifestyle & Leisure", "Legal & Advisory", "International Network",
-];
+const EVENT_TYPE_KEYS: Record<string, string> = {
+  mixer: "adminEvents.typeMixer",
+  dinner: "adminEvents.typeDinner",
+  workshop: "adminEvents.typeWorkshop",
+  private_party: "adminEvents.typePrivateParty",
+  podcast: "adminEvents.typePodcast",
+  corporate: "adminEvents.typeCorporate",
+};
+const EVENT_STATUS_KEYS: Record<string, string> = {
+  draft: "adminEvents.statusDraft",
+  published: "adminEvents.statusPublished",
+  sold_out: "adminEvents.statusSoldOut",
+  completed: "adminEvents.statusCompleted",
+  cancelled: "adminEvents.statusCancelled",
+};
+const TIER_KEYS: Record<string, string> = {
+  silver: "memberDetail.tierSilver",
+  gold: "memberDetail.tierGold",
+  platinum: "memberDetail.tierPlatinum",
+  obsidian: "memberDetail.tierObsidian",
+  vip: "memberDetail.tierVip",
+};
+const SEGMENT_KEYS: Record<string, string> = {
+  "Finance & Investors": "adminEvents.segFinance",
+  "Tech & Founders": "adminEvents.segTech",
+  "Real Estate": "adminEvents.segRealEstate",
+  "Corporate Executives": "adminEvents.segCorporate",
+  "Lifestyle & Leisure": "adminEvents.segLifestyle",
+  "Legal & Advisory": "adminEvents.segLegal",
+  "International Network": "adminEvents.segInternational",
+};
+const SEGMENT_OPTIONS = Object.keys(SEGMENT_KEYS);
 
 const PROMO_TIER_OPTIONS = ["silver", "gold", "platinum", "vip"];
 
@@ -212,14 +240,14 @@ export default function AdminEventsPage() {
                 <Label>{t("adminEvents.typeLabel")}</Label>
                 <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                   value={form.event_type} onChange={(e) => setForm((p) => ({ ...p, event_type: e.target.value }))}>
-                  {EVENT_TYPES.map((et) => <option key={et} value={et} className="capitalize">{et.replace("_", " ")}</option>)}
+                  {EVENT_TYPES.map((et) => <option key={et} value={et}>{EVENT_TYPE_KEYS[et] ? t(EVENT_TYPE_KEYS[et]) : et}</option>)}
                 </select>
               </div>
               <div className="space-y-1">
                 <Label>{t("adminEvents.statusLabel")}</Label>
                 <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                   value={form.status} onChange={(e) => setForm((p) => ({ ...p, status: e.target.value }))}>
-                  {["draft", "published", "sold_out", "completed", "cancelled"].map((s) => <option key={s} value={s}>{s}</option>)}
+                  {["draft", "published", "sold_out", "completed", "cancelled"].map((s) => <option key={s} value={s}>{EVENT_STATUS_KEYS[s] ? t(EVENT_STATUS_KEYS[s]) : s}</option>)}
                 </select>
               </div>
               <div className="space-y-1">
@@ -239,20 +267,20 @@ export default function AdminEventsPage() {
                 <select className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
                   value={form.min_tier} onChange={(e) => setForm((p) => ({ ...p, min_tier: e.target.value }))}>
                   <option value="">{t("adminEvents.noRestriction")}</option>
-                  {["silver", "gold", "platinum", "obsidian", "vip"].map((tier) => <option key={tier} value={tier} className="capitalize">{tier}</option>)}
+                  {["silver", "gold", "platinum", "obsidian", "vip"].map((tier) => <option key={tier} value={tier}>{TIER_KEYS[tier] ? t(TIER_KEYS[tier]) : tier}</option>)}
                 </select>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>{t("adminEvents.promoTiersLabel", { defaultValue: "Tiers with free entry (PROMO)" })}</Label>
-              <p className="text-xs text-muted-foreground">{t("adminEvents.promoTiersHint", { defaultValue: "VIP always enters free. Select additional tiers for this event." })}</p>
+              <Label>{t("adminEvents.promoTiersLabel")}</Label>
+              <p className="text-xs text-muted-foreground">{t("adminEvents.promoTiersHint")}</p>
               <div className="flex flex-wrap gap-2">
                 {PROMO_TIER_OPTIONS.map((tier) => (
                   <button key={tier} type="button" onClick={() => togglePromoTier(tier)}
                     className={`text-xs px-3 py-1.5 rounded-full border transition-colors capitalize
                       ${form.promo_tiers.includes(tier) ? "border-green-500 bg-green-50 text-green-700" : "border-border hover:border-green-400"}`}>
-                    {tier}
+                    {TIER_KEYS[tier] ? t(TIER_KEYS[tier]) : tier}
                   </button>
                 ))}
               </div>
@@ -265,7 +293,7 @@ export default function AdminEventsPage() {
                   <button key={seg} type="button" onClick={() => toggleSegment(seg)}
                     className={`text-xs px-3 py-1.5 rounded-full border transition-colors
                       ${form.target_segments.includes(seg) ? "border-primary bg-primary/10 text-primary" : "border-border hover:border-primary/40"}`}>
-                    {seg}
+                    {SEGMENT_KEYS[seg] ? t(SEGMENT_KEYS[seg]) : seg}
                   </button>
                 ))}
               </div>
@@ -306,7 +334,7 @@ export default function AdminEventsPage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-medium">{event.title}</p>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${STATUS_COLORS[event.status] ?? ""}`}>
-                    {event.status}
+                    {EVENT_STATUS_KEYS[event.status] ? t(EVENT_STATUS_KEYS[event.status]) : event.status}
                   </span>
                 </div>
                 <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground flex-wrap">
@@ -314,19 +342,19 @@ export default function AdminEventsPage() {
                     <CalendarDays className="h-3 w-3" />
                     {formatDate(event.starts_at)}
                   </span>
-                  <span>{event.rsvp_count ?? 0}/{event.capacity} attending</span>
+                  <span>{t("adminEvents.attending", { rsvp: event.rsvp_count ?? 0, capacity: event.capacity })}</span>
                   {event.ticket_price !== "0.00" && <span>฿{Number(event.ticket_price).toLocaleString()}</span>}
                 </div>
                 {event.target_segments.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2">
                     {event.target_segments.map((seg) => (
-                      <span key={seg} className="text-xs bg-muted px-2 py-0.5 rounded-full">{seg}</span>
+                      <span key={seg} className="text-xs bg-muted px-2 py-0.5 rounded-full">{SEGMENT_KEYS[seg] ? t(SEGMENT_KEYS[seg]) : seg}</span>
                     ))}
                   </div>
                 )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                {(STATUS_TRANSITIONS[event.status] ?? []).map(({ label, next, variant }) => (
+                {(STATUS_TRANSITIONS[event.status] ?? []).map(({ labelKey, next, variant }) => (
                   <Button
                     key={next}
                     size="sm"
@@ -337,11 +365,11 @@ export default function AdminEventsPage() {
                   >
                     {statusLoading === event.id + next
                       ? <Loader2 className="h-3 w-3 animate-spin" />
-                      : label}
+                      : t(labelKey)}
                   </Button>
                 ))}
                 <Badge variant="outline" className="capitalize text-xs">
-                  {event.event_type.replace("_", " ")}
+                  {EVENT_TYPE_KEYS[event.event_type] ? t(EVENT_TYPE_KEYS[event.event_type]) : event.event_type}
                 </Badge>
                 <Button
                   size="sm"

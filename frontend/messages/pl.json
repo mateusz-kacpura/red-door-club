@@ -20,7 +20,8 @@
     "download": "Pobierz",
     "refresh": "Odśwież",
     "unknown": "Nieznany",
-    "member": "Członek"
+    "member": "Członek",
+    "failed": "Błąd"
   },
   "nav": {
     "member": "Członek",
@@ -220,7 +221,19 @@
     "manualAward": "Ręczne przyznanie",
     "noActivity": "Brak aktywności.",
     "points": "Punkty",
-    "topMembersLifetime": "Najlepsi członkowie — punkty dożywotnie"
+    "topMembersLifetime": "Najlepsi członkowie — punkty dożywotnie",
+    "memberUuid": "UUID członka",
+    "reason": "Powód",
+    "reasonManualAward": "Ręczne przyznanie",
+    "reasonGuestReferralAward": "Polecenie gościa",
+    "reasonPodcastAward": "Sesja podcastu",
+    "reasonEventAward": "Uczestnictwo w wydarzeniu",
+    "invalidAmountTitle": "Nieprawidłowa kwota",
+    "pointsMustBePositive": "Punkty muszą być dodatnią liczbą całkowitą.",
+    "pointsAwarded": "Punkty przyznane",
+    "awardFailed": "Przyznanie nieudane",
+    "unknownMember": "Nieznany członek",
+    "pointsPlaceholder": "np. 100"
   },
   "networking": {
     "title": "Raport networkingowy",
@@ -405,7 +418,11 @@
     "colRisk": "Ryzyko",
     "colScore": "Wynik",
     "colPrimaryFactor": "Główny czynnik",
-    "never": "Nigdy"
+    "never": "Nigdy",
+    "riskLow": "Niski",
+    "riskMedium": "Średni",
+    "riskHigh": "Wysoki",
+    "membersOfTotal": "{active} / {total} członków"
   },
   "lockers": {
     "title": "Szafki",
@@ -427,7 +444,9 @@
     "vipRoom": "Pokój VIP",
     "lockerEntrance": "Wejście",
     "gym": "Siłownia",
-    "create": "Utwórz"
+    "create": "Utwórz",
+    "createFailed": "Nie udało się utworzyć szafki",
+    "releaseFailed": "Nie udało się zwolnić szafki"
   },
   "tabs": {
     "title": "Otwarte rachunki",
@@ -441,7 +460,8 @@
     "closeTab": "Zamknij rachunek",
     "downloadInvoice": "Pobierz fakturę",
     "tabClosed": "Rachunek zamknięty.",
-    "tabClosedError": "Nie udało się zamknąć rachunku."
+    "tabClosedError": "Nie udało się zamknąć rachunku.",
+    "closeFailed": "Nie udało się zamknąć rachunku"
   },
   "activity": {
     "title": "Aktywność",
@@ -461,7 +481,13 @@
     "colCardId": "ID karty",
     "colLocation": "Lokalizacja",
     "showing": "Pokazuje {from}–{to}",
-    "newEvents": "+{count} nowych"
+    "newEvents": "+{count} nowych",
+    "tapVenueEntry": "Wejście do klubu",
+    "tapPaymentTap": "Płatność NFC",
+    "tapConnectionTap": "Połączenie NFC",
+    "tapLockerAccess": "Dostęp do szafki",
+    "tapProfileCreated": "Profil utworzony",
+    "live": "NA ŻYWO"
   },
   "adminServices": {
     "title": "Usługi",
@@ -476,7 +502,9 @@
     "filterAll": "Wszystkie",
     "filterPending": "Oczekujące",
     "filterInProgress": "W trakcie",
-    "filterCompleted": "Zakończone"
+    "filterCompleted": "Zakończone",
+    "completedAt": "Zakończono {time}",
+    "unknownMember": "Nieznany członek"
   },
   "promoters": {
     "title": "Promotorzy",
@@ -501,7 +529,13 @@
     "regCommission": "Prowizja za rejestrację (฿)",
     "checkinFlat": "Zameldowanie — kwota stała (฿)",
     "checkinPct": "Zameldowanie — % opłaty",
-    "commissionSaved": "Ustawienia prowizji zapisane"
+    "commissionSaved": "Ustawienia prowizji zapisane",
+    "helpTitle": "Jak działa prowizja",
+    "helpRegTitle": "Prowizja za rejestrację",
+    "helpRegDesc": "Jednorazowa kwota (฿) wypłacana promotorowi, gdy nowy członek zarejestruje się za pomocą jego kodu QR.",
+    "helpCheckinTitle": "Prowizja za check-in",
+    "helpCheckinDesc": "Kwota wypłacana za każdym razem, gdy polecony członek zamelduje się w klubie. Może być ustawiona jako stała kwota (฿) lub procent opłaty za wejście — tylko jedna opcja może być aktywna jednocześnie.",
+    "helpDefaultsNote": "Te ustawienia są stosowane jako domyślne przy tworzeniu nowych kodów promotorów. Istniejące kody zachowują swoje indywidualne wartości prowizji."
   },
   "corporate": {
     "title": "Konta korporacyjne",
@@ -527,7 +561,10 @@
     "create": "Utwórz",
     "creating": "Tworzenie...",
     "created": "Konto korporacyjne utworzone",
-    "createFailed": "Nie udało się utworzyć konta"
+    "createFailed": "Nie udało się utworzyć konta",
+    "statusActive": "Aktywne",
+    "statusExpired": "Wygasłe",
+    "statusSuspended": "Zawieszone"
   },
   "promoterDashboard": {
     "title": "Panel promotora",
@@ -629,7 +666,21 @@
     "promoterCommissionFlat": "Kwota (THB)",
     "promoterCommissionPct": "Procent (%)",
     "promoterCommissionNone": "Brak",
-    "promoterCommissionType": "Typ"
+    "promoterCommissionType": "Typ",
+    "noTier": "— brak poziomu —",
+    "tierSilver": "Silver",
+    "tierGold": "Gold",
+    "tierPlatinum": "Platinum",
+    "tierObsidian": "Obsidian",
+    "tierVip": "VIP",
+    "typeProspect": "Potencjalny",
+    "typeMember": "Członek",
+    "typePromoter": "Promotor",
+    "typeStaff": "Personel",
+    "typeAdmin": "Administrator",
+    "active": "Aktywny",
+    "inactive": "Nieaktywny",
+    "nfcCard": "Karta NFC"
   },
   "floor": {
     "title": "Widok sali na żywo",
@@ -639,7 +690,9 @@
     "noMembers": "Nie wykryto członków w lokalu.",
     "nfcHint": "Członkowie, którzy tapną kartą NFC przy wejściu, pojawią się tutaj.",
     "entrance": "Wejście",
-    "entryPrefix": "Wejście"
+    "entryPrefix": "Wejście",
+    "updated": "Zaktualizowano {time}",
+    "defaultVenue": "lokal"
   },
   "checklist": {
     "title": "Lista przygotowań",
@@ -647,7 +700,16 @@
     "pending": "oczekujące",
     "done": "gotowe",
     "noTasks": "Brak zadań przygotowawczych na dziś.",
-    "tasksHint": "Życzenia członków przed przybyciem pojawią się tutaj."
+    "tasksHint": "Życzenia członków przed przybyciem pojawią się tutaj.",
+    "catBar": "Przygotowanie baru",
+    "catRestaurant": "Catering",
+    "catCar": "Parking / Samochód",
+    "catDriver": "Kierowca",
+    "catStudio": "Przygotowanie studia",
+    "catHotel": "Hotel",
+    "catJet": "Prywatny odrzutowiec",
+    "catOther": "Operacje",
+    "request": "zlecenie"
   },
   "adminEvents": {
     "totalEvents": "{count} wydarzeń łącznie",
@@ -666,7 +728,32 @@
     "noEvents": "Brak utworzonych wydarzeń.",
     "editEvent": "Edytuj wydarzenie",
     "descriptionLabel": "Opis",
-    "descriptionPlaceholder": "Opcjonalny opis wydarzenia"
+    "descriptionPlaceholder": "Opcjonalny opis wydarzenia",
+    "publish": "Opublikuj",
+    "complete": "Zakończ",
+    "cancel": "Anuluj",
+    "reopen": "Wznów",
+    "segFinance": "Finanse i inwestorzy",
+    "segTech": "Technologia i założyciele",
+    "segRealEstate": "Nieruchomości",
+    "segCorporate": "Kadra zarządzająca",
+    "segLifestyle": "Styl życia i rozrywka",
+    "segLegal": "Prawo i doradztwo",
+    "segInternational": "Sieć międzynarodowa",
+    "promoTiersLabel": "Poziomy z darmowym wejściem (PROMO)",
+    "promoTiersHint": "VIP zawsze wchodzi za darmo. Wybierz dodatkowe poziomy dla tego wydarzenia.",
+    "attending": "{rsvp}/{capacity} uczestników",
+    "typeMixer": "Mixer",
+    "typeDinner": "Kolacja",
+    "typeWorkshop": "Warsztaty",
+    "typePrivateParty": "Impreza prywatna",
+    "typePodcast": "Podcast",
+    "typeCorporate": "Korporacyjne",
+    "statusDraft": "Szkic",
+    "statusPublished": "Opublikowane",
+    "statusSoldOut": "Wyprzedane",
+    "statusCompleted": "Zakończone",
+    "statusCancelled": "Anulowane"
   },
   "corporateDetail": {
     "notFound": "Nie znaleziono konta.",

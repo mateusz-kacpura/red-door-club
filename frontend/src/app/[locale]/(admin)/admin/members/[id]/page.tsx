@@ -28,6 +28,14 @@ const TAP_TYPE_COLORS: Record<string, string> = {
   locker_access: "bg-purple-100 text-purple-700",
 };
 
+const TAP_TYPE_KEYS: Record<string, string> = {
+  venue_entry: "activity.tapVenueEntry",
+  payment_tap: "activity.tapPaymentTap",
+  connection_tap: "activity.tapConnectionTap",
+  locker_access: "activity.tapLockerAccess",
+  profile_created: "activity.tapProfileCreated",
+};
+
 function formatAmount(amount: number) {
   return `฿${Number(amount).toLocaleString("en-US", { minimumFractionDigits: 0 })}`;
 }
@@ -216,7 +224,7 @@ export default function MemberDetailPage() {
               {member.user_type}
             </span>
             <span className={`text-xs px-2.5 py-0.5 rounded-full ${member.is_active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-              {member.is_active ? "Active" : "Inactive"}
+              {member.is_active ? t("memberDetail.active") : t("memberDetail.inactive")}
             </span>
             <Button size="sm" variant="outline" className="h-7 text-xs gap-1.5" onClick={() => setShowEdit(!showEdit)}>
               {showEdit ? <X className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5" />}
@@ -290,12 +298,12 @@ export default function MemberDetailPage() {
                   value={editForm.tier}
                   onChange={(e) => setEditForm((p) => ({ ...p, tier: e.target.value }))}
                 >
-                  <option value="">— no tier —</option>
-                  <option value="silver">Silver</option>
-                  <option value="gold">Gold</option>
-                  <option value="platinum">Platinum</option>
-                  <option value="obsidian">Obsidian</option>
-                  <option value="vip">VIP</option>
+                  <option value="">{t("memberDetail.noTier")}</option>
+                  <option value="silver">{t("memberDetail.tierSilver")}</option>
+                  <option value="gold">{t("memberDetail.tierGold")}</option>
+                  <option value="platinum">{t("memberDetail.tierPlatinum")}</option>
+                  <option value="obsidian">{t("memberDetail.tierObsidian")}</option>
+                  <option value="vip">{t("memberDetail.tierVip")}</option>
                 </select>
               </div>
               <div className="space-y-1">
@@ -305,11 +313,11 @@ export default function MemberDetailPage() {
                   value={editForm.user_type}
                   onChange={(e) => setEditForm((p) => ({ ...p, user_type: e.target.value }))}
                 >
-                  <option value="prospect">Prospect</option>
-                  <option value="member">Member</option>
-                  <option value="promoter">Promoter</option>
-                  <option value="staff">Staff</option>
-                  <option value="admin">Admin</option>
+                  <option value="prospect">{t("memberDetail.typeProspect")}</option>
+                  <option value="member">{t("memberDetail.typeMember")}</option>
+                  <option value="promoter">{t("memberDetail.typePromoter")}</option>
+                  <option value="staff">{t("memberDetail.typeStaff")}</option>
+                  <option value="admin">{t("memberDetail.typeAdmin")}</option>
                 </select>
               </div>
               <div className="flex items-center gap-2 pt-4">
@@ -373,13 +381,13 @@ export default function MemberDetailPage() {
             <div className="space-y-2">
               <p className="text-sm font-medium flex items-center gap-2">
                 <CreditCard className="h-4 w-4 text-primary" />
-                NFC Card
+                {t("memberDetail.nfcCard")}
               </p>
               {member.nfc_cards.map((card: { card_id: string; status: string }) => (
                 <div key={card.card_id} className="flex items-center gap-2">
                   <span className="font-mono text-xs bg-muted px-2 py-1 rounded">{card.card_id}</span>
                   <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${card.status === "active" ? "bg-green-100 text-green-700" : "bg-muted text-muted-foreground"}`}>
-                    {card.status}
+                    {card.status === "active" ? t("memberDetail.active") : card.status === "inactive" ? t("memberDetail.inactive") : card.status}
                   </span>
                 </div>
               ))}
@@ -536,7 +544,7 @@ export default function MemberDetailPage() {
                 {member.recent_taps.map((tap) => (
                   <div key={tap.id} className="flex items-center justify-between py-2 text-sm">
                     <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${TAP_TYPE_COLORS[tap.tap_type] ?? "bg-muted text-muted-foreground"}`}>
-                      {tap.tap_type.replace(/_/g, " ")}
+                      {TAP_TYPE_KEYS[tap.tap_type] ? t(TAP_TYPE_KEYS[tap.tap_type]) : tap.tap_type.replace(/_/g, " ")}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {tap.location && <span className="mr-2">{tap.location}</span>}

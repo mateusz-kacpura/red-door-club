@@ -20,7 +20,8 @@
     "download": "下载",
     "refresh": "刷新",
     "unknown": "未知",
-    "member": "会员"
+    "member": "会员",
+    "failed": "失败"
   },
   "nav": {
     "member": "会员",
@@ -220,7 +221,19 @@
     "manualAward": "手动奖励",
     "noActivity": "暂无活动",
     "points": "积分",
-    "topMembersLifetime": "顶级会员 — 累计积分"
+    "topMembersLifetime": "顶级会员 — 累计积分",
+    "memberUuid": "会员 UUID",
+    "reason": "原因",
+    "reasonManualAward": "手动奖励",
+    "reasonGuestReferralAward": "来宾推荐",
+    "reasonPodcastAward": "播客录制",
+    "reasonEventAward": "活动参与",
+    "invalidAmountTitle": "金额无效",
+    "pointsMustBePositive": "积分必须是正整数。",
+    "pointsAwarded": "积分已奖励",
+    "awardFailed": "奖励失败",
+    "unknownMember": "未知会员",
+    "pointsPlaceholder": "例如 100"
   },
   "networking": {
     "title": "社交报告",
@@ -405,7 +418,11 @@
     "colRisk": "风险",
     "colScore": "评分",
     "colPrimaryFactor": "主要因素",
-    "never": "从未"
+    "never": "从未",
+    "riskLow": "低",
+    "riskMedium": "中",
+    "riskHigh": "高",
+    "membersOfTotal": "{active} / {total} 位会员"
   },
   "lockers": {
     "title": "储物柜",
@@ -427,7 +444,9 @@
     "vipRoom": "VIP室",
     "lockerEntrance": "入口",
     "gym": "健身房",
-    "create": "创建"
+    "create": "创建",
+    "createFailed": "创建储物柜失败",
+    "releaseFailed": "释放储物柜失败"
   },
   "tabs": {
     "title": "开放账单",
@@ -441,7 +460,8 @@
     "closeTab": "结账",
     "downloadInvoice": "下载发票",
     "tabClosed": "账单已结",
-    "tabClosedError": "结账失败"
+    "tabClosedError": "结账失败",
+    "closeFailed": "无法关闭账单"
   },
   "activity": {
     "title": "活动记录",
@@ -461,7 +481,13 @@
     "colCardId": "卡片ID",
     "colLocation": "位置",
     "showing": "显示 {from}–{to}",
-    "newEvents": "+{count} 新增"
+    "newEvents": "+{count} 新增",
+    "tapVenueEntry": "进入场馆",
+    "tapPaymentTap": "NFC支付",
+    "tapConnectionTap": "NFC连接",
+    "tapLockerAccess": "储物柜访问",
+    "tapProfileCreated": "创建档案",
+    "live": "实时"
   },
   "adminServices": {
     "title": "服务",
@@ -476,7 +502,9 @@
     "filterAll": "全部",
     "filterPending": "待处理",
     "filterInProgress": "处理中",
-    "filterCompleted": "已完成"
+    "filterCompleted": "已完成",
+    "completedAt": "完成于 {time}",
+    "unknownMember": "未知会员"
   },
   "promoters": {
     "title": "推广员",
@@ -501,7 +529,13 @@
     "regCommission": "注册佣金 (฿)",
     "checkinFlat": "签到 — 固定金额 (฿)",
     "checkinPct": "签到 — 费用百分比",
-    "commissionSaved": "佣金设置已保存"
+    "commissionSaved": "佣金设置已保存",
+    "helpTitle": "佣金如何运作",
+    "helpRegTitle": "注册佣金",
+    "helpRegDesc": "当新会员通过推广员的二维码注册时，一次性支付给推广员的固定金额 (฿)。",
+    "helpCheckinTitle": "签到佣金",
+    "helpCheckinDesc": "每次被推荐的会员在俱乐部签到时支付的金额。可以设置为固定金额 (฿) 或入场费的百分比 — 同一时间只能启用一种选项。",
+    "helpDefaultsNote": "这些设置在创建新的推广员代码时作为默认值应用。现有代码保留其各自的佣金值。"
   },
   "corporate": {
     "title": "企业账户",
@@ -527,7 +561,10 @@
     "create": "创建",
     "creating": "创建中...",
     "created": "企业账户已创建",
-    "createFailed": "创建账户失败"
+    "createFailed": "创建账户失败",
+    "statusActive": "活跃",
+    "statusExpired": "已过期",
+    "statusSuspended": "已暂停"
   },
   "promoterDashboard": {
     "title": "推广员仪表板",
@@ -629,7 +666,21 @@
     "promoterCommissionFlat": "固定 (THB)",
     "promoterCommissionPct": "百分比 (%)",
     "promoterCommissionNone": "无",
-    "promoterCommissionType": "类型"
+    "promoterCommissionType": "类型",
+    "noTier": "— 无等级 —",
+    "tierSilver": "Silver",
+    "tierGold": "Gold",
+    "tierPlatinum": "Platinum",
+    "tierObsidian": "Obsidian",
+    "tierVip": "VIP",
+    "typeProspect": "潜在客户",
+    "typeMember": "会员",
+    "typePromoter": "推广员",
+    "typeStaff": "员工",
+    "typeAdmin": "管理员",
+    "active": "活跃",
+    "inactive": "未活跃",
+    "nfcCard": "NFC 卡"
   },
   "floor": {
     "title": "实时场地视图",
@@ -639,7 +690,9 @@
     "noMembers": "场地内未检测到会员",
     "nfcHint": "在入口刷NFC卡的会员将显示在这里",
     "entrance": "入口",
-    "entryPrefix": "进入"
+    "entryPrefix": "进入",
+    "updated": "更新于 {time}",
+    "defaultVenue": "场馆"
   },
   "checklist": {
     "title": "准备清单",
@@ -647,7 +700,16 @@
     "pending": "待完成",
     "done": "已完成",
     "noTasks": "今日没有准备任务",
-    "tasksHint": "会员的抵达前申请将显示在这里"
+    "tasksHint": "会员的抵达前申请将显示在这里",
+    "catBar": "酒吧准备",
+    "catRestaurant": "餐饮服务",
+    "catCar": "停车 / 车辆",
+    "catDriver": "司机",
+    "catStudio": "录音室准备",
+    "catHotel": "酒店",
+    "catJet": "私人飞机",
+    "catOther": "运营",
+    "request": "请求"
   },
   "adminEvents": {
     "totalEvents": "共 {count} 个活动",
@@ -666,7 +728,32 @@
     "noEvents": "尚未创建活动",
     "editEvent": "编辑活动",
     "descriptionLabel": "描述",
-    "descriptionPlaceholder": "活动描述（可选）"
+    "descriptionPlaceholder": "活动描述（可选）",
+    "publish": "发布",
+    "complete": "完成",
+    "cancel": "取消",
+    "reopen": "重新开放",
+    "segFinance": "金融与投资者",
+    "segTech": "科技与创始人",
+    "segRealEstate": "房地产",
+    "segCorporate": "企业高管",
+    "segLifestyle": "生活方式与休闲",
+    "segLegal": "法律与咨询",
+    "segInternational": "国际网络",
+    "promoTiersLabel": "免费入场等级 (促销)",
+    "promoTiersHint": "VIP 始终免费入场。为此活动选择额外的等级。",
+    "attending": "{rsvp}/{capacity} 参加",
+    "typeMixer": "社交酒会",
+    "typeDinner": "晚宴",
+    "typeWorkshop": "工作坊",
+    "typePrivateParty": "私人派对",
+    "typePodcast": "播客",
+    "typeCorporate": "企业活动",
+    "statusDraft": "草稿",
+    "statusPublished": "已发布",
+    "statusSoldOut": "售罄",
+    "statusCompleted": "已完成",
+    "statusCancelled": "已取消"
   },
   "corporateDetail": {
     "notFound": "未找到账户",

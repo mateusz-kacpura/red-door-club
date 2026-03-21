@@ -141,7 +141,7 @@ export default function AdminServicesPage() {
                     <div>
                       <CardTitle className="text-base flex items-center gap-2">
                         <span>{CATEGORY_ICONS[req.request_type] ?? "📋"}</span>
-                        {req.member_name ?? "Unknown Member"}
+                        {req.member_name ?? t("adminServices.unknownMember")}
                       </CardTitle>
                       <CardDescription className="text-xs mt-0.5">
                         {new Date(req.created_at).toLocaleString("en-GB", {
@@ -152,7 +152,7 @@ export default function AdminServicesPage() {
                     <span
                       className={`text-xs px-2 py-0.5 rounded-full capitalize shrink-0 ${STATUS_COLORS[req.status] ?? ""}`}
                     >
-                      {req.status.replace("_", " ")}
+                      {t(`services.status${req.status}`, { defaultValue: req.status.replace("_", " ") })}
                     </span>
                   </div>
                 </CardHeader>
@@ -190,7 +190,7 @@ export default function AdminServicesPage() {
                   )}
                   {req.status === "completed" && req.completed_at && (
                     <p className="text-xs text-green-600">
-                      Completed {new Date(req.completed_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+                      {t("adminServices.completedAt", { time: new Date(req.completed_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) })}
                     </p>
                   )}
                 </CardContent>

@@ -45,6 +45,12 @@ const statusColor: Record<string, string> = {
   suspended: "bg-rose-500/10 text-rose-600 border-rose-500/20",
 };
 
+const CORPORATE_STATUS_KEYS: Record<string, string> = {
+  active: "corporate.statusActive",
+  expired: "corporate.statusExpired",
+  suspended: "corporate.statusSuspended",
+};
+
 export default function CorporateDetailPage() {
   const { t } = useTranslate();
   const { id } = useParams<{ id: string }>();
@@ -72,7 +78,7 @@ export default function CorporateDetailPage() {
       setNewMemberEmail("");
       fetchAccount();
     } catch (err: unknown) {
-      toast.error("Failed", { description: (err as { message?: string })?.message });
+      toast.error(t("common.failed"), { description: (err as { message?: string })?.message });
     } finally {
       setIsAdding(false);
     }
@@ -84,7 +90,7 @@ export default function CorporateDetailPage() {
       toast.success(newStatus === "suspended" ? t("corporateDetail.suspended") : t("corporateDetail.reactivated"));
       fetchAccount();
     } catch (err: unknown) {
-      toast.error("Failed", { description: (err as { message?: string })?.message });
+      toast.error(t("common.failed"), { description: (err as { message?: string })?.message });
     }
   };
 
@@ -110,7 +116,7 @@ export default function CorporateDetailPage() {
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className={cn("text-sm capitalize", statusColor[account.status] ?? "")}>
-            {account.status}
+            {CORPORATE_STATUS_KEYS[account.status] ? t(CORPORATE_STATUS_KEYS[account.status]) : account.status}
           </Badge>
           {account.status === "active" ? (
             <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => handleStatusChange("suspended")}>
@@ -195,7 +201,7 @@ export default function CorporateDetailPage() {
               {account.members.map((m) => (
                 <div key={m.id} className="flex items-center justify-between px-4 py-3 text-sm">
                   <div>
-                    <p className="font-medium">{m.member_name ?? "Unknown"}</p>
+                    <p className="font-medium">{m.member_name ?? t("common.unknown")}</p>
                     <p className="text-xs text-muted-foreground">{m.member_email}</p>
                   </div>
                   <Badge variant="outline" className="text-xs capitalize">{m.role}</Badge>

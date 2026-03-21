@@ -20,7 +20,8 @@
     "download": "ดาวน์โหลด",
     "refresh": "รีเฟรช",
     "unknown": "ไม่ทราบ",
-    "member": "สมาชิก"
+    "member": "สมาชิก",
+    "failed": "ล้มเหลว"
   },
   "nav": {
     "member": "สมาชิก",
@@ -220,7 +221,19 @@
     "manualAward": "มอบรางวัลด้วยตนเอง",
     "noActivity": "ยังไม่มีกิจกรรม",
     "points": "คะแนน",
-    "topMembersLifetime": "สมาชิกอันดับต้น — คะแนนตลอดชีวิต"
+    "topMembersLifetime": "สมาชิกอันดับต้น — คะแนนตลอดชีวิต",
+    "memberUuid": "UUID สมาชิก",
+    "reason": "เหตุผล",
+    "reasonManualAward": "ให้คะแนนด้วยตนเอง",
+    "reasonGuestReferralAward": "การแนะนำแขก",
+    "reasonPodcastAward": "เซสชั่นพอดแคสต์",
+    "reasonEventAward": "การเข้าร่วมกิจกรรม",
+    "invalidAmountTitle": "จำนวนไม่ถูกต้อง",
+    "pointsMustBePositive": "คะแนนต้องเป็นจำนวนเต็มบวก",
+    "pointsAwarded": "ให้คะแนนแล้ว",
+    "awardFailed": "การให้คะแนนล้มเหลว",
+    "unknownMember": "สมาชิกที่ไม่รู้จัก",
+    "pointsPlaceholder": "เช่น 100"
   },
   "networking": {
     "title": "รายงานเครือข่าย",
@@ -405,7 +418,11 @@
     "colRisk": "ความเสี่ยง",
     "colScore": "คะแนน",
     "colPrimaryFactor": "ปัจจัยหลัก",
-    "never": "ไม่เคย"
+    "never": "ไม่เคย",
+    "riskLow": "ต่ำ",
+    "riskMedium": "ปานกลาง",
+    "riskHigh": "สูง",
+    "membersOfTotal": "{active} / {total} สมาชิก"
   },
   "lockers": {
     "title": "ตู้ล็อคเกอร์",
@@ -427,7 +444,9 @@
     "vipRoom": "ห้อง VIP",
     "lockerEntrance": "ทางเข้า",
     "gym": "ยิม",
-    "create": "สร้าง"
+    "create": "สร้าง",
+    "createFailed": "ไม่สามารถสร้างตู้เก็บของได้",
+    "releaseFailed": "ไม่สามารถปลดล็อกตู้เก็บของได้"
   },
   "tabs": {
     "title": "แท็บที่เปิดอยู่",
@@ -441,7 +460,8 @@
     "closeTab": "ปิดแท็บ",
     "downloadInvoice": "ดาวน์โหลดใบแจ้งหนี้",
     "tabClosed": "ปิดแท็บแล้ว",
-    "tabClosedError": "ปิดแท็บล้มเหลว"
+    "tabClosedError": "ปิดแท็บล้มเหลว",
+    "closeFailed": "ไม่สามารถปิดบิลได้"
   },
   "activity": {
     "title": "กิจกรรม",
@@ -461,7 +481,13 @@
     "colCardId": "รหัสบัตร",
     "colLocation": "ตำแหน่ง",
     "showing": "แสดง {from}–{to}",
-    "newEvents": "+{count} ใหม่"
+    "newEvents": "+{count} ใหม่",
+    "tapVenueEntry": "เข้าสถานที่",
+    "tapPaymentTap": "แตะชำระเงิน",
+    "tapConnectionTap": "แตะเชื่อมต่อ",
+    "tapLockerAccess": "เข้าตู้เก็บของ",
+    "tapProfileCreated": "สร้างโปรไฟล์",
+    "live": "สด"
   },
   "adminServices": {
     "title": "บริการ",
@@ -476,7 +502,9 @@
     "filterAll": "ทั้งหมด",
     "filterPending": "รอดำเนินการ",
     "filterInProgress": "กำลังดำเนินการ",
-    "filterCompleted": "เสร็จสิ้น"
+    "filterCompleted": "เสร็จสิ้น",
+    "completedAt": "เสร็จสิ้นเมื่อ {time}",
+    "unknownMember": "สมาชิกที่ไม่รู้จัก"
   },
   "promoters": {
     "title": "ผู้โปรโมต",
@@ -501,7 +529,13 @@
     "regCommission": "ค่าคอมมิชชันลงทะเบียน (฿)",
     "checkinFlat": "เช็คอิน — คงที่ (฿)",
     "checkinPct": "เช็คอิน — % ของค่าธรรมเนียม",
-    "commissionSaved": "บันทึกการตั้งค่าค่าคอมมิชชันแล้ว"
+    "commissionSaved": "บันทึกการตั้งค่าค่าคอมมิชชันแล้ว",
+    "helpTitle": "ค่าคอมมิชชันทำงานอย่างไร",
+    "helpRegTitle": "ค่าคอมมิชชันการลงทะเบียน",
+    "helpRegDesc": "จำนวนเงินคงที่ (฿) จ่ายครั้งเดียวให้ผู้โปรโมตเมื่อสมาชิกใหม่ลงทะเบียนผ่านรหัส QR ของพวกเขา",
+    "helpCheckinTitle": "ค่าคอมมิชชันเช็คอิน",
+    "helpCheckinDesc": "จำนวนเงินที่จ่ายทุกครั้งที่สมาชิกที่ถูกแนะนำเช็คอินที่สโมสร สามารถตั้งเป็นจำนวนเงินคงที่ (฿) หรือเปอร์เซ็นต์ของค่าเข้า — สามารถใช้ได้เพียงหนึ่งตัวเลือกเท่านั้น",
+    "helpDefaultsNote": "การตั้งค่าเหล่านี้ใช้เป็นค่าเริ่มต้นเมื่อสร้างรหัสผู้โปรโมตใหม่ รหัสที่มีอยู่จะเก็บค่าคอมมิชชันเฉพาะของตนเอง"
   },
   "corporate": {
     "title": "บัญชีองค์กร",
@@ -527,7 +561,10 @@
     "create": "สร้าง",
     "creating": "กำลังสร้าง...",
     "created": "สร้างบัญชีองค์กรแล้ว",
-    "createFailed": "สร้างบัญชีล้มเหลว"
+    "createFailed": "สร้างบัญชีล้มเหลว",
+    "statusActive": "ใช้งาน",
+    "statusExpired": "หมดอายุ",
+    "statusSuspended": "ระงับ"
   },
   "promoterDashboard": {
     "title": "แดชบอร์ดผู้โปรโมต",
@@ -629,7 +666,21 @@
     "promoterCommissionFlat": "จำนวนคงที่ (THB)",
     "promoterCommissionPct": "เปอร์เซ็นต์ (%)",
     "promoterCommissionNone": "ไม่มี",
-    "promoterCommissionType": "ประเภท"
+    "promoterCommissionType": "ประเภท",
+    "noTier": "— ไม่มีระดับ —",
+    "tierSilver": "Silver",
+    "tierGold": "Gold",
+    "tierPlatinum": "Platinum",
+    "tierObsidian": "Obsidian",
+    "tierVip": "VIP",
+    "typeProspect": "ผู้มีแนวโน้ม",
+    "typeMember": "สมาชิก",
+    "typePromoter": "ผู้โปรโมต",
+    "typeStaff": "พนักงาน",
+    "typeAdmin": "ผู้ดูแล",
+    "active": "ใช้งานอยู่",
+    "inactive": "ไม่ได้ใช้งาน",
+    "nfcCard": "บัตร NFC"
   },
   "floor": {
     "title": "มุมมองพื้นสด",
@@ -639,7 +690,9 @@
     "noMembers": "ไม่พบสมาชิกในสถานที่",
     "nfcHint": "สมาชิกที่แตะบัตร NFC ที่ทางเข้าจะปรากฏที่นี่",
     "entrance": "ทางเข้า",
-    "entryPrefix": "เข้า"
+    "entryPrefix": "เข้า",
+    "updated": "อัปเดตเมื่อ {time}",
+    "defaultVenue": "สถานที่"
   },
   "checklist": {
     "title": "รายการเตรียมความพร้อม",
@@ -647,7 +700,16 @@
     "pending": "รอดำเนินการ",
     "done": "เสร็จสิ้น",
     "noTasks": "ไม่มีงานเตรียมความพร้อมสำหรับวันนี้",
-    "tasksHint": "คำขอก่อนเดินทางของสมาชิกจะปรากฏที่นี่"
+    "tasksHint": "คำขอก่อนเดินทางของสมาชิกจะปรากฏที่นี่",
+    "catBar": "เตรียมบาร์",
+    "catRestaurant": "จัดเลี้ยง",
+    "catCar": "ที่จอดรถ / รถยนต์",
+    "catDriver": "คนขับ",
+    "catStudio": "เตรียมสตูดิโอ",
+    "catHotel": "โรงแรม",
+    "catJet": "เครื่องบินส่วนตัว",
+    "catOther": "ปฏิบัติการ",
+    "request": "คำขอ"
   },
   "adminEvents": {
     "totalEvents": "{count} กิจกรรมทั้งหมด",
@@ -666,7 +728,32 @@
     "noEvents": "ยังไม่มีกิจกรรมที่สร้าง",
     "editEvent": "แก้ไขกิจกรรม",
     "descriptionLabel": "คำอธิบาย",
-    "descriptionPlaceholder": "คำอธิบายกิจกรรม (ไม่บังคับ)"
+    "descriptionPlaceholder": "คำอธิบายกิจกรรม (ไม่บังคับ)",
+    "publish": "เผยแพร่",
+    "complete": "เสร็จสิ้น",
+    "cancel": "ยกเลิก",
+    "reopen": "เปิดใหม่",
+    "segFinance": "การเงินและนักลงทุน",
+    "segTech": "เทคโนโลยีและผู้ก่อตั้ง",
+    "segRealEstate": "อสังหาริมทรัพย์",
+    "segCorporate": "ผู้บริหารองค์กร",
+    "segLifestyle": "ไลฟ์สไตล์และนันทนาการ",
+    "segLegal": "กฎหมายและที่ปรึกษา",
+    "segInternational": "เครือข่ายนานาชาติ",
+    "promoTiersLabel": "ระดับที่เข้าฟรี (โปรโม)",
+    "promoTiersHint": "VIP เข้าฟรีเสมอ เลือกระดับเพิ่มเติมสำหรับกิจกรรมนี้",
+    "attending": "{rsvp}/{capacity} ผู้เข้าร่วม",
+    "typeMixer": "มิกเซอร์",
+    "typeDinner": "ดินเนอร์",
+    "typeWorkshop": "เวิร์กช็อป",
+    "typePrivateParty": "ปาร์ตี้ส่วนตัว",
+    "typePodcast": "พอดแคสต์",
+    "typeCorporate": "องค์กร",
+    "statusDraft": "แบบร่าง",
+    "statusPublished": "เผยแพร่แล้ว",
+    "statusSoldOut": "ขายหมด",
+    "statusCompleted": "เสร็จสิ้น",
+    "statusCancelled": "ยกเลิก"
   },
   "corporateDetail": {
     "notFound": "ไม่พบบัญชี",

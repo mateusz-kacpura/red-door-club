@@ -18,6 +18,14 @@ const TAP_TYPE_COLORS: Record<string, string> = {
 };
 
 const ALL_TYPES = ["venue_entry", "payment_tap", "connection_tap", "locker_access"];
+
+const TAP_TYPE_KEYS: Record<string, string> = {
+  venue_entry: "activity.tapVenueEntry",
+  payment_tap: "activity.tapPaymentTap",
+  connection_tap: "activity.tapConnectionTap",
+  locker_access: "activity.tapLockerAccess",
+  profile_created: "activity.tapProfileCreated",
+};
 const PAGE_SIZE = 25;
 
 interface LiveTapMessage {
@@ -94,7 +102,7 @@ export default function AdminActivityPage() {
         </div>
         <div className="flex items-center gap-2">
           <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-xs text-green-600 font-medium tracking-wider">LIVE</span>
+          <span className="text-xs text-green-600 font-medium tracking-wider">{t("activity.live")}</span>
           {liveCount > 0 && (
             <span className="text-xs text-muted-foreground">
               (+{liveCount} new)
@@ -125,7 +133,7 @@ export default function AdminActivityPage() {
                 : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
           >
-            {type.replace(/_/g, " ")}
+            {TAP_TYPE_KEYS[type] ? t(TAP_TYPE_KEYS[type]) : type.replace(/_/g, " ")}
           </button>
         ))}
       </div>
@@ -166,7 +174,7 @@ export default function AdminActivityPage() {
                       </td>
                       <td className="px-4 py-3">
                         <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${TAP_TYPE_COLORS[event.tap_type] ?? "bg-muted text-muted-foreground"}`}>
-                          {event.tap_type.replace(/_/g, " ")}
+                          {TAP_TYPE_KEYS[event.tap_type] ? t(TAP_TYPE_KEYS[event.tap_type]) : event.tap_type.replace(/_/g, " ")}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-muted-foreground font-mono text-xs hidden md:table-cell">

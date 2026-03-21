@@ -53,8 +53,8 @@ export default function AdminFloorPage() {
   // Real-time WebSocket: receive tap events and show toast + flash card
   useWebSocket("/api/v1/ws/admin/live", (data) => {
     const event = data as TapEventMessage;
-    const name = event.member_name ?? "Unknown";
-    const location = event.location ?? "venue";
+    const name = event.member_name ?? t("common.unknown");
+    const location = event.location ?? t("floor.defaultVenue");
     const typeLabel = event.tap_type.replace(/_/g, " ");
 
     toast(`${name} — ${typeLabel}`, {
@@ -93,7 +93,7 @@ export default function AdminFloorPage() {
         <div className="flex items-center gap-3">
           {lastUpdated && (
             <span className="text-xs text-muted-foreground">
-              Updated {lastUpdated.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+              {t("floor.updated", { time: lastUpdated.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) })}
             </span>
           )}
           <Button variant="outline" size="sm" onClick={fetchFloor} disabled={isLoading}>

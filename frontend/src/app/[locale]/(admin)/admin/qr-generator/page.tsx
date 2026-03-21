@@ -47,6 +47,11 @@ interface ActiveAction {
 }
 
 const TIERS = ["silver", "gold", "obsidian"];
+const TIER_KEYS: Record<string, string> = {
+  silver: "memberDetail.tierSilver",
+  gold: "memberDetail.tierGold",
+  obsidian: "memberDetail.tierObsidian",
+};
 
 export default function AdminQrGeneratorPage() {
   const { t } = useTranslate();
@@ -292,7 +297,7 @@ export default function AdminQrGeneratorPage() {
                   onChange={(e) => setForm((p) => ({ ...p, tier: e.target.value }))}
                 >
                   {TIERS.map((tier) => (
-                    <option key={tier} value={tier} className="capitalize">{tier}</option>
+                    <option key={tier} value={tier}>{TIER_KEYS[tier] ? t(TIER_KEYS[tier]) : tier}</option>
                   ))}
                 </select>
               </div>

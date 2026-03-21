@@ -49,7 +49,7 @@ export default function AdminLoyaltyPage() {
     if (!memberId.trim() || !amount) return;
     const pts = parseInt(amount, 10);
     if (isNaN(pts) || pts <= 0) {
-      toast.error("Invalid amount", { description: "Points must be a positive integer." });
+      toast.error(t("loyalty.invalidAmountTitle"), { description: t("loyalty.pointsMustBePositive") });
       return;
     }
     setIsAwarding(true);
@@ -59,14 +59,14 @@ export default function AdminLoyaltyPage() {
         amount: pts,
         reason,
       });
-      toast.success("Points awarded", { description: `${pts} pts → member ${memberId.slice(0, 8)}…` });
+      toast.success(t("loyalty.pointsAwarded"), { description: `${pts} pts → ${memberId.slice(0, 8)}…` });
       setMemberId("");
       setAmount("");
       setReason("manual_award");
       fetchLeaderboard();
     } catch (err: unknown) {
       const msg = (err as { message?: string })?.message ?? "Failed to award points.";
-      toast.error("Award failed", { description: msg });
+      toast.error(t("loyalty.awardFailed"), { description: msg });
     } finally {
       setIsAwarding(false);
     }
@@ -128,7 +128,7 @@ export default function AdminLoyaltyPage() {
                     {/* Member info */}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">
-                        {entry.full_name ?? "Unknown Member"}
+                        {entry.full_name ?? t("loyalty.unknownMember")}
                       </p>
                       {entry.company_name && (
                         <p className="text-xs text-muted-foreground truncate">{entry.company_name}</p>
@@ -176,7 +176,7 @@ export default function AdminLoyaltyPage() {
               <form onSubmit={handleAward} className="space-y-3">
                 <div className="space-y-1.5">
                   <label className="text-xs text-muted-foreground uppercase tracking-wide">
-                    Member UUID
+                    {t("loyalty.memberUuid")}
                   </label>
                   <Input
                     placeholder="xxxxxxxx-xxxx-xxxx-..."
@@ -195,7 +195,7 @@ export default function AdminLoyaltyPage() {
                     type="number"
                     min={1}
                     max={10000}
-                    placeholder="e.g. 100"
+                    placeholder={t("loyalty.pointsPlaceholder")}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     required
@@ -204,17 +204,17 @@ export default function AdminLoyaltyPage() {
 
                 <div className="space-y-1.5">
                   <label className="text-xs text-muted-foreground uppercase tracking-wide">
-                    Reason
+                    {t("loyalty.reason")}
                   </label>
                   <select
                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                   >
-                    <option value="manual_award">Manual Award</option>
-                    <option value="guest_referral">Guest Referral</option>
-                    <option value="podcast_recording">Podcast Session</option>
-                    <option value="event_attendance">Event Attendance</option>
+                    <option value="manual_award">{t("loyalty.reasonManualAward")}</option>
+                    <option value="guest_referral">{t("loyalty.reasonGuestReferralAward")}</option>
+                    <option value="podcast_recording">{t("loyalty.reasonPodcastAward")}</option>
+                    <option value="event_attendance">{t("loyalty.reasonEventAward")}</option>
                   </select>
                 </div>
 

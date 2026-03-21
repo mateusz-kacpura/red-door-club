@@ -49,7 +49,7 @@ export default function AdminTabsPage() {
       await apiClient.post(`/admin/tabs/${tabId}/close`, {});
       await fetchTabs();
     } catch (err) {
-      alert(err instanceof ApiError ? err.message : "Failed to close tab");
+      alert(err instanceof ApiError ? err.message : t("tabs.closeFailed"));
     } finally {
       setClosing(null);
     }
@@ -125,7 +125,7 @@ export default function AdminTabsPage() {
                   ))}
                   {tab.items.length > 3 && (
                     <p className="text-xs text-muted-foreground py-1">
-                      +{tab.items.length - 3} more items
+                      +{t("tabs.moreItems", { count: tab.items.length - 3 })}
                     </p>
                   )}
                 </div>

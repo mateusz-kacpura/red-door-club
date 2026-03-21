@@ -20,7 +20,8 @@
     "download": "Завантажити",
     "refresh": "Оновити",
     "unknown": "Невідомо",
-    "member": "Учасник"
+    "member": "Учасник",
+    "failed": "Помилка"
   },
   "nav": {
     "member": "Учасник",
@@ -220,7 +221,19 @@
     "manualAward": "Ручне нарахування",
     "noActivity": "Немає активності.",
     "points": "Бали",
-    "topMembersLifetime": "Найкращі учасники — бали за весь час"
+    "topMembersLifetime": "Найкращі учасники — бали за весь час",
+    "memberUuid": "UUID учасника",
+    "reason": "Причина",
+    "reasonManualAward": "Ручне нарахування",
+    "reasonGuestReferralAward": "Запрошення гостя",
+    "reasonPodcastAward": "Сесія подкасту",
+    "reasonEventAward": "Відвідування події",
+    "invalidAmountTitle": "Невірна сума",
+    "pointsMustBePositive": "Бали повинні бути додатнім цілим числом.",
+    "pointsAwarded": "Бали нараховано",
+    "awardFailed": "Помилка нарахування",
+    "unknownMember": "Невідомий учасник",
+    "pointsPlaceholder": "напр. 100"
   },
   "networking": {
     "title": "Звіт з нетворкінгу",
@@ -405,7 +418,11 @@
     "colRisk": "Ризик",
     "colScore": "Оцінка",
     "colPrimaryFactor": "Основний фактор",
-    "never": "Ніколи"
+    "never": "Ніколи",
+    "riskLow": "Низький",
+    "riskMedium": "Середній",
+    "riskHigh": "Високий",
+    "membersOfTotal": "{active} / {total} учасників"
   },
   "lockers": {
     "title": "Скриньки",
@@ -427,7 +444,9 @@
     "vipRoom": "VIP-зал",
     "lockerEntrance": "Вхід",
     "gym": "Тренажерний зал",
-    "create": "Створити"
+    "create": "Створити",
+    "createFailed": "Не вдалося створити шафку",
+    "releaseFailed": "Не вдалося звільнити шафку"
   },
   "tabs": {
     "title": "Відкриті рахунки",
@@ -441,7 +460,8 @@
     "closeTab": "Закрити рахунок",
     "downloadInvoice": "Завантажити рахунок",
     "tabClosed": "Рахунок закрито.",
-    "tabClosedError": "Не вдалося закрити рахунок."
+    "tabClosedError": "Не вдалося закрити рахунок.",
+    "closeFailed": "Не вдалося закрити рахунок"
   },
   "activity": {
     "title": "Активність",
@@ -461,7 +481,13 @@
     "colCardId": "ID картки",
     "colLocation": "Локація",
     "showing": "Показано {from}–{to}",
-    "newEvents": "+{count} нових"
+    "newEvents": "+{count} нових",
+    "tapVenueEntry": "Вхід до клубу",
+    "tapPaymentTap": "Оплата NFC",
+    "tapConnectionTap": "NFC-контакт",
+    "tapLockerAccess": "Доступ до шафки",
+    "tapProfileCreated": "Профіль створено",
+    "live": "НАЖИВО"
   },
   "adminServices": {
     "title": "Сервіси",
@@ -476,7 +502,9 @@
     "filterAll": "Всі",
     "filterPending": "Очікуючі",
     "filterInProgress": "В процесі",
-    "filterCompleted": "Завершені"
+    "filterCompleted": "Завершені",
+    "completedAt": "Завершено {time}",
+    "unknownMember": "Невідомий учасник"
   },
   "promoters": {
     "title": "Промоутери",
@@ -501,7 +529,13 @@
     "regCommission": "Комісія за реєстрацію (฿)",
     "checkinFlat": "За заїзд — фіксована (฿)",
     "checkinPct": "За заїзд — % від оплати",
-    "commissionSaved": "Налаштування комісії збережено"
+    "commissionSaved": "Налаштування комісії збережено",
+    "helpTitle": "Як працює комісія",
+    "helpRegTitle": "Комісія за реєстрацію",
+    "helpRegDesc": "Одноразова фіксована сума (฿), що виплачується промоутеру, коли новий учасник реєструється за його QR-кодом.",
+    "helpCheckinTitle": "Комісія за візит",
+    "helpCheckinDesc": "Сума, що виплачується кожного разу, коли залучений учасник відмічається в клубі. Можна встановити як фіксовану суму (฿) або відсоток від вхідної плати — одночасно активний лише один варіант.",
+    "helpDefaultsNote": "Ці налаштування застосовуються за замовчуванням при створенні нових кодів промоутерів. Існуючі коди зберігають свої індивідуальні значення комісії."
   },
   "corporate": {
     "title": "Корпоративні акаунти",
@@ -527,7 +561,10 @@
     "create": "Створити",
     "creating": "Створення...",
     "created": "Корпоративний акаунт створено",
-    "createFailed": "Не вдалося створити акаунт"
+    "createFailed": "Не вдалося створити акаунт",
+    "statusActive": "Активний",
+    "statusExpired": "Закінчився",
+    "statusSuspended": "Призупинено"
   },
   "promoterDashboard": {
     "title": "Панель промоутера",
@@ -629,7 +666,21 @@
     "promoterCommissionFlat": "Фікс. (THB)",
     "promoterCommissionPct": "Відсоток (%)",
     "promoterCommissionNone": "Немає",
-    "promoterCommissionType": "Тип"
+    "promoterCommissionType": "Тип",
+    "noTier": "— немає рівня —",
+    "tierSilver": "Silver",
+    "tierGold": "Gold",
+    "tierPlatinum": "Platinum",
+    "tierObsidian": "Obsidian",
+    "tierVip": "VIP",
+    "typeProspect": "Потенційний",
+    "typeMember": "Учасник",
+    "typePromoter": "Промоутер",
+    "typeStaff": "Персонал",
+    "typeAdmin": "Адміністратор",
+    "active": "Активний",
+    "inactive": "Неактивний",
+    "nfcCard": "NFC-картка"
   },
   "floor": {
     "title": "Вид залу в реальному часі",
@@ -639,7 +690,9 @@
     "noMembers": "Учасників у закладі не виявлено.",
     "nfcHint": "Учасники, що прикладуть NFC-картку при вході, з'являться тут.",
     "entrance": "Вхід",
-    "entryPrefix": "Вхід"
+    "entryPrefix": "Вхід",
+    "updated": "Оновлено {time}",
+    "defaultVenue": "заклад"
   },
   "checklist": {
     "title": "Чек-лист підготовки",
@@ -647,7 +700,16 @@
     "pending": "очікуючих",
     "done": "готово",
     "noTasks": "Немає завдань підготовки на сьогодні.",
-    "tasksHint": "Запити учасників щодо попереднього прибуття з'являться тут."
+    "tasksHint": "Запити учасників щодо попереднього прибуття з'являться тут.",
+    "catBar": "Підготовка бару",
+    "catRestaurant": "Кейтеринг",
+    "catCar": "Парковка / Автомобіль",
+    "catDriver": "Водій",
+    "catStudio": "Підготовка студії",
+    "catHotel": "Готель",
+    "catJet": "Приватний літак",
+    "catOther": "Операції",
+    "request": "запит"
   },
   "adminEvents": {
     "totalEvents": "{count} подій загалом",
@@ -666,7 +728,32 @@
     "noEvents": "Немає створених подій.",
     "editEvent": "Редагувати подію",
     "descriptionLabel": "Опис",
-    "descriptionPlaceholder": "Необов'язковий опис події"
+    "descriptionPlaceholder": "Необов'язковий опис події",
+    "publish": "Опублікувати",
+    "complete": "Завершити",
+    "cancel": "Скасувати",
+    "reopen": "Відновити",
+    "segFinance": "Фінанси та інвестори",
+    "segTech": "Технології та засновники",
+    "segRealEstate": "Нерухомість",
+    "segCorporate": "Топ-менеджмент",
+    "segLifestyle": "Спосіб життя та дозвілля",
+    "segLegal": "Право та консалтинг",
+    "segInternational": "Міжнародна мережа",
+    "promoTiersLabel": "Рівні з безкоштовним входом (ПРОМО)",
+    "promoTiersHint": "VIP завжди входить безкоштовно. Оберіть додаткові рівні для цієї події.",
+    "attending": "{rsvp}/{capacity} учасників",
+    "typeMixer": "Міксер",
+    "typeDinner": "Вечеря",
+    "typeWorkshop": "Майстер-клас",
+    "typePrivateParty": "Приватна вечірка",
+    "typePodcast": "Подкаст",
+    "typeCorporate": "Корпоративне",
+    "statusDraft": "Чернетка",
+    "statusPublished": "Опубліковано",
+    "statusSoldOut": "Розпродано",
+    "statusCompleted": "Завершено",
+    "statusCancelled": "Скасовано"
   },
   "corporateDetail": {
     "notFound": "Акаунт не знайдено.",

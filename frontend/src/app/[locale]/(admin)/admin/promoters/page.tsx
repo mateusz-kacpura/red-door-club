@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Users, Loader2, DollarSign, TrendingUp, Settings } from "lucide-react";
+import { Users, Loader2, DollarSign, TrendingUp, Settings, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +40,7 @@ export default function AdminPromotersPage() {
     checkin_commission_pct: null,
   });
   const [savingConfig, setSavingConfig] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     apiClient.get<PromoterRow[]>("/admin/promoters")
@@ -135,6 +136,31 @@ export default function AdminPromotersPage() {
         </CardContent>
       </Card>
 
+      {/* Help Info */}
+      <button
+        onClick={() => setShowHelp((v) => !v)}
+        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <HelpCircle className="h-4 w-4" />
+        {t("promoters.helpTitle")}
+        {showHelp ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+      </button>
+      {showHelp && (
+        <Card className="rounded-xl border-muted">
+          <CardContent className="p-4 space-y-3 text-sm">
+            <div>
+              <p className="font-medium">{t("promoters.helpRegTitle")}</p>
+              <p className="text-muted-foreground text-xs mt-0.5">{t("promoters.helpRegDesc")}</p>
+            </div>
+            <div>
+              <p className="font-medium">{t("promoters.helpCheckinTitle")}</p>
+              <p className="text-muted-foreground text-xs mt-0.5">{t("promoters.helpCheckinDesc")}</p>
+            </div>
+            <p className="text-xs text-muted-foreground border-t pt-2">{t("promoters.helpDefaultsNote")}</p>
+          </CardContent>
+        </Card>
+      )}
+
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -156,7 +182,7 @@ export default function AdminPromotersPage() {
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{p.full_name ?? "Unknown"}</p>
+                    <p className="font-medium truncate">{p.full_name ?? t("common.unknown")}</p>
                     <p className="text-xs text-muted-foreground">{p.email}</p>
                     {p.company_name && (
                       <p className="text-xs text-muted-foreground truncate">{p.company_name}</p>
@@ -191,7 +217,7 @@ export default function AdminPromotersPage() {
                       onClick={async () => {
                         try {
                           await apiClient.get(`/admin/promoters`);
-                          toast.info("Use admin/promoters/payouts to approve.");
+                          toast.info(t("promoters.payoutHint"));
                         } catch { /* */ }
                       }}
                     >

@@ -20,7 +20,8 @@
     "download": "Скачать",
     "refresh": "Обновить",
     "unknown": "Неизвестно",
-    "member": "Участник"
+    "member": "Участник",
+    "failed": "Ошибка"
   },
   "nav": {
     "member": "Участник",
@@ -220,7 +221,19 @@
     "manualAward": "Ручное начисление",
     "noActivity": "Нет активности.",
     "points": "Баллы",
-    "topMembersLifetime": "Лучшие участники — баллы за всё время"
+    "topMembersLifetime": "Лучшие участники — баллы за всё время",
+    "memberUuid": "UUID участника",
+    "reason": "Причина",
+    "reasonManualAward": "Ручное начисление",
+    "reasonGuestReferralAward": "Приглашение гостя",
+    "reasonPodcastAward": "Сессия подкаста",
+    "reasonEventAward": "Посещение события",
+    "invalidAmountTitle": "Неверная сумма",
+    "pointsMustBePositive": "Баллы должны быть положительным целым числом.",
+    "pointsAwarded": "Баллы начислены",
+    "awardFailed": "Ошибка начисления",
+    "unknownMember": "Неизвестный участник",
+    "pointsPlaceholder": "напр. 100"
   },
   "networking": {
     "title": "Отчёт по нетворкингу",
@@ -405,7 +418,11 @@
     "colRisk": "Риск",
     "colScore": "Оценка",
     "colPrimaryFactor": "Основной фактор",
-    "never": "Никогда"
+    "never": "Никогда",
+    "riskLow": "Низкий",
+    "riskMedium": "Средний",
+    "riskHigh": "Высокий",
+    "membersOfTotal": "{active} / {total} участников"
   },
   "lockers": {
     "title": "Ячейки",
@@ -427,7 +444,9 @@
     "vipRoom": "VIP-зал",
     "lockerEntrance": "Вход",
     "gym": "Тренажёрный зал",
-    "create": "Создать"
+    "create": "Создать",
+    "createFailed": "Не удалось создать шкафчик",
+    "releaseFailed": "Не удалось освободить шкафчик"
   },
   "tabs": {
     "title": "Открытые счета",
@@ -441,7 +460,8 @@
     "closeTab": "Закрыть счёт",
     "downloadInvoice": "Скачать счёт",
     "tabClosed": "Счёт закрыт.",
-    "tabClosedError": "Не удалось закрыть счёт."
+    "tabClosedError": "Не удалось закрыть счёт.",
+    "closeFailed": "Не удалось закрыть счёт"
   },
   "activity": {
     "title": "Активность",
@@ -461,7 +481,13 @@
     "colCardId": "ID карты",
     "colLocation": "Локация",
     "showing": "Показано {from}–{to}",
-    "newEvents": "+{count} новых"
+    "newEvents": "+{count} новых",
+    "tapVenueEntry": "Вход в клуб",
+    "tapPaymentTap": "Оплата NFC",
+    "tapConnectionTap": "NFC-контакт",
+    "tapLockerAccess": "Доступ к шкафчику",
+    "tapProfileCreated": "Профиль создан",
+    "live": "LIVE"
   },
   "adminServices": {
     "title": "Сервисы",
@@ -476,7 +502,9 @@
     "filterAll": "Все",
     "filterPending": "Ожидающие",
     "filterInProgress": "В процессе",
-    "filterCompleted": "Завершённые"
+    "filterCompleted": "Завершённые",
+    "completedAt": "Завершено {time}",
+    "unknownMember": "Неизвестный участник"
   },
   "promoters": {
     "title": "Промоутеры",
@@ -501,7 +529,13 @@
     "regCommission": "Комиссия за регистрацию (฿)",
     "checkinFlat": "За заезд — фиксированная (฿)",
     "checkinPct": "За заезд — % от оплаты",
-    "commissionSaved": "Настройки комиссии сохранены"
+    "commissionSaved": "Настройки комиссии сохранены",
+    "helpTitle": "Как работает комиссия",
+    "helpRegTitle": "Комиссия за регистрацию",
+    "helpRegDesc": "Единовременная фиксированная сумма (฿), выплачиваемая промоутеру при регистрации нового участника по его QR-коду.",
+    "helpCheckinTitle": "Комиссия за визит",
+    "helpCheckinDesc": "Сумма, выплачиваемая каждый раз, когда привлечённый участник отмечается в клубе. Можно установить как фиксированную сумму (฿) или процент от входной платы — одновременно активен только один вариант.",
+    "helpDefaultsNote": "Эти настройки применяются по умолчанию при создании новых кодов промоутеров. Существующие коды сохраняют свои индивидуальные значения комиссии."
   },
   "corporate": {
     "title": "Корпоративные аккаунты",
@@ -527,7 +561,10 @@
     "create": "Создать",
     "creating": "Создание...",
     "created": "Корпоративный аккаунт создан",
-    "createFailed": "Не удалось создать аккаунт"
+    "createFailed": "Не удалось создать аккаунт",
+    "statusActive": "Активный",
+    "statusExpired": "Истёк",
+    "statusSuspended": "Приостановлен"
   },
   "promoterDashboard": {
     "title": "Панель промоутера",
@@ -629,7 +666,21 @@
     "promoterCommissionFlat": "Фикс. (THB)",
     "promoterCommissionPct": "Процент (%)",
     "promoterCommissionNone": "Нет",
-    "promoterCommissionType": "Тип"
+    "promoterCommissionType": "Тип",
+    "noTier": "— нет уровня —",
+    "tierSilver": "Silver",
+    "tierGold": "Gold",
+    "tierPlatinum": "Platinum",
+    "tierObsidian": "Obsidian",
+    "tierVip": "VIP",
+    "typeProspect": "Потенциальный",
+    "typeMember": "Участник",
+    "typePromoter": "Промоутер",
+    "typeStaff": "Персонал",
+    "typeAdmin": "Администратор",
+    "active": "Активный",
+    "inactive": "Неактивный",
+    "nfcCard": "NFC-карта"
   },
   "floor": {
     "title": "Вид зала в реальном времени",
@@ -639,7 +690,9 @@
     "noMembers": "Участники в заведении не обнаружены.",
     "nfcHint": "Участники, приложившие NFC-карту при входе, появятся здесь.",
     "entrance": "Вход",
-    "entryPrefix": "Вход"
+    "entryPrefix": "Вход",
+    "updated": "Обновлено {time}",
+    "defaultVenue": "заведение"
   },
   "checklist": {
     "title": "Чек-лист подготовки",
@@ -647,7 +700,16 @@
     "pending": "ожидающих",
     "done": "готово",
     "noTasks": "Нет задач подготовки на сегодня.",
-    "tasksHint": "Запросы участников о предварительном прибытии появятся здесь."
+    "tasksHint": "Запросы участников о предварительном прибытии появятся здесь.",
+    "catBar": "Подготовка бара",
+    "catRestaurant": "Кейтеринг",
+    "catCar": "Парковка / Автомобиль",
+    "catDriver": "Водитель",
+    "catStudio": "Подготовка студии",
+    "catHotel": "Отель",
+    "catJet": "Частный самолёт",
+    "catOther": "Операции",
+    "request": "запрос"
   },
   "adminEvents": {
     "totalEvents": "{count} мероприятий",
@@ -666,7 +728,32 @@
     "noEvents": "Нет созданных мероприятий.",
     "editEvent": "Редактировать мероприятие",
     "descriptionLabel": "Описание",
-    "descriptionPlaceholder": "Необязательное описание мероприятия"
+    "descriptionPlaceholder": "Необязательное описание мероприятия",
+    "publish": "Опубликовать",
+    "complete": "Завершить",
+    "cancel": "Отменить",
+    "reopen": "Возобновить",
+    "segFinance": "Финансы и инвесторы",
+    "segTech": "Технологии и основатели",
+    "segRealEstate": "Недвижимость",
+    "segCorporate": "Топ-менеджмент",
+    "segLifestyle": "Образ жизни и досуг",
+    "segLegal": "Право и консалтинг",
+    "segInternational": "Международная сеть",
+    "promoTiersLabel": "Уровни с бесплатным входом (ПРОМО)",
+    "promoTiersHint": "VIP всегда входит бесплатно. Выберите дополнительные уровни для этого события.",
+    "attending": "{rsvp}/{capacity} участников",
+    "typeMixer": "Миксер",
+    "typeDinner": "Ужин",
+    "typeWorkshop": "Мастер-класс",
+    "typePrivateParty": "Частная вечеринка",
+    "typePodcast": "Подкаст",
+    "typeCorporate": "Корпоративное",
+    "statusDraft": "Черновик",
+    "statusPublished": "Опубликовано",
+    "statusSoldOut": "Распродано",
+    "statusCompleted": "Завершено",
+    "statusCancelled": "Отменено"
   },
   "corporateDetail": {
     "notFound": "Аккаунт не найден.",

@@ -33,6 +33,12 @@ const statusColor: Record<string, string> = {
   suspended: "bg-rose-500/10 text-rose-600 border-rose-500/20",
 };
 
+const CORPORATE_STATUS_KEYS: Record<string, string> = {
+  active: "corporate.statusActive",
+  expired: "corporate.statusExpired",
+  suspended: "corporate.statusSuspended",
+};
+
 const packageColor: Record<string, string> = {
   starter: "text-slate-500",
   business: "text-blue-500",
@@ -193,7 +199,7 @@ export default function AdminCorporatePage() {
                         variant="outline"
                         className={cn("text-xs capitalize", statusColor[a.status] ?? "")}
                       >
-                        {a.status}
+                        {CORPORATE_STATUS_KEYS[a.status] ? t(CORPORATE_STATUS_KEYS[a.status]) : a.status}
                       </Badge>
                       <div className="flex items-center gap-1 justify-end text-xs text-muted-foreground">
                         <Users className="h-3 w-3" />

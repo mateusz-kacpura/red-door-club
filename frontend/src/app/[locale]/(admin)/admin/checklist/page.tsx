@@ -18,15 +18,15 @@ const CATEGORY_ICONS: Record<string, string> = {
   other: "📋",
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  bar: "Bar Setup",
-  restaurant: "Catering",
-  car: "Parking / Car",
-  driver: "Driver",
-  studio: "Studio Prep",
-  hotel: "Hotel",
-  jet: "Private Jet",
-  other: "Operations",
+const CATEGORY_LABEL_KEYS: Record<string, string> = {
+  bar: "checklist.catBar",
+  restaurant: "checklist.catRestaurant",
+  car: "checklist.catCar",
+  driver: "checklist.catDriver",
+  studio: "checklist.catStudio",
+  hotel: "checklist.catHotel",
+  jet: "checklist.catJet",
+  other: "checklist.catOther",
 };
 
 export default function AdminChecklistPage() {
@@ -102,9 +102,9 @@ export default function AdminChecklistPage() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm flex items-center gap-2">
                 <span>{CATEGORY_ICONS[type] ?? "📋"}</span>
-                {CATEGORY_LABELS[type] ?? type}
+                {CATEGORY_LABEL_KEYS[type] ? t(CATEGORY_LABEL_KEYS[type]) : type}
                 <span className="text-xs text-muted-foreground font-normal">
-                  ({requests.filter((r) => r.status !== "completed").length} pending)
+                  ({requests.filter((r) => r.status !== "completed").length} {t("checklist.pending")})
                 </span>
               </CardTitle>
             </CardHeader>
@@ -135,7 +135,7 @@ export default function AdminChecklistPage() {
                       <p className={`text-sm ${isDone ? "line-through" : ""}`}>
                         {req.details && typeof req.details === "object" && "notes" in req.details
                           ? String(req.details.notes)
-                          : `${CATEGORY_LABELS[req.request_type] ?? req.request_type} request`}
+                          : `${CATEGORY_LABEL_KEYS[req.request_type] ? t(CATEGORY_LABEL_KEYS[req.request_type]) : req.request_type} ${t("checklist.request")}`}
                       </p>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         {new Date(req.created_at).toLocaleTimeString("en-GB", {
@@ -148,7 +148,7 @@ export default function AdminChecklistPage() {
                       ${req.status === "completed" ? "bg-green-100 text-green-700" :
                         req.status === "in_progress" ? "bg-primary/10 text-primary" :
                         "bg-yellow-100 text-yellow-700"}`}>
-                      {req.status.replace("_", " ")}
+                      {t(`services.status${req.status}`, { defaultValue: req.status.replace("_", " ") })}
                     </span>
                   </div>
                 );

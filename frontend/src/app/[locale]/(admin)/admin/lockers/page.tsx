@@ -48,7 +48,7 @@ export default function AdminLockersPage() {
       setShowForm(false);
       await fetchLockers();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Failed to create locker");
+      setError(err instanceof ApiError ? err.message : t("lockers.createFailed"));
     } finally {
       setCreating(false);
     }
@@ -60,7 +60,7 @@ export default function AdminLockersPage() {
       await apiClient.delete(`/admin/lockers/${lockerNumber}/release`);
       await fetchLockers();
     } catch (err) {
-      alert(err instanceof ApiError ? err.message : "Failed to release locker");
+      alert(err instanceof ApiError ? err.message : t("lockers.releaseFailed"));
     } finally {
       setReleasing(null);
     }
@@ -149,7 +149,9 @@ export default function AdminLockersPage() {
                     <Unlock className="h-4 w-4 text-muted-foreground" />
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground">{locker.location.replace(/_/g, " ")}</p>
+                <p className="text-xs text-muted-foreground">{
+                  { main_floor: t("lockers.mainFloor"), vip_room: t("lockers.vipRoom"), entrance: t("lockers.lockerEntrance"), gym: t("lockers.gym") }[locker.location] ?? locker.location.replace(/_/g, " ")
+                }</p>
                 <Badge
                   variant="outline"
                   className={

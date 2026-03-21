@@ -20,7 +20,8 @@
     "download": "Download",
     "refresh": "Refresh",
     "unknown": "Unknown",
-    "member": "Member"
+    "member": "Member",
+    "failed": "Failed"
   },
   "nav": {
     "member": "Member",
@@ -220,7 +221,19 @@
     "manualAward": "Manual Award",
     "noActivity": "No activity yet.",
     "points": "Points",
-    "topMembersLifetime": "Top Members — Lifetime Points"
+    "topMembersLifetime": "Top Members — Lifetime Points",
+    "memberUuid": "Member UUID",
+    "reason": "Reason",
+    "reasonManualAward": "Manual Award",
+    "reasonGuestReferralAward": "Guest Referral",
+    "reasonPodcastAward": "Podcast Session",
+    "reasonEventAward": "Event Attendance",
+    "invalidAmountTitle": "Invalid amount",
+    "pointsMustBePositive": "Points must be a positive integer.",
+    "pointsAwarded": "Points awarded",
+    "awardFailed": "Award failed",
+    "unknownMember": "Unknown Member",
+    "pointsPlaceholder": "e.g. 100"
   },
   "networking": {
     "title": "Networking Report",
@@ -405,7 +418,11 @@
     "colRisk": "Risk",
     "colScore": "Score",
     "colPrimaryFactor": "Primary Factor",
-    "never": "Never"
+    "never": "Never",
+    "riskLow": "Low",
+    "riskMedium": "Medium",
+    "riskHigh": "High",
+    "membersOfTotal": "{active} / {total} members"
   },
   "lockers": {
     "title": "Lockers",
@@ -427,7 +444,9 @@
     "vipRoom": "VIP Room",
     "lockerEntrance": "Entrance",
     "gym": "Gym",
-    "create": "Create"
+    "create": "Create",
+    "createFailed": "Failed to create locker",
+    "releaseFailed": "Failed to release locker"
   },
   "tabs": {
     "title": "Open Tabs",
@@ -441,7 +460,8 @@
     "closeTab": "Close Tab",
     "downloadInvoice": "Download Invoice",
     "tabClosed": "Tab closed.",
-    "tabClosedError": "Failed to close tab."
+    "tabClosedError": "Failed to close tab.",
+    "closeFailed": "Failed to close tab"
   },
   "activity": {
     "title": "Activity",
@@ -461,7 +481,13 @@
     "colCardId": "Card ID",
     "colLocation": "Location",
     "showing": "Showing {from}–{to}",
-    "newEvents": "+{count} new"
+    "newEvents": "+{count} new",
+    "tapVenueEntry": "Venue Entry",
+    "tapPaymentTap": "Payment Tap",
+    "tapConnectionTap": "Connection Tap",
+    "tapLockerAccess": "Locker Access",
+    "tapProfileCreated": "Profile Created",
+    "live": "LIVE"
   },
   "adminServices": {
     "title": "Services",
@@ -476,7 +502,9 @@
     "filterAll": "All",
     "filterPending": "Pending",
     "filterInProgress": "In Progress",
-    "filterCompleted": "Completed"
+    "filterCompleted": "Completed",
+    "completedAt": "Completed {time}",
+    "unknownMember": "Unknown Member"
   },
   "promoters": {
     "title": "Promoters",
@@ -501,7 +529,13 @@
     "regCommission": "Registration commission (฿)",
     "checkinFlat": "Check-in — flat (฿)",
     "checkinPct": "Check-in — % of fee",
-    "commissionSaved": "Commission settings saved"
+    "commissionSaved": "Commission settings saved",
+    "helpTitle": "How commission works",
+    "helpRegTitle": "Registration commission",
+    "helpRegDesc": "A one-time flat amount (฿) paid to the promoter when a new member registers using their QR code.",
+    "helpCheckinTitle": "Check-in commission",
+    "helpCheckinDesc": "A recurring amount paid each time a referred member checks in at the club. Can be set as a fixed amount (฿) or a percentage of the entry fee — only one option can be active at a time.",
+    "helpDefaultsNote": "These settings are applied as defaults when creating new promoter codes. Existing codes keep their individual commission values."
   },
   "corporate": {
     "title": "Corporate Accounts",
@@ -527,7 +561,10 @@
     "create": "Create",
     "creating": "Creating...",
     "created": "Corporate account created",
-    "createFailed": "Failed to create account"
+    "createFailed": "Failed to create account",
+    "statusActive": "Active",
+    "statusExpired": "Expired",
+    "statusSuspended": "Suspended"
   },
   "promoterDashboard": {
     "title": "Promoter Dashboard",
@@ -629,7 +666,21 @@
     "promoterCommissionFlat": "Flat (THB)",
     "promoterCommissionPct": "Percentage (%)",
     "promoterCommissionNone": "None",
-    "promoterCommissionType": "Type"
+    "promoterCommissionType": "Type",
+    "noTier": "— no tier —",
+    "tierSilver": "Silver",
+    "tierGold": "Gold",
+    "tierPlatinum": "Platinum",
+    "tierObsidian": "Obsidian",
+    "tierVip": "VIP",
+    "typeProspect": "Prospect",
+    "typeMember": "Member",
+    "typePromoter": "Promoter",
+    "typeStaff": "Staff",
+    "typeAdmin": "Admin",
+    "active": "Active",
+    "inactive": "Inactive",
+    "nfcCard": "NFC Card"
   },
   "floor": {
     "title": "Live Floor View",
@@ -639,7 +690,9 @@
     "noMembers": "No members detected in venue.",
     "nfcHint": "Members who tap their NFC card at entry will appear here.",
     "entrance": "Entrance",
-    "entryPrefix": "Entry"
+    "entryPrefix": "Entry",
+    "updated": "Updated {time}",
+    "defaultVenue": "venue"
   },
   "checklist": {
     "title": "Prep Checklist",
@@ -647,7 +700,16 @@
     "pending": "pending",
     "done": "done",
     "noTasks": "No preparation tasks for today.",
-    "tasksHint": "Member pre-arrival requests will appear here."
+    "tasksHint": "Member pre-arrival requests will appear here.",
+    "catBar": "Bar Setup",
+    "catRestaurant": "Catering",
+    "catCar": "Parking / Car",
+    "catDriver": "Driver",
+    "catStudio": "Studio Prep",
+    "catHotel": "Hotel",
+    "catJet": "Private Jet",
+    "catOther": "Operations",
+    "request": "request"
   },
   "adminEvents": {
     "totalEvents": "{count} total events",
@@ -666,7 +728,32 @@
     "noEvents": "No events created yet.",
     "editEvent": "Edit Event",
     "descriptionLabel": "Description",
-    "descriptionPlaceholder": "Optional event description"
+    "descriptionPlaceholder": "Optional event description",
+    "publish": "Publish",
+    "complete": "Complete",
+    "cancel": "Cancel",
+    "reopen": "Reopen",
+    "segFinance": "Finance & Investors",
+    "segTech": "Tech & Founders",
+    "segRealEstate": "Real Estate",
+    "segCorporate": "Corporate Executives",
+    "segLifestyle": "Lifestyle & Leisure",
+    "segLegal": "Legal & Advisory",
+    "segInternational": "International Network",
+    "promoTiersLabel": "Tiers with free entry (PROMO)",
+    "promoTiersHint": "VIP always enters free. Select additional tiers for this event.",
+    "attending": "{rsvp}/{capacity} attending",
+    "typeMixer": "Mixer",
+    "typeDinner": "Dinner",
+    "typeWorkshop": "Workshop",
+    "typePrivateParty": "Private Party",
+    "typePodcast": "Podcast",
+    "typeCorporate": "Corporate",
+    "statusDraft": "Draft",
+    "statusPublished": "Published",
+    "statusSoldOut": "Sold Out",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled"
   },
   "corporateDetail": {
     "notFound": "Account not found.",

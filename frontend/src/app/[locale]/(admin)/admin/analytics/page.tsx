@@ -195,7 +195,7 @@ export default function AdminAnalyticsPage() {
                       <div key={spender.member_id} className="flex items-center justify-between py-2 text-sm">
                         <div className="flex items-center gap-3">
                           <span className="text-muted-foreground w-5 text-center">{idx + 1}</span>
-                          <span>{spender.full_name ?? "Unknown"}</span>
+                          <span>{spender.full_name ?? t("common.unknown")}</span>
                         </div>
                         <span className="font-medium">{formatAmount(Number(spender.total_spent))}</span>
                       </div>
@@ -370,7 +370,7 @@ export default function AdminAnalyticsPage() {
                           {peakHours.heatmap[d].filter((_, h) => h % 3 === 0).map((val, h) => {
                             const intensity = Math.round((val / dayMax) * 4);
                             const bg = ["bg-zinc-900","bg-zinc-700","bg-yellow-900","bg-yellow-600","bg-[#C9A96E]"][intensity] ?? "bg-zinc-900";
-                            return <div key={h} className={`h-3 flex-1 rounded-sm ${bg}`} title={`Hour ${h*3}: ${val} taps`} />;
+                            return <div key={h} className={`h-3 flex-1 rounded-sm ${bg}`} title={t("analytics.heatmapHour", { hour: h*3, count: val })} />;
                           })}
                         </div>
                       </div>

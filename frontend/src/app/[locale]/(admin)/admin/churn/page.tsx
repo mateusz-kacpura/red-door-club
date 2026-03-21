@@ -15,12 +15,12 @@ const TIER_COLORS: Record<string, string> = {
   bronze: "text-orange-400 border-orange-600",
 };
 
-const RISK_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  healthy: { label: "Healthy", color: "text-emerald-400", bg: "bg-emerald-400/10" },
-  low: { label: "Low", color: "text-sky-400", bg: "bg-sky-400/10" },
-  medium: { label: "Medium", color: "text-yellow-400", bg: "bg-yellow-400/10" },
-  high: { label: "High", color: "text-orange-400", bg: "bg-orange-400/10" },
-  critical: { label: "Critical", color: "text-red-400", bg: "bg-red-400/10" },
+const RISK_CONFIG: Record<string, { labelKey: string; color: string; bg: string }> = {
+  healthy: { labelKey: "churn.healthy", color: "text-emerald-400", bg: "bg-emerald-400/10" },
+  low: { labelKey: "churn.riskLow", color: "text-sky-400", bg: "bg-sky-400/10" },
+  medium: { labelKey: "churn.riskMedium", color: "text-yellow-400", bg: "bg-yellow-400/10" },
+  high: { labelKey: "churn.riskHigh", color: "text-orange-400", bg: "bg-orange-400/10" },
+  critical: { labelKey: "churn.critical", color: "text-red-400", bg: "bg-red-400/10" },
 };
 
 interface ChurnMember {
@@ -100,7 +100,7 @@ export default function AdminChurnPage() {
               <Heart className="w-3 h-3" /> {t("churn.retentionRate")}
             </div>
             <p className="text-2xl font-bold text-emerald-400">{overview.retention_rate_30d}%</p>
-            <p className="text-xs text-zinc-500">{overview.active_30d} / {overview.total_members} members</p>
+            <p className="text-xs text-zinc-500">{t("churn.membersOfTotal", { active: overview.active_30d, total: overview.total_members })}</p>
           </CardContent>
         </Card>
         <Card className="bg-zinc-900 border-zinc-800">
@@ -185,7 +185,7 @@ export default function AdminChurnPage() {
                         <td className="px-4 py-3 text-zinc-400">{lastSeen}</td>
                         <td className="px-4 py-3">
                           <span className={`text-xs font-semibold px-2 py-0.5 rounded ${risk.color} ${risk.bg}`}>
-                            {risk.label}
+                            {t(risk.labelKey)}
                           </span>
                         </td>
                         <td className="px-4 py-3">
