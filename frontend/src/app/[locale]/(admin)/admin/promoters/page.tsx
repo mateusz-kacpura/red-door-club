@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Users, Loader2, DollarSign, TrendingUp } from "lucide-react";
+import { Users, Loader2, DollarSign, TrendingUp, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { apiClient } from "@/lib/api-client";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { apiClient, ApiError } from "@/lib/api-client";
 import { toast } from "sonner";
 import { useTranslate } from "@tolgee/react";
 
@@ -20,17 +22,53 @@ interface PromoterRow {
   pending_payout: number;
 }
 
+interface CommissionConfig {
+  reg_commission: number;
+  checkin_commission_flat: number | null;
+  checkin_commission_pct: number | null;
+}
+
 export default function AdminPromotersPage() {
   const { t } = useTranslate();
   const [promoters, setPromoters] = useState<PromoterRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Commission config state
+  const [config, setConfig] = useState<CommissionConfig>({
+    reg_commission: 500,
+    checkin_commission_flat: null,
+    checkin_commission_pct: null,
+  });
+  const [savingConfig, setSavingConfig] = useState(false);
 
   useEffect(() => {
     apiClient.get<PromoterRow[]>("/admin/promoters")
       .then(setPromoters)
       .catch(() => {})
       .finally(() => setIsLoading(false));
+
+    apiClient.get<CommissionConfig>("/admin/promoter-commission-config")
+      .then(setConfig)
+      .catch(() => {});
   }, []);
+
+  const handleSaveConfig = async () => {
+    setSavingConfig(true);
+    try {
+      const payload: CommissionConfig = {
+        reg_commission: config.reg_commission,
+        checkin_commission_flat: config.checkin_commission_flat || null,
+        checkin_commission_pct: config.checkin_commission_pct || null,
+      };
+      const updated = await apiClient.patch<CommissionConfig>("/admin/promoter-commission-config", payload);
+      setConfig(updated);
+      toast.success(t("promoters.commissionSaved"));
+    } catch (err) {
+      if (err instanceof ApiError) toast.error(err.message);
+    } finally {
+      setSavingConfig(false);
+    }
+  };
 
   const fmt = (n: number) => `฿${Number(n).toLocaleString("en-US", { minimumFractionDigits: 0 })}`;
 
@@ -40,6 +78,62 @@ export default function AdminPromotersPage() {
         <h1 className="text-2xl font-light tracking-wide">{t("promoters.title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">{t("promoters.managementSubtitle")}</p>
       </div>
+
+      {/* Commission Config */}
+      <Card className="rounded-xl border-primary/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Settings className="h-4 w-4 text-primary" />
+            {t("promoters.commissionConfig")}
+          </CardTitle>
+          <p className="text-xs text-muted-foreground">{t("promoters.commissionConfigHint")}</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="space-y-1">
+              <Label className="text-xs">{t("promoters.regCommission")}</Label>
+              <Input
+                type="number"
+                min={0}
+                value={config.reg_commission}
+                onChange={(e) => setConfig((c) => ({ ...c, reg_commission: Number(e.target.value) }))}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">{t("promoters.checkinFlat")}</Label>
+              <Input
+                type="number"
+                min={0}
+                placeholder="—"
+                value={config.checkin_commission_flat ?? ""}
+                onChange={(e) => {
+                  const val = e.target.value ? Number(e.target.value) : null;
+                  setConfig((c) => ({ ...c, checkin_commission_flat: val, checkin_commission_pct: val ? null : c.checkin_commission_pct }));
+                }}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">{t("promoters.checkinPct")}</Label>
+              <Input
+                type="number"
+                min={0}
+                max={100}
+                placeholder="—"
+                value={config.checkin_commission_pct ?? ""}
+                onChange={(e) => {
+                  const val = e.target.value ? Number(e.target.value) : null;
+                  setConfig((c) => ({ ...c, checkin_commission_pct: val, checkin_commission_flat: val ? null : c.checkin_commission_flat }));
+                }}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button size="sm" onClick={handleSaveConfig} disabled={savingConfig}>
+              {savingConfig ? <Loader2 className="h-4 w-4 animate-spin" /> : t("common.saveChanges")}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
@@ -96,7 +190,7 @@ export default function AdminPromotersPage() {
                       className="h-6 text-xs"
                       onClick={async () => {
                         try {
-                          await apiClient.get(`/admin/promoters`); // TODO: navigate to payout approval
+                          await apiClient.get(`/admin/promoters`);
                           toast.info("Use admin/promoters/payouts to approve.");
                         } catch { /* */ }
                       }}

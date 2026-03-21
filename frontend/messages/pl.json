@@ -495,7 +495,13 @@
     "colCommission": "Prowizja",
     "pendingPayout": "Oczekująca wypłata: {amount}",
     "review": "Przejrzyj",
-    "payoutHint": "Przejdź do wypłat, aby zatwierdzić."
+    "payoutHint": "Przejdź do wypłat, aby zatwierdzić.",
+    "commissionConfig": "Ustawienia prowizji",
+    "commissionConfigHint": "Te stawki dotyczą wszystkich nowych promotorów",
+    "regCommission": "Prowizja za rejestrację (฿)",
+    "checkinFlat": "Zameldowanie — kwota stała (฿)",
+    "checkinPct": "Zameldowanie — % opłaty",
+    "commissionSaved": "Ustawienia prowizji zapisane"
   },
   "corporate": {
     "title": "Konta korporacyjne",

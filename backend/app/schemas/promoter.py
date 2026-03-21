@@ -96,3 +96,23 @@ class ReferralRead(BaseModel):
 
 class AdminApprovePayoutRequest(BaseModel):
     notes: str | None = None
+
+
+class PromoterCommissionConfigRead(BaseModel):
+    reg_commission: Decimal
+    checkin_commission_flat: Decimal | None
+    checkin_commission_pct: Decimal | None
+
+    model_config = {"from_attributes": True}
+
+
+class PromoterCommissionConfigUpdate(BaseModel):
+    reg_commission: Decimal = Field(default=Decimal("500"), ge=0)
+    checkin_commission_flat: Decimal | None = Field(default=None, ge=0)
+    checkin_commission_pct: Decimal | None = Field(default=None, ge=0, le=100)
+
+    @model_validator(mode="after")
+    def check_mutual_exclusion(self) -> "PromoterCommissionConfigUpdate":
+        if self.checkin_commission_flat is not None and self.checkin_commission_pct is not None:
+            raise ValueError("Only one of checkin_commission_flat or checkin_commission_pct can be set.")
+        return self

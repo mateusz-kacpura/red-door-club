@@ -495,7 +495,13 @@
     "colCommission": "佣金",
     "pendingPayout": "待付款：{amount}",
     "review": "审核",
-    "payoutHint": "使用付款页面进行批准"
+    "payoutHint": "使用付款页面进行批准",
+    "commissionConfig": "佣金设置",
+    "commissionConfigHint": "这些费率适用于所有新推广员",
+    "regCommission": "注册佣金 (฿)",
+    "checkinFlat": "签到 — 固定金额 (฿)",
+    "checkinPct": "签到 — 费用百分比",
+    "commissionSaved": "佣金设置已保存"
   },
   "corporate": {
     "title": "企业账户",

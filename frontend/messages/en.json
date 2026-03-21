@@ -495,7 +495,13 @@
     "colCommission": "Commission",
     "pendingPayout": "Pending payout: {amount}",
     "review": "Review",
-    "payoutHint": "Use the payouts page to approve."
+    "payoutHint": "Use the payouts page to approve.",
+    "commissionConfig": "Commission Settings",
+    "commissionConfigHint": "These rates apply to all new promoters",
+    "regCommission": "Registration commission (฿)",
+    "checkinFlat": "Check-in — flat (฿)",
+    "checkinPct": "Check-in — % of fee",
+    "commissionSaved": "Commission settings saved"
   },
   "corporate": {
     "title": "Corporate Accounts",

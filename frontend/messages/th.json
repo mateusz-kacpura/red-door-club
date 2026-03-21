@@ -495,7 +495,13 @@
     "colCommission": "ค่าคอมมิชชัน",
     "pendingPayout": "การชำระที่รอดำเนินการ: {amount}",
     "review": "ตรวจสอบ",
-    "payoutHint": "ใช้หน้าการชำระเพื่ออนุมัติ"
+    "payoutHint": "ใช้หน้าการชำระเพื่ออนุมัติ",
+    "commissionConfig": "ตั้งค่าค่าคอมมิชชัน",
+    "commissionConfigHint": "อัตราเหล่านี้ใช้กับผู้โปรโมตใหม่ทุกคน",
+    "regCommission": "ค่าคอมมิชชันลงทะเบียน (฿)",
+    "checkinFlat": "เช็คอิน — คงที่ (฿)",
+    "checkinPct": "เช็คอิน — % ของค่าธรรมเนียม",
+    "commissionSaved": "บันทึกการตั้งค่าค่าคอมมิชชันแล้ว"
   },
   "corporate": {
     "title": "บัญชีองค์กร",

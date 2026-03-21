@@ -16,6 +16,7 @@ from app.schemas.qr_batch import QrBatchCreate, QrBatchRead, QrBatchDetail, QrBa
 from app.schemas.locker import LockerCreate, LockerRead
 from app.schemas.loyalty import AdminAwardPointsRequest, LoyaltyTransactionRead
 from app.schemas.service_request import ServiceRequestRead, ServiceRequestUpdate, ServiceRequestAdminUpdate
+from app.schemas.promoter import PromoterCommissionConfigUpdate
 from app.schemas.tab import TabRead
 from app.schemas.user import UserRead, UserUpdate
 from app.services.admin import AdminService
@@ -421,6 +422,7 @@ async def make_promoter(
     from sqlalchemy.exc import IntegrityError
     from app.db.models.user import User
     from app.db.models.promoter import PromoCode
+    from app.db.models.promoter_config import PromoterCommissionConfig
     from app.core.exceptions import NotFoundError
 
     user = await db.get(User, member_id)
@@ -433,6 +435,12 @@ async def make_promoter(
 
     user.is_promoter = True
     user.user_type = "promoter"
+
+    # Read global commission config
+    config = await db.get(PromoterCommissionConfig, 1)
+    reg_com = config.reg_commission if config else 500
+    flat = config.checkin_commission_flat if config else None
+    pct = config.checkin_commission_pct if config else None
 
     # Auto-generate promo code
     raw = (user.full_name or user.email.split("@")[0]).upper()
@@ -448,7 +456,9 @@ async def make_promoter(
         code = PromoCode(
             code=code_name,
             promoter_id=user.id,
-            reg_commission=500,
+            reg_commission=reg_com,
+            checkin_commission_flat=flat,
+            checkin_commission_pct=pct,
         )
         db.add(code)
         try:
@@ -459,17 +469,67 @@ async def make_promoter(
             user = await db.get(User, member_id)
             user.is_promoter = True
             user.user_type = "promoter"
+            config = await db.get(PromoterCommissionConfig, 1)
+            reg_com = config.reg_commission if config else 500
+            flat = config.checkin_commission_flat if config else None
+            pct = config.checkin_commission_pct if config else None
             suffix = str(user.id).replace("-", "")[:10].upper()
             code_name = f"{sanitized}-{suffix}" if sanitized else f"PROMO-{suffix}"
             code = PromoCode(
                 code=code_name,
                 promoter_id=user.id,
-                reg_commission=500,
+                reg_commission=reg_com,
+                checkin_commission_flat=flat,
+                checkin_commission_pct=pct,
             )
             db.add(code)
 
     await db.commit()
     return {"promoter_id": str(user.id), "is_promoter": True, "user_type": "promoter"}
+
+
+@router.get("/promoter-commission-config", summary="Get global promoter commission config")
+async def get_promoter_commission_config(
+    current_user: CurrentAdmin,
+    db: DBSession,
+):
+    from app.db.models.promoter_config import PromoterCommissionConfig
+    from app.schemas.promoter import PromoterCommissionConfigRead
+
+    config = await db.get(PromoterCommissionConfig, 1)
+    if config is None:
+        return {"reg_commission": 500, "checkin_commission_flat": None, "checkin_commission_pct": None}
+    return PromoterCommissionConfigRead.model_validate(config)
+
+
+@router.patch("/promoter-commission-config", summary="Update global promoter commission config")
+async def update_promoter_commission_config(
+    current_user: CurrentAdmin,
+    db: DBSession,
+    payload: PromoterCommissionConfigUpdate,
+):
+    from app.db.models.promoter_config import PromoterCommissionConfig
+    from app.schemas.promoter import PromoterCommissionConfigRead
+
+    config = await db.get(PromoterCommissionConfig, 1)
+    if config is None:
+        config = PromoterCommissionConfig(id=1)
+        db.add(config)
+
+    config.reg_commission = payload.reg_commission
+    if payload.checkin_commission_flat is not None:
+        config.checkin_commission_flat = payload.checkin_commission_flat
+        config.checkin_commission_pct = None
+    elif payload.checkin_commission_pct is not None:
+        config.checkin_commission_pct = payload.checkin_commission_pct
+        config.checkin_commission_flat = None
+    else:
+        config.checkin_commission_flat = None
+        config.checkin_commission_pct = None
+
+    await db.commit()
+    await db.refresh(config)
+    return PromoterCommissionConfigRead.model_validate(config)
 
 
 @router.post("/promo-codes", status_code=201, summary="Create a promo code for a promoter")
