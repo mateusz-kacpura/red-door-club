@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, CreditCard, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -52,10 +53,8 @@ function SetupContent() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
-      <div className="mb-8 text-center">
-        <p className="text-xs tracking-[0.3em] text-muted-foreground uppercase">
-          S8LLS Club
-        </p>
+      <div className="mb-8 text-center flex flex-col items-center">
+        <Image src="/icons/logo.svg" alt="S8LLS" width={120} height={43} className="dark:invert-0 invert" />
         <h1 className="text-2xl font-light tracking-wide mt-2">Card Activation</h1>
       </div>
 

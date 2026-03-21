@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -56,7 +57,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Admin Sidebar */}
       <aside className="w-56 shrink-0 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
-          <p className="text-xs tracking-[0.2em] text-muted-foreground uppercase">{t("nav.s8lls")}</p>
+          <Image src="/icons/logo.svg" alt="S8LLS" width={80} height={28} className="dark:invert-0 invert" />
           <p className="text-sm font-medium mt-0.5">{t("nav.adminPanel")}</p>
         </div>
 

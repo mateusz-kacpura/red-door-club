@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -120,7 +121,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           className="flex items-center gap-2"
           onClick={onNavigate}
         >
-          <span className="font-light tracking-widest uppercase text-sm">{t("nav.s8lls")}</span>
+          <Image src="/icons/logo.svg" alt="S8LLS" width={100} height={36} className="dark:invert-0 invert" priority />
         </Link>
       </div>
       <NavLinks onNavigate={onNavigate} />
@@ -141,7 +142,9 @@ export function Sidebar() {
       <Sheet open={isOpen} onOpenChange={close}>
         <SheetContent side="left" className="w-72 p-0">
           <SheetHeader className="h-14 px-4">
-            <SheetTitle>{t("nav.s8lls")}</SheetTitle>
+            <SheetTitle>
+              <Image src="/icons/logo.svg" alt="S8LLS" width={100} height={36} className="dark:invert-0 invert" />
+            </SheetTitle>
             <SheetClose onClick={close} />
           </SheetHeader>
           <NavLinks onNavigate={close} />

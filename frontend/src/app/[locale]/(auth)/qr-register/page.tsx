@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Image from "next/image";
 import { QRRegisterForm } from "@/components/auth/qr-register-form";
 
 export const metadata = {
@@ -9,11 +10,9 @@ export const metadata = {
 export default function QRRegisterPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-light tracking-widest text-foreground uppercase">
-          S8LLS
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1 tracking-wider">
+      <div className="mb-8 text-center flex flex-col items-center">
+        <Image src="/icons/logo.svg" alt="S8LLS" width={150} height={54} className="dark:invert-0 invert" priority />
+        <p className="text-sm text-muted-foreground mt-2 tracking-wider">
           Private Business Club — Bangkok
         </p>
       </div>

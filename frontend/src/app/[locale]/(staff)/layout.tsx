@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { ROUTES } from "@/lib/constants";
@@ -40,9 +41,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
       {/* Minimal header for mobile */}
       <header className="border-b px-4 py-3 flex items-center justify-between">
         <div>
-          <p className="text-xs tracking-[0.15em] text-muted-foreground uppercase">
-            {t("nav.s8lls")}
-          </p>
+          <Image src="/icons/logo.svg" alt="S8LLS" width={80} height={28} className="dark:invert-0 invert" />
           <p className="text-sm font-medium">{t("staff.title")}</p>
         </div>
         <div className="flex items-center gap-1">

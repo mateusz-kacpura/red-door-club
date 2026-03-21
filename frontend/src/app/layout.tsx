@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   title: "S8LLS Club",
   description: "S8LLS — Private Members Club",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/favicon.ico",
+    apple: "/icons/icon-192.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

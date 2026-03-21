@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, CreditCard, CheckCircle, XCircle, Users, Receipt, Lock, Unlock } from "lucide-react";
 
@@ -68,9 +69,9 @@ function TapContent() {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center max-w-sm mx-auto px-6">
         {/* Logo */}
-        <p className="text-xs tracking-[0.3em] text-muted-foreground uppercase mb-8">
-          S8LLS Club
-        </p>
+        <div className="mb-8">
+          <Image src="/icons/logo.svg" alt="S8LLS" width={120} height={43} className="dark:invert-0 invert mx-auto" />
+        </div>
 
         {status === "loading" && (
           <div className="space-y-4">
