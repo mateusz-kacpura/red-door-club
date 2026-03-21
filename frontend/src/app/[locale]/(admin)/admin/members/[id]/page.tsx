@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard, TrendingUp, Wallet, QrCode, Plus, DoorOpen } from "lucide-react";
+import { Loader2, ArrowLeft, Users, DollarSign, Headphones, Zap, Pencil, X, Check, CreditCard, TrendingUp, Wallet, QrCode, DoorOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,13 +63,8 @@ export default function MemberDetailPage() {
   const [togglingStaff, setTogglingStaff] = useState(false);
 
   // Promoter code state
-  const [newCodeName, setNewCodeName] = useState("");
-  const [generatingCode, setGeneratingCode] = useState(false);
   const [renamingCodeId, setRenamingCodeId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
-  const [regCommission, setRegCommission] = useState<number>(0);
-  const [checkinType, setCheckinType] = useState<"none" | "flat" | "pct">("none");
-  const [checkinValue, setCheckinValue] = useState<number>(0);
 
   useEffect(() => {
     if (!memberId) return;
@@ -149,36 +144,6 @@ export default function MemberDetailPage() {
       // silent
     } finally {
       setTogglingStaff(false);
-    }
-  };
-
-  const handleGenerateCode = async () => {
-    if (!member || !newCodeName.trim()) return;
-    setGeneratingCode(true);
-    try {
-      const payload: Record<string, unknown> = {
-        code: newCodeName.trim().toUpperCase(),
-        promoter_id: member.id,
-        quota: 0,
-        reg_commission: regCommission,
-      };
-      if (checkinType === "flat") {
-        payload.checkin_commission_flat = checkinValue;
-      } else if (checkinType === "pct") {
-        payload.checkin_commission_pct = checkinValue;
-      }
-      await apiClient.post("/admin/promo-codes", payload);
-      setNewCodeName("");
-      setRegCommission(0);
-      setCheckinType("none");
-      setCheckinValue(0);
-      // Re-fetch member detail
-      const data = await apiClient.get<MemberDetail>(`/admin/members/${member.id}`);
-      setMember(data);
-    } catch {
-      // silent
-    } finally {
-      setGeneratingCode(false);
     }
   };
 
@@ -494,58 +459,6 @@ export default function MemberDetailPage() {
               <div className="flex flex-col items-center gap-4 py-6">
                 <QrCode className="h-10 w-10 text-muted-foreground/30" />
                 <p className="text-sm text-muted-foreground">{t("memberDetail.promoterNoCode")}</p>
-                <div className="flex gap-2 items-center">
-                  <Input
-                    value={newCodeName}
-                    onChange={(e) => setNewCodeName(e.target.value)}
-                    className="uppercase h-8 font-mono max-w-[200px]"
-                    placeholder={t("memberDetail.promoterCodeNamePlaceholder")}
-                  />
-                </div>
-                <div className="grid gap-3 w-full max-w-xs text-sm">
-                  <div className="flex items-center gap-2">
-                    <Label className="w-28 text-xs shrink-0">{t("memberDetail.promoterRegCommission")}</Label>
-                    <Input
-                      type="number"
-                      min={0}
-                      value={regCommission}
-                      onChange={(e) => setRegCommission(Number(e.target.value))}
-                      className="h-8"
-                      placeholder="0"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Label className="w-28 text-xs shrink-0">{t("memberDetail.promoterCheckinCommission")}</Label>
-                    <select
-                      value={checkinType}
-                      onChange={(e) => { setCheckinType(e.target.value as "none" | "flat" | "pct"); setCheckinValue(0); }}
-                      className="h-8 rounded-md border border-input bg-background px-2 text-xs"
-                    >
-                      <option value="none">{t("memberDetail.promoterCommissionNone")}</option>
-                      <option value="flat">{t("memberDetail.promoterCommissionFlat")}</option>
-                      <option value="pct">{t("memberDetail.promoterCommissionPct")}</option>
-                    </select>
-                    {checkinType !== "none" && (
-                      <Input
-                        type="number"
-                        min={0}
-                        max={checkinType === "pct" ? 100 : undefined}
-                        value={checkinValue}
-                        onChange={(e) => setCheckinValue(Number(e.target.value))}
-                        className="h-8 w-20"
-                        placeholder="0"
-                      />
-                    )}
-                  </div>
-                </div>
-                <Button size="sm" onClick={handleGenerateCode} disabled={generatingCode || !newCodeName.trim()}>
-                    {generatingCode ? <Loader2 className="h-4 w-4 animate-spin" /> : (
-                      <>
-                        <Plus className="h-4 w-4 mr-1" />
-                        {t("memberDetail.promoterGenerate")}
-                      </>
-                    )}
-                  </Button>
               </div>
             )}
           </CardContent>

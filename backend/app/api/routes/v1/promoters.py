@@ -9,7 +9,6 @@ from app.db.models.user import User
 from app.schemas.promoter import (
     PayoutRequestCreate,
     PayoutRequestRead,
-    PromoCodeCreate,
     PromoCodeRead,
     ReferralRead,
 )
@@ -40,27 +39,6 @@ async def list_my_codes(
     )
     codes = result.scalars().all()
     return [PromoCodeRead.model_validate(c) for c in codes]
-
-
-@router.post("/me/codes", status_code=201, summary="Create a new promo code")
-async def create_my_code(
-    current_user: CurrentUser,
-    db: DBSession,
-    payload: PromoCodeCreate,
-):
-    code = PromoCode(
-        code=payload.code.upper(),
-        promoter_id=current_user.id,
-        tier_grant=payload.tier_grant,
-        quota=payload.quota,
-        reg_commission=payload.reg_commission,
-        checkin_commission_flat=payload.checkin_commission_flat,
-        checkin_commission_pct=payload.checkin_commission_pct,
-    )
-    db.add(code)
-    await db.commit()
-    await db.refresh(code)
-    return PromoCodeRead.model_validate(code)
 
 
 @router.get("/me/payouts", summary="List payout requests")
